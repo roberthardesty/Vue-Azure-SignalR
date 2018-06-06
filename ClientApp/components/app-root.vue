@@ -1,16 +1,27 @@
 <template>
-    <div id="app" class="container-fluid">
-        <div class="row">
-            <div class="col-sm-3">
-                <nav-menu params="route: route"></nav-menu>
-            </div>
-            <div class="col-sm-9">
-                <router-view></router-view>
-            </div>
-        </div>
-
-    </div>
-
+    <v-app id="inspire" light>
+            <nav-menu :isOpen="drawerOpen"></nav-menu>
+            <v-toolbar color="amber" app absolute clipped-left>
+                <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
+                <span class="title ml-3 mr-5">Ip&nbsp;<span class="text">Man</span></span>
+                <v-text-field
+                    solo-inverted
+                    flat
+                    label="Search"
+                    prepend-icon="search"
+                ></v-text-field>
+                <v-spacer></v-spacer>
+            </v-toolbar>
+            <main>
+                <v-content >
+                    <v-container fluid fill-height class="grey lighten-4">
+                        <v-layout justify-center align-center>
+                            <router-view></router-view>
+                        </v-layout>
+                    </v-container>
+                </v-content>
+            </main>
+    </v-app>
 </template>
 
 <script>
@@ -28,6 +39,7 @@ Vue.component('nav-menu', NavMenu);
 export default {
     data() {
         return {
+            drawerOpen: false
         }
     }
 }
