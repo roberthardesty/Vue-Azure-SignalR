@@ -1,21 +1,23 @@
 <template>
     <v-app id="inspire" light>
-            <nav-menu :isOpen="drawerOpen"></nav-menu>
+            <nav-menu 
+                :isOpen="drawerOpen">
+            </nav-menu>
             <v-toolbar color="amber" app absolute clipped-left>
                 <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
                 <span class="title ml-3 mr-5">Ip&nbsp;<span class="text">Man</span></span>
-                <v-text-field
-                    solo-inverted
-                    flat
-                    label="Search"
-                    prepend-icon="search"
-                ></v-text-field>
                 <v-spacer></v-spacer>
+                <router-link to="/counter" tag="div" >
+                    <v-icon color="white">add_circle_outline</v-icon>
+                </router-link>
+                <router-link to="/fetch-data" tag="div">
+                    <v-icon color="black">cloud</v-icon>
+                </router-link>
             </v-toolbar>
             <main>
-                <v-content >
+                <v-content fluid>
                     <v-container fluid fill-height class="grey lighten-4">
-                        <v-layout justify-center align-center>
+                        <v-layout fill-height>
                             <router-view></router-view>
                         </v-layout>
                     </v-container>
