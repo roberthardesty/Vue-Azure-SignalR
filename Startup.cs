@@ -20,14 +20,7 @@ namespace IPMan
         {
             services.AddMvc();
 
-            services.AddCors(options => options.AddPolicy("CorsPolicy",
-            builder =>
-            {
-                builder.AllowAnyMethod().AllowAnyHeader()
-                       .WithOrigins("https://localhost:5001")
-                       .AllowCredentials();
-            }));
-            services.AddSignalR();
+            services.AddSignalR().AddAzureSignalR();
 
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
@@ -48,8 +41,7 @@ namespace IPMan
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();            
-            app.UseCors("CorsPolicy");
-            app.UseSignalR(routes =>
+            app.UseAzureSignalR(routes =>
             {
                 routes.MapHub<CounterHub>("/count");
                 routes.MapHub<WeatherHub>("/weather");
