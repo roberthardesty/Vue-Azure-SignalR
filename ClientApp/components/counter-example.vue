@@ -22,7 +22,7 @@
         created: function ()
         {
             this.connection = new this.$signalR.HubConnectionBuilder()
-                .withUrl("http://localhost:5005/count")
+                .withUrl("/count")
                 .configureLogging(this.$signalR.LogLevel.Error)
                 .build();
         },
