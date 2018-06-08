@@ -1,8 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const utils = require('./ClientApp/build/utils')
+const utils = require('./ClientApp/buildSettings/utils')
 const config = require('./ClientApp/config')
-const vueLoaderConfig = require('./ClientApp/build/vue-loader.conf')
+const vueLoaderConfig = require('./ClientApp/buildSettings/vue-loader.conf')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const bundleOutputDir = './wwwroot/dist';
 
