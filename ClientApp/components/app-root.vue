@@ -10,7 +10,7 @@
                 <v-spacer></v-spacer>
                 <router-link to="/counter" tag="div" >
                     <v-btn icon>
-                        <v-icon color="white">add_circle_outline</v-icon>
+                        <v-icon color="black">add_circle_outline</v-icon>
                     </v-btn>
                 </router-link>
                 <router-link to="/fetch-data" tag="div">
@@ -18,7 +18,10 @@
                         <v-icon color="black">cloud</v-icon>
                     </v-btn>
                 </router-link>
-                <a href="/login">
+                <v-subheader id="usernameTitle" v-if="username">
+                        {{username}}
+                </v-subheader>
+                <a href="/login" v-else>
                     <v-btn icon>
                         <v-icon color="gray">person</v-icon>
                     </v-btn>
@@ -62,6 +65,15 @@ import NavMenu from './nav-menu.vue'
 })
 export default class App extends Vue
 {
+    // Get the user name cookie.
+    private getCookie(key) {
+        var cookies = document.cookie.split(';').map(c => c.trim());
+        for (var i = 0; i < cookies.length; i++) {
+            if (cookies[i].startsWith(key + '=')) return unescape(cookies[i].slice(key.length + 1));
+        }
+        return '';
+    }
+    public username = this.getCookie('github_username');    
     data() {
         return {
             drawerOpen: false
@@ -71,4 +83,7 @@ export default class App extends Vue
 </script>
 
 <style>
+#usernameTitle {
+    font-size: 12pt;
+}
 </style>

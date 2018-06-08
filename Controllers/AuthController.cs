@@ -15,7 +15,7 @@ namespace IPMan.Controllers
                 return Challenge(GitHubAuthenticationDefaults.AuthenticationScheme);
             }
 
-            HttpContext.Response.Cookies.Append("githubchat_username", User.Identity.Name);
+            HttpContext.Response.Cookies.Append("github_username", User.Identity.Name);
             HttpContext.SignInAsync(User);
             return Redirect("/");
         }
