@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace IPMan.Services.Hubs
@@ -10,6 +11,7 @@ namespace IPMan.Services.Hubs
         
     }
 
+    [Authorize]
     public class Counter : HostedService
     {
         public Counter(IHubContext<CounterHub> context)
