@@ -73,10 +73,17 @@ namespace IPMan
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+            });
+            
+            app.MapWhen(x => !x.Request.Path.Value.StartsWith("/login"),
+                            builder =>
+            {
+                builder.UseMvc(routes =>
+                {
+                    routes.MapSpaFallbackRoute(
+                        name: "spa-fallback",
+                        defaults: new { controller = "Home", action = "Index" });
+                });
             });
         }
         private static async Task GetUserCompanyInfoAsync(OAuthCreatingTicketContext context)

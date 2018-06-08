@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace IPMan.Services.Hubs
 {
+    [Authorize]
     public class CounterHub : Hub
     {
         
     }
 
-    [Authorize]
     public class Counter : HostedService
     {
         public Counter(IHubContext<CounterHub> context)

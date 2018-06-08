@@ -1,19 +1,32 @@
 <template>
     <v-app id="inspire" light>
+            <v-toolbar color="amber" app absolute clipped-left>
+                <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
+                <router-link to="/" tag="a">
+                    <v-toolbar-title class="black--text">
+                        Ip Man
+                    </v-toolbar-title>
+                </router-link>
+                <v-spacer></v-spacer>
+                <router-link to="/counter" tag="div" >
+                    <v-btn icon>
+                        <v-icon color="white">add_circle_outline</v-icon>
+                    </v-btn>
+                </router-link>
+                <router-link to="/fetch-data" tag="div">
+                    <v-btn icon>
+                        <v-icon color="black">cloud</v-icon>
+                    </v-btn>
+                </router-link>
+                <a href="/login">
+                    <v-btn icon>
+                        <v-icon color="gray">person</v-icon>
+                    </v-btn>
+                </a>
+            </v-toolbar>
             <nav-menu 
                 :isOpen="drawerOpen">
             </nav-menu>
-            <v-toolbar color="amber" app absolute clipped-left>
-                <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
-                <span class="title ml-3 mr-5">Ip&nbsp;<span class="text">Man</span></span>
-                <v-spacer></v-spacer>
-                <router-link to="/counter" tag="div" >
-                    <v-icon color="white">add_circle_outline</v-icon>
-                </router-link>
-                <router-link to="/fetch-data" tag="div">
-                    <v-icon color="black">cloud</v-icon>
-                </router-link>
-            </v-toolbar>
             <main>
                 <v-content fluid>
                     <v-container fluid fill-height class="grey lighten-4">
