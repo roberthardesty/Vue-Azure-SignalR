@@ -40,7 +40,7 @@
         },
         created: function () {
             this.connection = new this.$signalR.HubConnectionBuilder()
-                .withUrl("http://localhost:5000/weather")
+                .withUrl("/weather")
                 .configureLogging(this.$signalR.LogLevel.Error)
                 .build();
         },
