@@ -10,7 +10,7 @@ namespace IPMan.Controllers
         [HttpGet("login")]
         public IActionResult Login()
         {
-            //if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
                 return Challenge(GitHubAuthenticationDefaults.AuthenticationScheme);
             }

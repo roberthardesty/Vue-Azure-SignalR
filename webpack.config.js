@@ -92,6 +92,11 @@ module.exports = (env) => {
         ] : [
                 // Plugins that apply in production builds only
                 new UglifyJsPlugin(),
+                new webpack.DefinePlugin({
+                    'process.env': {
+                        'NODE_ENV': JSON.stringify("production")
+                    }
+                    }),
                 new ExtractTextPlugin('site.css')
             ])
     }];
