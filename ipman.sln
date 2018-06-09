@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPMan", "ipman.csproj", "{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ipman", "ipman\ipman.csproj", "{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ipman.shared", "ipman.shared\ipman.shared.csproj", "{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ipman.core", "ipman.core\ipman.core.csproj", "{C44DCB4A-77C8-4480-B5A1-14567201A2D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
