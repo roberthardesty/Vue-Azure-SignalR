@@ -1,10 +1,13 @@
-﻿using System;
+﻿using ipman.shared.Entity.Join;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ipman.shared.Entity
 {
-    class Tag
+    public class Tag
     {
+        public string TagName { get; set; }
+        public ICollection<PostTag> PostTags { get; set; }
     }
 }
