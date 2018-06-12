@@ -33,12 +33,14 @@ namespace IPMan
             services.AddMvc();
 
             services.AddSignalR().AddAzureSignalR();
+
+            ConfigureAuthentication(services);
             ConfigureAuthorization(services);
+
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
         }
-
-        public void ConfigureAuthorization(IServiceCollection services)
+        public void ConfigureAuthentication(IServiceCollection services)
         {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie()
@@ -49,7 +51,7 @@ namespace IPMan
                         options.Scope.Add("user:email");
                         options.Events = new OAuthEvents
                         {
-                            OnCreatingTicket = GetUserCompanyInfoAsync
+                            OnCreatingTicket = CreateUserClaims
                         };
                     })
                     .AddGoogle("Google", googleOptions =>
@@ -61,13 +63,19 @@ namespace IPMan
                         googleOptions.SaveTokens = true;
                         googleOptions.Events = new OAuthEvents
                         {
-                            OnCreatingTicket = GetUserCompanyInfoAsync
+                            OnCreatingTicket = CreateUserClaims
                         };
                         //googleOptions.ClaimActions.MapJsonSubKey("urn:google:image", "image", "url");
                         googleOptions.ClaimActions.Remove(ClaimTypes.GivenName);
                     });
         }
-
+        public void ConfigureAuthorization(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Microsoft_Only", policy => policy.RequireClaim("Company", "Microsoft"));
+            });
+        }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -82,8 +90,11 @@ namespace IPMan
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
             app.UseAuthentication();
-            app.UseStaticFiles();            
+
+            app.UseStaticFiles();     
+
             app.UseAzureSignalR(routes =>
             {
                 routes.MapHub<CounterHub>("/count");
@@ -108,7 +119,7 @@ namespace IPMan
                 });
             });
         }
-        private static async Task GetUserCompanyInfoAsync(OAuthCreatingTicketContext context)
+        private static async Task CreateUserClaims(OAuthCreatingTicketContext context)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
