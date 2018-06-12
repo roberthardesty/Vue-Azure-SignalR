@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire" light>
-            <v-toolbar color="amber" app absolute clipped-left>
+            <v-toolbar color="secondary" app absolute clipped-left>
                 <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
                 <router-link to="/" tag="a">
                     <v-toolbar-title class="black--text">
@@ -21,11 +21,18 @@
                 <v-subheader id="usernameTitle" v-if="username">
                         {{username}}
                 </v-subheader>
-                <a href="/login" v-else>
-                    <v-btn icon>
-                        <v-icon color="gray">person</v-icon>
-                    </v-btn>
-                </a>
+                <span v-else>
+                    <a href="/login-google">
+                        <v-btn icon>
+                            <img height="25" elevation-24 src="../assests/Google.png">
+                        </v-btn>
+                    </a>
+                    <a href="/login-github">
+                        <v-btn icon>
+                            <img height="25" elevation-24 src="../assests/Github.svg">
+                        </v-btn>
+                    </a>
+                </span>
             </v-toolbar>
             <nav-menu 
                 :isOpen="drawerOpen">

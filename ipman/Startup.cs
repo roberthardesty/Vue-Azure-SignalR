@@ -18,6 +18,9 @@ namespace IPMan
     {
         private const string GitHubClientId = "GitHubClientId";
         private const string GitHubClientSecret = "GitHubClientSecret";
+        private const string GoogleClientId = "GoogleClientId";
+        private const string GoogleClientSecret = "GoogleClientSecret";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,6 +33,13 @@ namespace IPMan
             services.AddMvc();
 
             services.AddSignalR().AddAzureSignalR();
+            ConfigureAuthorization(services);
+            services.AddSingleton<IHostedService, Counter>();
+            services.AddSingleton<IHostedService, Weather>();
+        }
+
+        public void ConfigureAuthorization(IServiceCollection services)
+        {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie()
                     .AddGitHub(options =>
@@ -41,9 +51,21 @@ namespace IPMan
                         {
                             OnCreatingTicket = GetUserCompanyInfoAsync
                         };
+                    })
+                    .AddGoogle("Google", googleOptions =>
+                    {
+                        googleOptions.ClientId = Configuration[GoogleClientId];
+                        googleOptions.ClientSecret = Configuration[GoogleClientSecret];
+                        googleOptions.AuthorizationEndpoint += "?prompt=consent"; // Hack so we always get a refresh token, it only comes on the first authorization response
+                        googleOptions.AccessType = "offline";
+                        googleOptions.SaveTokens = true;
+                        googleOptions.Events = new OAuthEvents
+                        {
+                            OnCreatingTicket = GetUserCompanyInfoAsync
+                        };
+                        //googleOptions.ClaimActions.MapJsonSubKey("urn:google:image", "image", "url");
+                        googleOptions.ClaimActions.Remove(ClaimTypes.GivenName);
                     });
-            services.AddSingleton<IHostedService, Counter>();
-            services.AddSingleton<IHostedService, Weather>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
