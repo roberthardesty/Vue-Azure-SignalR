@@ -9,6 +9,7 @@ namespace ipman.core.Utilities
 {
     public class IPManDataContext: DbContext
     {
+        private const string ConnectionString = "SQLConnectionString";
         private IConfiguration _configuration;
         public IPManDataContext(IConfiguration configuration)
         {
@@ -31,7 +32,7 @@ namespace ipman.core.Utilities
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration["ConnectionStringBlah"]);
+            optionsBuilder.UseSqlServer(_configuration[ConnectionString]);
         }
     }
 }
