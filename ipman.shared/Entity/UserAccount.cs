@@ -1,4 +1,5 @@
 ﻿using ipman.shared.Entity.Join;
+using ipman.shared.Entity.Lookups;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +13,9 @@ namespace ipman.shared.Entity
         public string EmailAddress { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string GitHubID { get; set; }
+        public string GoogleID { get; set; }
+        public AuthenticationProvider LastLoginProvider { get; set; }
         public DateTime LastLoginUTC { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
