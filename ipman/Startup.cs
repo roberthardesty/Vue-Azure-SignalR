@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -11,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IPMan.Services.Hubs;
 using System.Threading.Tasks;
+using IPMan.Utilities;
+using ipman.shared.Entity.Lookups;
 
 namespace IPMan
 {
@@ -24,6 +28,7 @@ namespace IPMan
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConfigurationService.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -51,7 +56,7 @@ namespace IPMan
                         options.Scope.Add("user:email");
                         options.Events = new OAuthEvents
                         {
-                            OnCreatingTicket = CreateUserClaims
+                            OnCreatingTicket = UserLoginTask.Execute(AuthenticationProvider.Github)
                         };
                     })
                     .AddGoogle("Google", googleOptions =>
@@ -63,7 +68,7 @@ namespace IPMan
                         googleOptions.SaveTokens = true;
                         googleOptions.Events = new OAuthEvents
                         {
-                            OnCreatingTicket = CreateUserClaims
+                            OnCreatingTicket = UserLoginTask.Execute(AuthenticationProvider.Google)
                         };
                         //googleOptions.ClaimActions.MapJsonSubKey("urn:google:image", "image", "url");
                         googleOptions.ClaimActions.Remove(ClaimTypes.GivenName);
@@ -119,25 +124,6 @@ namespace IPMan
                 });
             });
         }
-        private static async Task CreateUserClaims(OAuthCreatingTicketContext context)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
-
-            var response = await context.Backchannel.SendAsync(request,
-                HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
-
-            var user = JObject.Parse(await response.Content.ReadAsStringAsync());
-            if (user.ContainsKey("company"))
-            {
-                var company = user["company"].ToString();
-                var companyIdentity = new ClaimsIdentity(new[]
-                {
-                    new Claim("Company", company)
-                });
-                context.Principal.AddIdentity(companyIdentity);
-            }
-        } 
+        
     }
 }
