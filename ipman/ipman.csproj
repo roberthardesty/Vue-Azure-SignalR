@@ -8,21 +8,25 @@
     <UserSecretsId>IPManDevSignalR</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.0"/>
-    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.0.0-*"/>
-    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="2.0.0-rc2-final"/>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.0.0-*" />
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="2.0.0-rc2-final" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="yarn.lock"/>
-    <Content Remove="ClientApp\**"/>
+    <None Remove="yarn.lock" />
+    <Content Remove="ClientApp\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ipman.core\ipman.core.csproj" />
+    <ProjectReference Include="..\ipman.shared\ipman.shared.csproj" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
-    <Exec Command="npm install"/>
-    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod"/>
-    <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod"/>
+    <Exec Command="npm install" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod" />
     <ItemGroup>
-      <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**"/>
+      <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

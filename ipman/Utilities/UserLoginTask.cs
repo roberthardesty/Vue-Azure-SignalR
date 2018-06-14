@@ -9,6 +9,8 @@ using Newtonsoft.Json.Linq;
 using ipman.shared.Entity.Lookups;
 using ipman.shared.Entity;
 using ipman.core.Query;
+using ipman.core.Command;
+using ipman.core.Utilities;
 
 namespace IPMan.Utilities
 {
@@ -16,7 +18,7 @@ namespace IPMan.Utilities
     {
         public static Func<OAuthCreatingTicketContext, Task> Execute(AuthenticationProvider provider)
         {
-            UserAccountGetByEmail
+
             async Task CreateTask(OAuthCreatingTicketContext context)
             {
                 // Create the request for user data
@@ -27,18 +29,47 @@ namespace IPMan.Utilities
                 var response = await context.Backchannel.SendAsync(request,
                     HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
 
-                JObject contentString = JObject.Parse(await response.Content.ReadAsStringAsync());
-                string email = "";
-                // Parse the response for the email
+                JObject contentJObject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                string email = "",
+                       firstName = "",
+                       lastName = "",
+                       imageUrl = "",
+                       id = "";
+                // Parse the response for the email, names, and avatar url
                 switch (provider)
                 {
                     case AuthenticationProvider.Github:
-                        GetGitHubEmail(contentString, out email);
+                        GetGitHubEmail(contentJObject, out email);
                         break;
                     case AuthenticationProvider.Google:
-                        GetGoogleEmail(contentString, out email);
+                        GetGoogleEmail(contentJObject, out email);
+                        GetGoogleNames(contentJObject, out firstName, out lastName);
+                        GetGoogleAvatarLink(contentJObject, out imageUrl);
                         break;
                 }
+                // If an Email wasnt parsed fail out
+                if(string.IsNullOrEmpty(email))
+                {
+                    context.Fail("No Email Provided.");
+                    return;
+                }
+                // Check for existing user. Create if not exists. update.
+                UserAccountGetByEmail userAccountGetByEmail = new UserAccountGetByEmail(new IPManDataContext(ConfigurationService.Configuration));
+                UserAccountUpsert userAccountUpsert = new UserAccountUpsert(new IPManDataContext(ConfigurationService.Configuration));
+
+                UserAccount userAccount;
+                UserAccount preExistingUser = userAccountGetByEmail.Execute(email);
+
+                if (preExistingUser == null)
+                    userAccount = CreateNewUserAccount(email, firstName, lastName, imageUrl);
+                else
+                    userAccount = preExistingUser;
+
+                userAccount.LastLoginUTC = DateTime.Now;
+                userAccount.LastLoginProvider = provider;
+
+                await userAccountUpsert.Execute(userAccount, preExistingUser == null);
+                context.Success();
             }
 
             return CreateTask;
@@ -46,26 +77,59 @@ namespace IPMan.Utilities
         private static void GetGitHubEmail(JObject user, out string email)
         {
             email = "";
-            if (!user.ContainsKey("email"))
-                return;
-
-            email = user["email"].ToString();
+            if (user.ContainsKey("email"))
+                email = user["email"].ToString();
         }
-
         private static void GetGoogleEmail(JObject user, out string email)
         {
             email = "";
-            if (!user.ContainsKey("emails"))
+            if (user.ContainsKey("emails"))
+            {
+                JObject emailObject = user["emails"].FirstOrDefault() as JObject;
+                if (emailObject != null
+                    && emailObject.ContainsKey("type")
+                    && emailObject["type"].ToString() == "account")
+                    email = emailObject["value"].ToString();
+            }
+        }
+        private static void GetGoogleNames(JObject user, out string firstName, out string lastName)
+        {
+            firstName = "";
+            lastName = "";
+            if (!user.ContainsKey("name"))
                 return;
 
-            JObject emailObject = user["emails"].FirstOrDefault() as JObject;
+            JObject nameObject = user["name"] as JObject;
 
-            if (emailObject == null
-                || !emailObject.ContainsKey("type")
-                || emailObject["type"].ToString() != "account")
-                return;
-
-            email = emailObject["value"].ToString();
+            if(nameObject.ContainsKey("givenName") && nameObject.ContainsKey("familyName"))
+            {
+                firstName = nameObject["givenName"].ToString();
+                lastName = nameObject["familyName"].ToString();
+            }
+        }
+        private static void GetGoogleAvatarLink(JObject user, out string avatarLink)
+        {
+            avatarLink = "";
+            if(user.ContainsKey("image"))
+            {
+                JObject imageObject = user["image"] as JObject;
+                if (imageObject.ContainsKey("url"))
+                    avatarLink = imageObject["url"].ToString();
+            }
+        }
+        private static UserAccount CreateNewUserAccount(string email, string firstName, string lastName, string imageLink)
+        {
+            DateTime createdDate = DateTime.UtcNow;
+            return new UserAccount
+            {
+                ID = Guid.NewGuid(),
+                EmailAddress = email,
+                FirstName = firstName,
+                LastName = lastName,
+                AvatarLink = imageLink,
+                CreatedUTC = createdDate,
+                LastUpdatedUTC = createdDate
+            };
         }
     }
 

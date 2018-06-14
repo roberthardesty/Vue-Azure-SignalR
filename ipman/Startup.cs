@@ -15,6 +15,7 @@ using IPMan.Services.Hubs;
 using System.Threading.Tasks;
 using IPMan.Utilities;
 using ipman.shared.Entity.Lookups;
+using ipman.core.Utilities;
 
 namespace IPMan
 {
@@ -44,6 +45,7 @@ namespace IPMan
 
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
+            services.AddDbContext<IPManDataContext>();
         }
         public void ConfigureAuthentication(IServiceCollection services)
         {
