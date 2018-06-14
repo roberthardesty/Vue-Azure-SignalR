@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ipman.shared.Entity
 {
-    public class Post
+    public class Post : EntityBase
     {
         public string PostTitle { get; set; }
         public string PostDescription { get; set; }
