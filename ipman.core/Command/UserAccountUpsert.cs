@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ipman.core.Query
+namespace ipman.core.Command
 {
     public class UserAccountUpsert
     {
@@ -16,11 +16,17 @@ namespace ipman.core.Query
             _ipManDataContext = ipManDataContext;
         }
 
-        public async Task Execute(UserAccount userAccount)
+        public async Task Execute(UserAccount userAccount, bool isInsert = false)
         {
-            await _ipManDataContext.Upsert(userAccount)
-                             .On(ua => ua.ID)
-                             .RunAsync();
+            if(isInsert)
+            {
+                _ipManDataContext.Add<UserAccount>(userAccount);
+            }
+            else
+            {
+                _ipManDataContext.Update<UserAccount>(userAccount);
+            }
+            await _ipManDataContext.SaveChangesAsync();
         }
     }
 }
