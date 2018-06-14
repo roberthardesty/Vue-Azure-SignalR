@@ -21,12 +21,19 @@ namespace ipman.core.Utilities
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SiteAccountUserAccount>()
             .HasKey(x => new { x.SiteAccountID, x.UserAccountID });
+
+            modelBuilder.Entity<SiteAccountUserAccountDepartment>()
+            .HasKey(x => new  { x.SiteAccountUserAccountID, x.DepartmentID } );
+
+            modelBuilder.Entity<PostTag>()
+            .HasKey(x => new { x.PostID, x.TagID });
+
+
 
             base.OnModelCreating(modelBuilder);
         }
