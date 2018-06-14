@@ -30,25 +30,22 @@ namespace IPMan.Utilities
                     HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
 
                 JObject contentJObject = JObject.Parse(await response.Content.ReadAsStringAsync());
-                string email = "",
-                       firstName = "",
-                       lastName = "",
-                       imageUrl = "",
-                       id = "";
+
+                UserAccount userAccount = new UserAccount();
                 // Parse the response for the email, names, and avatar url
                 switch (provider)
                 {
                     case AuthenticationProvider.Github:
-                        GetGitHubEmail(contentJObject, out email);
+                        userAccount.AddGitHubEmailAddress(contentJObject);
                         break;
                     case AuthenticationProvider.Google:
-                        GetGoogleEmail(contentJObject, out email);
-                        GetGoogleNames(contentJObject, out firstName, out lastName);
-                        GetGoogleAvatarLink(contentJObject, out imageUrl);
+                        userAccount.AddGoogleEmail(contentJObject)
+                                   .AddGoogleNames(contentJObject)
+                                   .AddGoogleAvatarLink(contentJObject);
                         break;
                 }
                 // If an Email wasnt parsed fail out
-                if(string.IsNullOrEmpty(email))
+                if(string.IsNullOrEmpty(userAccount.EmailAddress))
                 {
                     context.Fail("No Email Provided.");
                     return;
@@ -57,16 +54,14 @@ namespace IPMan.Utilities
                 UserAccountGetByEmail userAccountGetByEmail = new UserAccountGetByEmail(new IPManDataContext(ConfigurationService.Configuration));
                 UserAccountUpsert userAccountUpsert = new UserAccountUpsert(new IPManDataContext(ConfigurationService.Configuration));
 
-                UserAccount userAccount;
-                UserAccount preExistingUser = userAccountGetByEmail.Execute(email);
+                UserAccount preExistingUser = userAccountGetByEmail.Execute(userAccount.EmailAddress);
 
                 if (preExistingUser == null)
-                    userAccount = CreateNewUserAccount(email, firstName, lastName, imageUrl);
+                    userAccount.AddCreatedData();
                 else
                     userAccount = preExistingUser;
 
-                userAccount.LastLoginUTC = DateTime.Now;
-                userAccount.LastLoginProvider = provider;
+                userAccount.AddLoginData(provider);
 
                 await userAccountUpsert.Execute(userAccount, preExistingUser == null);
                 context.Success();
@@ -74,68 +69,67 @@ namespace IPMan.Utilities
 
             return CreateTask;
         }
-        private static void GetGitHubEmail(JObject user, out string email)
+
+        #region Parsing User Data
+
+        private static UserAccount AddGitHubEmailAddress(this UserAccount userAccount, JObject user)
         {
-            email = "";
             if (user.ContainsKey("email"))
-                email = user["email"].ToString();
+                userAccount.EmailAddress = user["email"].ToString();
+            return userAccount;
         }
-        private static void GetGoogleEmail(JObject user, out string email)
+        private static UserAccount AddGoogleEmail(this UserAccount userAccount, JObject user)
         {
-            email = "";
             if (user.ContainsKey("emails"))
             {
                 JObject emailObject = user["emails"].FirstOrDefault() as JObject;
                 if (emailObject != null
                     && emailObject.ContainsKey("type")
                     && emailObject["type"].ToString() == "account")
-                    email = emailObject["value"].ToString();
+                    userAccount.EmailAddress = emailObject["value"].ToString();
             }
+            return userAccount;
         }
-        private static void GetGoogleNames(JObject user, out string firstName, out string lastName)
+        private static UserAccount AddGoogleNames(this UserAccount userAccount, JObject user)
         {
-            firstName = "";
-            lastName = "";
-            if (!user.ContainsKey("name"))
-                return;
-
-            JObject nameObject = user["name"] as JObject;
-
-            if(nameObject.ContainsKey("givenName") && nameObject.ContainsKey("familyName"))
+            if (user.ContainsKey("name"))
             {
-                firstName = nameObject["givenName"].ToString();
-                lastName = nameObject["familyName"].ToString();
+                JObject nameObject = user["name"] as JObject;
+
+                if(nameObject.ContainsKey("givenName") && nameObject.ContainsKey("familyName"))
+                {
+                    userAccount.FirstName = nameObject["givenName"].ToString();
+                    userAccount.LastName = nameObject["familyName"].ToString();
+                }
             }
+            return userAccount;
         }
-        private static void GetGoogleAvatarLink(JObject user, out string avatarLink)
+        private static UserAccount AddGoogleAvatarLink(this UserAccount userAccount, JObject user)
         {
-            avatarLink = "";
             if(user.ContainsKey("image"))
             {
                 JObject imageObject = user["image"] as JObject;
                 if (imageObject.ContainsKey("url"))
-                    avatarLink = imageObject["url"].ToString();
+                    userAccount.AvatarLink = imageObject["url"].ToString();
             }
+            return userAccount;
         }
-        private static UserAccount CreateNewUserAccount(string email, string firstName, string lastName, string imageLink)
+#endregion
+        private static UserAccount AddCreatedData(this UserAccount userAccount)
         {
             DateTime createdDate = DateTime.UtcNow;
-            return new UserAccount
-            {
-                ID = Guid.NewGuid(),
-                EmailAddress = email,
-                FirstName = firstName,
-                LastName = lastName,
-                AvatarLink = imageLink,
-                CreatedUTC = createdDate,
-                LastUpdatedUTC = createdDate
-            };
+            userAccount.CreatedUTC = createdDate;
+            userAccount.LastUpdatedUTC = createdDate;
+            return userAccount;
+        }
+        private static UserAccount AddLoginData(this UserAccount userAccount, AuthenticationProvider provider)
+        {
+            DateTime nowTime = DateTime.UtcNow;
+            userAccount.LastLoginUTC = nowTime;
+            userAccount.LastLoginProvider = provider;
+            return userAccount;
         }
     }
 
 }
-//var emailClaim = new ClaimsIdentity(new[]
-//{
-//    new Claim("AccountWithEmail", email)
-//});
-//principal.AddIdentity(emailClaim);
+
