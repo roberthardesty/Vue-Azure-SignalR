@@ -54,7 +54,7 @@ namespace IPMan.Utilities
                 UserAccountGetByEmail userAccountGetByEmail = new UserAccountGetByEmail(new IPManDataContext(ConfigurationService.Configuration));
                 UserAccountUpsert userAccountUpsert = new UserAccountUpsert(new IPManDataContext(ConfigurationService.Configuration));
 
-                UserAccount preExistingUser = userAccountGetByEmail.Execute(userAccount.EmailAddress);
+                UserAccount preExistingUser = userAccountGetByEmail.Execute(userAccount.EmailAddress, true);
 
                 if (preExistingUser == null)
                     userAccount.AddCreatedData();
@@ -115,6 +115,7 @@ namespace IPMan.Utilities
             return userAccount;
         }
 #endregion
+
         private static UserAccount AddCreatedData(this UserAccount userAccount)
         {
             DateTime createdDate = DateTime.UtcNow;
@@ -130,6 +131,4 @@ namespace IPMan.Utilities
             return userAccount;
         }
     }
-
 }
-

@@ -1,5 +1,6 @@
 using ipman.core.Utilities;
 using ipman.shared.Entity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,9 +16,13 @@ namespace ipman.core.Query
             _ipManDataContext = ipManDataContext;
         }
 
-        public UserAccount Execute(string email)
+        public UserAccount Execute(string email, bool includeSiteAccounts = false)
         {
-            return _ipManDataContext.UserAccounts.FirstOrDefault(user => user.EmailAddress == email);
+            IQueryable<UserAccount> baseQuery = _ipManDataContext.UserAccounts.Where(user => user.EmailAddress == email);
+            if (includeSiteAccounts)
+                baseQuery = baseQuery.Include(user => user.SiteAccountUserAccounts)
+                                      .ThenInclude(saua => saua.SiteAccount);
+            return baseQuery.FirstOrDefault();
         }
     }
 }
