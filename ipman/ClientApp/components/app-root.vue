@@ -13,7 +13,7 @@
                         <v-icon color="black">add_circle_outline</v-icon>
                     </v-btn>
                 </router-link>
-                <router-link to="/fetch-data" tag="div">
+                <router-link to="/dashboard" tag="div">
                     <v-btn icon>
                         <v-icon color="black">cloud</v-icon>
                     </v-btn>
@@ -85,6 +85,10 @@ export default class App extends Vue
         return {
             drawerOpen: false
         }
+    }
+    public mounted()
+    {
+        console.log(this.username);
     }
 }
 </script>

@@ -10,23 +10,24 @@
     </v-flex>
 </template>
 
-<script>
-        
-    export default {
-        data() {
-            return {
-                connection: null,
-                count: 0,
-            }
-        },
-        created: function ()
+<script lang="ts">
+    import Vue from 'vue';
+    import Component from 'vue-class-component';
+    @Component({
+
+    })
+    export default class Counter extends Vue {
+        connection = null;
+        count = 0;
+
+        created()
         {
             this.connection = new this.$signalR.HubConnectionBuilder()
                 .withUrl("/count")
                 .configureLogging(this.$signalR.LogLevel.Error)
                 .build();
-        },
-        mounted: function () {
+        };
+        mounted() {
             this.connection.start();
             
             this.connection.on('increment', data => {

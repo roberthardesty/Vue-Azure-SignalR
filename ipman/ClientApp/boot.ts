@@ -13,10 +13,20 @@ import jquery from 'jquery'
 (<any>window).$ = jquery
 (<any>window).jQuery = jquery
 
-var signalR = require('./signalr.min.js');
+import * as signalR from "@aspnet/signalr";
+//var signalR = require('./signalr.min.js');
 
 Vue.prototype.$http = axios;
 Vue.prototype.$signalR = signalR;
+
+declare module 'vue/types/vue' 
+{
+    // 3. Declare augmentation for Vue
+    interface Vue 
+    {
+      $signalR: any
+    }
+}
 
 Vue.use(Vuetify);
 
