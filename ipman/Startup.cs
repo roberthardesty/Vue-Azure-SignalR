@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using IPMan.Utilities;
 using ipman.shared.Entity.Lookups;
 using ipman.core.Utilities;
+using Microsoft.AspNetCore.Authentication;
+using ipman.core.Query;
 
 namespace IPMan
 {
@@ -45,6 +47,7 @@ namespace IPMan
 
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
+            services.AddTransient<UserAccountGetByEmail>();
             services.AddDbContext<IPManDataContext>();
         }
         public void ConfigureAuthentication(IServiceCollection services)
@@ -55,6 +58,7 @@ namespace IPMan
                     {
                         options.ClientId = Configuration[GitHubClientId];
                         options.ClientSecret = Configuration[GitHubClientSecret];
+
                         options.Scope.Add("user:email");
                         options.Events = new OAuthEvents
                         {
@@ -65,14 +69,16 @@ namespace IPMan
                     {
                         googleOptions.ClientId = Configuration[GoogleClientId];
                         googleOptions.ClientSecret = Configuration[GoogleClientSecret];
+
                         googleOptions.AuthorizationEndpoint += "?prompt=consent"; // Hack so we always get a refresh token, it only comes on the first authorization response
                         googleOptions.AccessType = "offline";
                         googleOptions.SaveTokens = true;
+
                         googleOptions.Events = new OAuthEvents
                         {
                             OnCreatingTicket = UserLoginTask.Execute(AuthenticationProvider.Google)
                         };
-                        //googleOptions.ClaimActions.MapJsonSubKey("urn:google:image", "image", "url");
+                        //googleOptions.ClaimActions.MapJsonKey("urn:google:image","image");
                         googleOptions.ClaimActions.Remove(ClaimTypes.GivenName);
                     });
         }
@@ -106,6 +112,7 @@ namespace IPMan
             {
                 routes.MapHub<CounterHub>("/count");
                 routes.MapHub<WeatherHub>("/weather");
+                routes.MapHub<SiteAccountHub>("/siteAccount");
             });
 
             app.UseMvc(routes =>

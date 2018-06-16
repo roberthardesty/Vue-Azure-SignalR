@@ -52,9 +52,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator';
-import CounterExample from './counter-example.vue'
-import FetchData from './fetch-data.vue'
-import HomePage from './home-page.vue'
 import NavMenu from './nav-menu.vue'
 
 // Vue.component('counter-example', CounterExample);
@@ -65,9 +62,6 @@ import NavMenu from './nav-menu.vue'
 @Component({
     components:{
         NavMenu,
-        CounterExample,
-        FetchData,
-        HomePage
     }
 })
 export default class App extends Vue

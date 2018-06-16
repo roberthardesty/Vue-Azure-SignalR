@@ -21,9 +21,9 @@ namespace IPMan.Services.Hubs
         {
             _userAccountGetByEmail = userAccountGetByEmail;
         }
-        public List<SiteAccount> GetUserSiteAccount()
+        public List<SiteAccount> GetUserSiteAccounts()
         {
-            string email = Context.User.FindFirst(c => c.Type == ClaimTypes.Email).ToString();
+            string email = Context.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
 
             UserAccount user = _userAccountGetByEmail.Execute(email, true);
 

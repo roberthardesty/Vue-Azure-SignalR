@@ -9,20 +9,20 @@ export default class SiteAccountService
         this._signalR = signalR;
     }
 
-    public Connect()
+    public async Connect()
     {
-        this._connection = this._signalR.HubConnectionBuilder()
+        this._connection = new this._signalR.HubConnectionBuilder()
                                         .withUrl("/siteAccount")
                                         .configureLogging(this._signalR.LogLevel.Error)
                                         .build();
+        await this._connection.start();
     }
 
     public GetUserSiteAccounts(): Promise<any>
     {
         return new Promise((resolve, reject) => 
         {
-            console.log(this.GetUserSiteAccounts.name);
-            this._connection.invoke(this.GetUserSiteAccounts.name, {})
+            this._connection.invoke(this.GetUserSiteAccounts.name)
                             .then(resolve)
                             .catch(reject);
         })

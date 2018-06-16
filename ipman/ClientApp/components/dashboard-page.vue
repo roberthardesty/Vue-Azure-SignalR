@@ -26,6 +26,7 @@ import SiteAccountService from '../services/SiteAccountService'
 export default class DashboardPage extends Vue
 {
     private _siteAccountSerivice: SiteAccountService;
+    private connection;
     public data(): any
     {
         return { msg: '' };
@@ -36,11 +37,12 @@ export default class DashboardPage extends Vue
         this._siteAccountSerivice = new SiteAccountService(this.$signalR);
     }
 
-    public mounted(): void
+    public async mounted()
     {
-        this._siteAccountSerivice.GetUserSiteAccounts()
-        .then(console.log)
-        .catch(console.log);
+        await this._siteAccountSerivice.Connect()
+            this._siteAccountSerivice.GetUserSiteAccounts()
+            .then(console.log)
+            .catch(console.log)
     }
 }
 </script>
