@@ -32,14 +32,14 @@ export default class DashboardPage extends Vue
         return { msg: '' };
     }
 
-    public created()
+    public async created()
     {
         this._siteAccountSerivice = new SiteAccountService(this.$signalR);
+        await this._siteAccountSerivice.Connect()
     }
 
     public async mounted()
     {
-        await this._siteAccountSerivice.Connect()
             this._siteAccountSerivice.GetUserSiteAccounts()
             .then(console.log)
             .catch(console.log)
