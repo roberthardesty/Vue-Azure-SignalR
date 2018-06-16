@@ -8,9 +8,11 @@
     "install": "webpack --config webpack.config.vendor.js"
   },
   "dependencies": {
+    "@aspnet/signalr": "^1.0.0",
     "axios": "^0.15.3",
     "core-js": "^2.4.1",
     "font-awesome": "^4.6.3",
+    "tslib": "^1.9.2",
     "vue": "^2.5.16",
     "vue-property-decorator": "^6.1.0",
     "vue-router": "^3.0.1",
@@ -18,8 +20,7 @@
     "vue-template-compiler": "^2.5.16",
     "vuetify": "^1.0.18",
     "vuex": "^3.0.1",
-    "vuex-router-sync": "^5.0.0",
-    "@aspnet/signalr": "^1.0.0"
+    "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^10.3.0",
