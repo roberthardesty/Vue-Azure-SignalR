@@ -1,14 +1,16 @@
 <template>
+<v-layout>
     <v-container fill-height >
-            <h2>
-                Title thing welcome
-            </h2>
-            <hr/>
-            <v-layout align-center row wrap>
-                <v-flex xs12>
-                </v-flex>
-            </v-layout>
+        <h2>
+            Title thing welcome
+        </h2>
+        <hr/>
+        <v-layout align-center row wrap>
+            <v-flex xs12>
+            </v-flex>
+        </v-layout>
     </v-container>
+</v-layout>
 </template>
 
 <script lang="ts">

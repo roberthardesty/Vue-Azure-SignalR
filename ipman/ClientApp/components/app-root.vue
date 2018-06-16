@@ -1,51 +1,49 @@
 <template>
     <v-app id="inspire" light>
-            <v-toolbar color="secondary" app absolute clipped-left>
-                <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
-                <router-link to="/" tag="a">
-                    <v-toolbar-title class="black--text">
-                        Ip Man
-                    </v-toolbar-title>
-                </router-link>
-                <v-spacer></v-spacer>
-                <router-link to="/counter" tag="div" >
+        <v-toolbar color="secondary" app absolute clipped-left>
+            <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
+            <router-link to="/" tag="a">
+                <v-toolbar-title class="black--text">
+                    Ip Man
+                </v-toolbar-title>
+            </router-link>
+            <v-spacer></v-spacer>
+            <router-link to="/counter" tag="div" >
+                <v-btn icon>
+                    <v-icon color="black">add_circle_outline</v-icon>
+                </v-btn>
+            </router-link>
+            <router-link to="/dashboard" tag="div">
+                <v-btn icon>
+                    <v-icon color="black">cloud</v-icon>
+                </v-btn>
+            </router-link>
+            <v-subheader id="usernameTitle" v-if="username">
+                    {{username}}
+            </v-subheader>
+            <span v-else>
+                <a href="/login-google">
                     <v-btn icon>
-                        <v-icon color="black">add_circle_outline</v-icon>
+                        <img height="25" elevation-24 src="../assests/Google.png">
                     </v-btn>
-                </router-link>
-                <router-link to="/dashboard" tag="div">
+                </a>
+                <a href="/login-github">
                     <v-btn icon>
-                        <v-icon color="black">cloud</v-icon>
+                        <img height="25" elevation-24 src="../assests/Github.svg">
                     </v-btn>
-                </router-link>
-                <v-subheader id="usernameTitle" v-if="username">
-                        {{username}}
-                </v-subheader>
-                <span v-else>
-                    <a href="/login-google">
-                        <v-btn icon>
-                            <img height="25" elevation-24 src="../assests/Google.png">
-                        </v-btn>
-                    </a>
-                    <a href="/login-github">
-                        <v-btn icon>
-                            <img height="25" elevation-24 src="../assests/Github.svg">
-                        </v-btn>
-                    </a>
-                </span>
-            </v-toolbar>
-            <nav-menu 
-                :isOpen="drawerOpen">
-            </nav-menu>
-            <main>
-                <v-content fluid>
-                    <v-container fluid fill-height class="grey lighten-4">
-                        <v-layout fill-height>
-                            <router-view></router-view>
-                        </v-layout>
-                    </v-container>
-                </v-content>
-            </main>
+                </a>
+            </span>
+        </v-toolbar>
+        <nav-menu 
+            :isOpen="drawerOpen">
+        </nav-menu>
+        <main>
+            <v-content fluid>
+                <v-container fluid fill-height class="grey lighten-4">
+                    <router-view></router-view>
+                </v-container>
+            </v-content>
+        </main>
     </v-app>
 </template>
 
@@ -53,11 +51,6 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator';
 import NavMenu from './nav-menu.vue'
-
-// Vue.component('counter-example', CounterExample);
-// Vue.component('fetch-data', FetchData);
-// Vue.component('home-page', HomePage);
-// Vue.component('nav-menu', NavMenu);
 
 @Component({
     components:{
