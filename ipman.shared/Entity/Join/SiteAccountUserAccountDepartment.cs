@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ipman.shared.Entity.Join
 {
-    public class SiteAccountUserAccountDepartment
+    public class SiteAccountUserAccountDepartment: EntityBase
     {
         public Guid SiteAccountUserAccountID { get; set; }
-        public SiteAccountUserAccount SiteAccountUserAccount { get; set; }
+        public ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         public Guid DepartmentID { get; set; }
         public Department Department { get; set; }
     }

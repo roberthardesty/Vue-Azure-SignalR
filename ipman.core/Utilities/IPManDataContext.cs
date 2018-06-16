@@ -1,7 +1,9 @@
 ﻿using ipman.shared.Entity;
 using ipman.shared.Entity.Join;
+using ipman.shared.Entity.Lookups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,15 +26,25 @@ namespace ipman.core.Utilities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
+            modelBuilder.Entity<PostTag>()
+            .HasKey(x => new { x.PostID, x.TagID });
+
             modelBuilder.Entity<SiteAccountUserAccount>()
             .HasKey(x => new { x.SiteAccountID, x.UserAccountID });
 
             modelBuilder.Entity<SiteAccountUserAccountDepartment>()
             .HasKey(x => new  { x.SiteAccountUserAccountID, x.DepartmentID } );
 
-            modelBuilder.Entity<PostTag>()
-            .HasKey(x => new { x.PostID, x.TagID });
-
+            modelBuilder.Entity<SiteAccountUserAccountDepartment>()
+                .HasData();
+            modelBuilder.Entity<SiteAccountUserAccount>()
+                .HasData(SeedData.SiteUsers);
+            modelBuilder.Entity<UserAccount>()
+                .HasData(SeedData.Users);
+            modelBuilder.Entity<SiteAccount>()
+                .HasData(SeedData.Sites);
 
 
             base.OnModelCreating(modelBuilder);

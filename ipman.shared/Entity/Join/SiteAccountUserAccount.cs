@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ipman.shared.Entity.Join
 {
-    public class SiteAccountUserAccount
+    public class SiteAccountUserAccount: EntityBase
     {
         public Guid SiteAccountID { get; set; }
         public SiteAccount SiteAccount { get; set; }
