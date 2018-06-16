@@ -23,8 +23,8 @@ namespace ipman.shared.Entity
         public ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
         [NotMapped]
-        public ICollection<SiteAccount> SiteAccounts => SiteAccountUserAccounts.Select(saua => saua.SiteAccount).ToList();
+        public ICollection<SiteAccount> SiteAccounts => SiteAccountUserAccounts.Select(saua => saua.SiteAccount)?.ToList();
         [NotMapped]
-        public ICollection<Department> Departmets => SiteAccountUserAccountDepartments.Select(sauada => sauada.Department).ToList();
+        public ICollection<Department> Departmets => SiteAccountUserAccountDepartments.Select(sauada => sauada.Department)?.ToList();
     }
 }

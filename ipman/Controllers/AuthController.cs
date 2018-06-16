@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace IPMan.Controllers
 
             HttpContext.Response.Cookies.Append("github_username", User.Identity.Name);
             HttpContext.SignInAsync(User);
-            return Redirect("/");
+            return Redirect("/dashboard");
         }
         [HttpGet("login-google")]
         public IActionResult LoginGoogle()
@@ -29,7 +30,7 @@ namespace IPMan.Controllers
 
             HttpContext.Response.Cookies.Append("github_username", User.Identity.Name);
             HttpContext.SignInAsync(User);
-            return Redirect("/");
+            return Redirect("/dashboard");
         }
     }
 }    

@@ -18,14 +18,14 @@
 
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-
+import SiteAccountService from '../services/SiteAccountService'
 @Component({
 
 })
 
 export default class DashboardPage extends Vue
 {
-    public connection: any = null;
+    private _siteAccountSerivice: SiteAccountService;
     public data(): any
     {
         return { msg: '' };
@@ -33,20 +33,14 @@ export default class DashboardPage extends Vue
 
     public created()
     {
-        this.connection = new this.$signalR.HubConnectionBuilder()
-            .withUrl("/count")
-            .configureLogging(this.$signalR.LogLevel.Error)
-            .build();
-
+        this._siteAccountSerivice = new SiteAccountService(this.$signalR);
     }
 
     public mounted(): void
     {
-        this.connection.start();
-        
-        this.connection.on('increment', data => {
-            
-        });
+        this._siteAccountSerivice.GetUserSiteAccounts()
+        .then(console.log)
+        .catch(console.log);
     }
 }
 </script>
