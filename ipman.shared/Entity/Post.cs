@@ -9,6 +9,6 @@ namespace ipman.shared.Entity
     {
         public string PostTitle { get; set; }
         public string PostDescription { get; set; }
-        public ICollection<PostTag> PostTag { get; set; }
+        public virtual ICollection<PostTag> PostTag { get; set; }
     }
 }

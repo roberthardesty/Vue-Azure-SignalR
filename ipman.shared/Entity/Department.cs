@@ -13,6 +13,6 @@ namespace ipman.shared.Entity
         public bool IsActive { get; set; }
         public Guid SiteAccountID { get; set; }
         public SiteAccount SiteAccount { get; set; }
-        public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
+        public virtual ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
     }
 }

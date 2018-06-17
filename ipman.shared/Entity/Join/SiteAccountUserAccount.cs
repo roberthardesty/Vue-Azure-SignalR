@@ -14,7 +14,7 @@ namespace ipman.shared.Entity.Join
         public Guid RoleID { get; set; }
         public bool IsActive { get; set; }
         public bool IsMemberOfAllDepartments { get; set; }
-        public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
+        public virtual ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime LastLoginUTC { get; set; }
         [NotMapped]

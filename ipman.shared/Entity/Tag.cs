@@ -8,6 +8,6 @@ namespace ipman.shared.Entity
     public class Tag : EntityBase
     {
         public string TagName { get; set; }
-        public ICollection<PostTag> PostTags { get; set; }
+        public virtual ICollection<PostTag> PostTags { get; set; }
     }
 }

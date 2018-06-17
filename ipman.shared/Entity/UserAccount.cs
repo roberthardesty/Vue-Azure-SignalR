@@ -20,7 +20,7 @@ namespace ipman.shared.Entity
         public DateTime LastLoginUTC { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
-        public ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
+        public virtual ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         [NotMapped]
         public ICollection<SiteAccount> SiteAccounts => SiteAccountUserAccounts?.Select(saua => saua.SiteAccount)?.ToList();
     }
