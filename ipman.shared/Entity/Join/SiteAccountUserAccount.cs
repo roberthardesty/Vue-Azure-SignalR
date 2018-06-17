@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ipman.shared.Entity.Join
 {
-    public class SiteAccountUserAccount: EntityBase
+    public class SiteAccountUserAccount
     {
         public Guid SiteAccountID { get; set; }
         public SiteAccount SiteAccount { get; set; }
@@ -14,6 +14,8 @@ namespace ipman.shared.Entity.Join
         public Guid RoleID { get; set; }
         public bool IsActive { get; set; }
         public bool IsMemberOfAllDepartments { get; set; }
+        public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
+        public DateTime CreatedUTC { get; set; }
         public DateTime LastLoginUTC { get; set; }
         [NotMapped]
         public Role Role => Role.Find(RoleID);

@@ -11,7 +11,8 @@ namespace ipman.shared.Entity
         public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
         public bool IsActive { get; set; }
+        public Guid SiteAccountID { get; set; }
         public SiteAccount SiteAccount { get; set; }
-        public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartment { get; set; }
+        public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartments { get; set; }
     }
 }

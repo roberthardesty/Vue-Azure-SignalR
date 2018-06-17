@@ -27,6 +27,7 @@ namespace ipman.core.Migrations
                     ID = table.Column<Guid>(nullable: false),
                     SiteAccountName = table.Column<string>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreatedUTC = table.Column<DateTime>(nullable: false),
                     LastUpdatedUTC = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -76,7 +77,7 @@ namespace ipman.core.Migrations
                     CreatedUTC = table.Column<DateTime>(nullable: false),
                     LastUpdatedUTC = table.Column<DateTime>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
-                    SiteAccountID = table.Column<Guid>(nullable: true)
+                    SiteAccountID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,13 +87,14 @@ namespace ipman.core.Migrations
                         column: x => x.SiteAccountID,
                         principalTable: "SiteAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PostTag",
                 columns: table => new
                 {
+                    ID = table.Column<Guid>(nullable: false),
                     PostID = table.Column<Guid>(nullable: false),
                     TagID = table.Column<Guid>(nullable: false)
                 },
@@ -122,6 +124,7 @@ namespace ipman.core.Migrations
                     RoleID = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
                     IsMemberOfAllDepartments = table.Column<bool>(nullable: false),
+                    CreatedUTC = table.Column<DateTime>(nullable: false),
                     LastLoginUTC = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -145,12 +148,12 @@ namespace ipman.core.Migrations
                 name: "SiteAccountUserAccountDepartment",
                 columns: table => new
                 {
+                    IsActive = table.Column<bool>(nullable: false),
+                    CreatedUTC = table.Column<DateTime>(nullable: false),
                     SiteAccountUserAccountID = table.Column<Guid>(nullable: false),
-                    SiteAccountUserAccountSiteAccountID = table.Column<Guid>(nullable: true),
-                    SiteAccountUserAccountUserAccountID = table.Column<Guid>(nullable: true),
-                    DepartmentID = table.Column<Guid>(nullable: false),
-                    SiteAccountID = table.Column<Guid>(nullable: true),
-                    UserAccountID = table.Column<Guid>(nullable: true)
+                    SiteAccountUserSiteAccountID = table.Column<Guid>(nullable: true),
+                    SiteAccountUserUserAccountID = table.Column<Guid>(nullable: true),
+                    DepartmentID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,24 +165,52 @@ namespace ipman.core.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SiteAccountUserAccountDepartment_SiteAccounts_SiteAccountID",
-                        column: x => x.SiteAccountID,
-                        principalTable: "SiteAccounts",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_SiteAccountUserAccountDepartment_UserAccounts_UserAccountID",
-                        column: x => x.UserAccountID,
-                        principalTable: "UserAccounts",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_SiteAccountUserAccountDepartment_SiteAccountUserAccount_SiteAccountUserAccountSiteAccountID_SiteAccountUserAccountUserAccoun~",
-                        columns: x => new { x.SiteAccountUserAccountSiteAccountID, x.SiteAccountUserAccountUserAccountID },
+                        name: "FK_SiteAccountUserAccountDepartment_SiteAccountUserAccount_SiteAccountUserSiteAccountID_SiteAccountUserUserAccountID",
+                        columns: x => new { x.SiteAccountUserSiteAccountID, x.SiteAccountUserUserAccountID },
                         principalTable: "SiteAccountUserAccount",
                         principalColumns: new[] { "SiteAccountID", "UserAccountID" },
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "SiteAccounts",
+                columns: new[] { "ID", "CreatedUTC", "IsActive", "LastUpdatedUTC", "SiteAccountName" },
+                values: new object[] { new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Awesome Possum Admins" });
+
+            migrationBuilder.InsertData(
+                table: "UserAccounts",
+                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC" },
+                values: new object[] { new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "budnjoe@gmail.com", "rob", null, null, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "UserAccounts",
+                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC" },
+                values: new object[] { new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "robert.hardesty.mail@gmail.com", "Robert", null, null, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "Departments",
+                columns: new[] { "ID", "CreatedUTC", "DepartmentName", "IsActive", "LastUpdatedUTC", "SiteAccountID" },
+                values: new object[] { new Guid("e29241de-853c-4a05-9928-1c6ac7f73b25"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "I AM THE WALRUS", true, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8") });
+
+            migrationBuilder.InsertData(
+                table: "SiteAccountUserAccount",
+                columns: new[] { "SiteAccountID", "UserAccountID", "CreatedUTC", "IsActive", "IsMemberOfAllDepartments", "LastLoginUTC", "RoleID" },
+                values: new object[] { new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("2fa6b838-8b5b-4bb0-b888-ffce4fb7b7b7") });
+
+            migrationBuilder.InsertData(
+                table: "SiteAccountUserAccount",
+                columns: new[] { "SiteAccountID", "UserAccountID", "CreatedUTC", "IsActive", "IsMemberOfAllDepartments", "LastLoginUTC", "RoleID" },
+                values: new object[] { new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("2fa6b838-8b5b-4bb0-b888-ffce4fb7b7b7") });
+
+            migrationBuilder.InsertData(
+                table: "SiteAccountUserAccountDepartment",
+                columns: new[] { "SiteAccountUserAccountID", "DepartmentID", "CreatedUTC", "IsActive", "SiteAccountUserSiteAccountID", "SiteAccountUserUserAccountID" },
+                values: new object[] { new Guid("143bf075-478f-4e1a-b8d8-889be2af42a4"), new Guid("e29241de-853c-4a05-9928-1c6ac7f73b25"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, null, null });
+
+            migrationBuilder.InsertData(
+                table: "SiteAccountUserAccountDepartment",
+                columns: new[] { "SiteAccountUserAccountID", "DepartmentID", "CreatedUTC", "IsActive", "SiteAccountUserSiteAccountID", "SiteAccountUserUserAccountID" },
+                values: new object[] { new Guid("f9c6aae5-fe6c-43bf-92b4-bf79ba92d2fe"), new Guid("e29241de-853c-4a05-9928-1c6ac7f73b25"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, null, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departments_SiteAccountID",
@@ -202,19 +233,9 @@ namespace ipman.core.Migrations
                 column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SiteAccountUserAccountDepartment_SiteAccountID",
+                name: "IX_SiteAccountUserAccountDepartment_SiteAccountUserSiteAccountID_SiteAccountUserUserAccountID",
                 table: "SiteAccountUserAccountDepartment",
-                column: "SiteAccountID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SiteAccountUserAccountDepartment_UserAccountID",
-                table: "SiteAccountUserAccountDepartment",
-                column: "UserAccountID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SiteAccountUserAccountDepartment_SiteAccountUserAccountSiteAccountID_SiteAccountUserAccountUserAccountID",
-                table: "SiteAccountUserAccountDepartment",
-                columns: new[] { "SiteAccountUserAccountSiteAccountID", "SiteAccountUserAccountUserAccountID" });
+                columns: new[] { "SiteAccountUserSiteAccountID", "SiteAccountUserUserAccountID" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

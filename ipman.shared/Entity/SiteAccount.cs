@@ -9,8 +9,8 @@ namespace ipman.shared.Entity
     {
         public string SiteAccountName { get; set; }
         public bool IsActive { get; set; }
+        public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
-        public ICollection<SiteAccountUserAccount> SiteAccountUserAccount { get; set; }
-        public ICollection<SiteAccountUserAccountDepartment> SiteAccountUserAccountDepartment { get; set; }
+        public ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
     }
 }
