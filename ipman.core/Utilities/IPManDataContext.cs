@@ -26,25 +26,35 @@ namespace ipman.core.Utilities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SiteAccount>(site =>
+            {
+                site.HasKey(s => s.ID);
+                site.HasData(SeedData.Sites);
+            });
+            modelBuilder.Entity<UserAccount>(user =>
+            {
+                user.HasData(SeedData.Users);
+            });
 
+            modelBuilder.Entity<Department>(dept =>
+            {
+                dept.HasData(SeedData.Departments);
+            });
 
             modelBuilder.Entity<PostTag>()
             .HasKey(x => new { x.PostID, x.TagID });
 
-            modelBuilder.Entity<SiteAccountUserAccount>()
-            .HasKey(x => new { x.SiteAccountID, x.UserAccountID });
+            modelBuilder.Entity<SiteAccountUserAccount>(saua =>
+            {
+                saua.HasKey(x => new { x.SiteAccountID, x.UserAccountID });
+                saua.HasData(SeedData.SiteUsers);
+            });
 
-            modelBuilder.Entity<SiteAccountUserAccountDepartment>()
-            .HasKey(x => new  { x.SiteAccountUserAccountID, x.DepartmentID } );
-
-            modelBuilder.Entity<SiteAccountUserAccountDepartment>()
-                .HasData();
-            modelBuilder.Entity<SiteAccountUserAccount>()
-                .HasData(SeedData.SiteUsers);
-            modelBuilder.Entity<UserAccount>()
-                .HasData(SeedData.Users);
-            modelBuilder.Entity<SiteAccount>()
-                .HasData(SeedData.Sites);
+            modelBuilder.Entity<SiteAccountUserAccountDepartment>(sauad =>
+            {
+                sauad.HasKey(x => new { x.SiteAccountUserAccountID, x.DepartmentID });
+                sauad.HasData(SeedData.SiteUserDepartments);
+            });
 
 
             base.OnModelCreating(modelBuilder);
