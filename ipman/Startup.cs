@@ -19,6 +19,7 @@ using ipman.core.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using ipman.core.Query;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace IPMan
 {
@@ -41,7 +42,11 @@ namespace IPMan
         {
             services.AddMvc().AddJsonOptions(options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; });
 
-            services.AddSignalR().AddAzureSignalR().AddJsonProtocol(p => {p.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;});
+            services.AddSignalR().AddAzureSignalR().AddJsonProtocol(p => 
+            {
+                p.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                p.PayloadSerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
 
             ConfigureAuthentication(services);
             ConfigureAuthorization(services);
