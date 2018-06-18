@@ -1,4 +1,4 @@
-export class Role
+export default class Role
 {
     public constructor(roleID: string, roleName: string)
     {

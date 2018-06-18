@@ -1,11 +1,11 @@
 import { EntityBase } from "./EntityBase";
-import { SiteAccount } from "./SiteAccount";
-import { Department } from "./Department";
+import SiteAccount from "./SiteAccount";
+import Department from "./Department";
 import { AuthenticationProvider } from "./lookups/AuthenticationProvider";
-import { SiteAccountUserAccount } from "./join/SiteAccountUserAccount";
-import { SiteAccountUserAccountDepartment } from "./join/SiteAccountUserAccountDepartment";
+import SiteAccountUserAccount from "./join/SiteAccountUserAccount";
+import SiteAccountUserAccountDepartment from "./join/SiteAccountUserAccountDepartment";
 
-export interface UserAccount extends EntityBase
+export default interface UserAccount extends EntityBase
 {
      EmailAddress: string;
      FirstName: string;

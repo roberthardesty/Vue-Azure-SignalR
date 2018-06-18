@@ -1,8 +1,8 @@
 import { EntityBase } from "./EntityBase";
-import { SiteAccountUserAccount } from "./join/SiteAccountUserAccount";
-import { SiteAccountUserAccountDepartment } from "./join/SiteAccountUserAccountDepartment";
+import SiteAccountUserAccount from "./join/SiteAccountUserAccount";
+import SiteAccountUserAccountDepartment from "./join/SiteAccountUserAccountDepartment";
 
-export interface SiteAccount extends EntityBase
+export default interface SiteAccount extends EntityBase
 {
     SiteAccountName: string;
     IsActive: boolean;

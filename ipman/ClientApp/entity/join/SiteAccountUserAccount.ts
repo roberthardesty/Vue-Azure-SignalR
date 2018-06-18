@@ -1,8 +1,8 @@
-import { SiteAccount } from "../SiteAccount";
-import { UserAccount } from "../UserAccount";
-import { Role } from "../Role";
+import SiteAccount from "../SiteAccount";
+import UserAccount from "../UserAccount";
+import Role from "../Role";
 
-export interface SiteAccountUserAccount {
+export default interface SiteAccountUserAccount {
     SiteAccountID: string;
     SiteAccount: SiteAccount;
     UserAccountID: string;
