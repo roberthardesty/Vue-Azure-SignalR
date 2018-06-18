@@ -14,5 +14,7 @@ namespace ipman.shared.Entity
         public DateTime LastUpdatedUTC { get; set; }
         public virtual ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         public virtual ICollection<Department> Departments { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 }

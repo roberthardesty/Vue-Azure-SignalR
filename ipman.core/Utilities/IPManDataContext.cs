@@ -23,6 +23,7 @@ namespace ipman.core.Utilities
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

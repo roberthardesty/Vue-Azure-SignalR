@@ -11,6 +11,7 @@ namespace ipman.shared.Entity
    public  class UserAccount: EntityBase
    {
         public string EmailAddress { get; set; }
+        public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string GitHubID { get; set; }
@@ -20,6 +21,7 @@ namespace ipman.shared.Entity
         public DateTime LastLoginUTC { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
+        public ICollection<Vote> Votes { get; set; }
         public virtual ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         [NotMapped]
         public ICollection<SiteAccount> SiteAccounts => SiteAccountUserAccounts?.Select(saua => saua.SiteAccount)?.ToList();
