@@ -24,12 +24,12 @@
             <span v-else>
                 <a href="/login-google">
                     <v-btn icon>
-                        <img height="25" elevation-24 src="../assests/Google.png">
+                        <img height="25" elevation-24 src="../assets/Google.png">
                     </v-btn>
                 </a>
                 <a href="/login-github">
                     <v-btn icon>
-                        <img height="25" elevation-24 src="../assests/Github.svg">
+                        <img height="25" elevation-24 src="../assets/Github.svg">
                     </v-btn>
                 </a>
             </span>
