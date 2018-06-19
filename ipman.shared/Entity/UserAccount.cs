@@ -21,7 +21,9 @@ namespace ipman.shared.Entity
         public DateTime LastLoginUTC { get; set; }
         public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
-        public ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Wager> Wagers { get; set; }
+        public virtual ICollection<Post> CreatedPosts { get; set; }
         public virtual ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         [NotMapped]
         public ICollection<SiteAccount> SiteAccounts => SiteAccountUserAccounts?.Select(saua => saua.SiteAccount)?.ToList();

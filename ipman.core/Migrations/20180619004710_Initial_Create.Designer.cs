@@ -10,7 +10,7 @@ using ipman.core.Utilities;
 namespace ipman.core.Migrations
 {
     [DbContext(typeof(IPManDataContext))]
-    [Migration("20180617042210_Initial_Create")]
+    [Migration("20180619004710_Initial_Create")]
     partial class Initial_Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,26 @@ namespace ipman.core.Migrations
                     b.HasIndex("TagID");
 
                     b.ToTable("PostTag");
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Join.PostWager", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("PostID");
+
+                    b.Property<int>("Prediction");
+
+                    b.Property<Guid>("WagerID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PostID");
+
+                    b.HasIndex("WagerID");
+
+                    b.ToTable("PostWager");
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Join.SiteAccountUserAccount", b =>
@@ -127,7 +147,15 @@ namespace ipman.core.Migrations
 
                     b.Property<string>("PostTitle");
 
+                    b.Property<Guid>("SiteAccountID");
+
+                    b.Property<Guid>("UserAccountCreatorID");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("SiteAccountID");
+
+                    b.HasIndex("UserAccountCreatorID");
 
                     b.ToTable("Posts");
                 });
@@ -142,6 +170,8 @@ namespace ipman.core.Migrations
                     b.Property<bool>("IsActive");
 
                     b.Property<DateTime>("LastUpdatedUTC");
+
+                    b.Property<string>("SiteAccountImagePath");
 
                     b.Property<string>("SiteAccountName");
 
@@ -159,9 +189,19 @@ namespace ipman.core.Migrations
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedUTC");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<Guid>("SiteAccountID");
+
+                    b.Property<string>("TagImage");
+
                     b.Property<string>("TagName");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("SiteAccountID");
 
                     b.ToTable("Tags");
                 });
@@ -191,6 +231,8 @@ namespace ipman.core.Migrations
 
                     b.Property<DateTime>("LastUpdatedUTC");
 
+                    b.Property<string>("Username");
+
                     b.HasKey("ID");
 
                     b.ToTable("UserAccounts");
@@ -201,10 +243,50 @@ namespace ipman.core.Migrations
                     );
                 });
 
+            modelBuilder.Entity("ipman.shared.Entity.Vote", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedUTC");
+
+                    b.Property<bool>("IsComment");
+
+                    b.Property<bool>("IsUpTally");
+
+                    b.Property<Guid>("PostID");
+
+                    b.Property<Guid>("UserAccountID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PostID");
+
+                    b.HasIndex("UserAccountID");
+
+                    b.ToTable("Votes");
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Wager", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("UserAccountID");
+
+                    b.Property<int>("WagerAmount");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserAccountID");
+
+                    b.ToTable("Wager");
+                });
+
             modelBuilder.Entity("ipman.shared.Entity.Department", b =>
                 {
                     b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
-                        .WithMany()
+                        .WithMany("Departments")
                         .HasForeignKey("SiteAccountID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -212,13 +294,26 @@ namespace ipman.core.Migrations
             modelBuilder.Entity("ipman.shared.Entity.Join.PostTag", b =>
                 {
                     b.HasOne("ipman.shared.Entity.Post", "Post")
-                        .WithMany("PostTag")
+                        .WithMany("PostTags")
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ipman.shared.Entity.Tag", "Tag")
                         .WithMany("PostTags")
                         .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Join.PostWager", b =>
+                {
+                    b.HasOne("ipman.shared.Entity.Post", "Post")
+                        .WithMany("PostWagers")
+                        .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ipman.shared.Entity.Wager", "Wager")
+                        .WithMany("PostWagers")
+                        .HasForeignKey("WagerID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -245,6 +340,48 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.Join.SiteAccountUserAccount", "SiteAccountUser")
                         .WithMany("SiteAccountUserAccountDepartments")
                         .HasForeignKey("SiteAccountUserSiteAccountID", "SiteAccountUserUserAccountID");
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Post", b =>
+                {
+                    b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
+                        .WithMany("Posts")
+                        .HasForeignKey("SiteAccountID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ipman.shared.Entity.UserAccount", "UserAccountCreator")
+                        .WithMany("CreatedPosts")
+                        .HasForeignKey("UserAccountCreatorID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Tag", b =>
+                {
+                    b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
+                        .WithMany("Tags")
+                        .HasForeignKey("SiteAccountID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Vote", b =>
+                {
+                    b.HasOne("ipman.shared.Entity.Post", "Post")
+                        .WithMany("Votes")
+                        .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ipman.shared.Entity.UserAccount", "UserAccount")
+                        .WithMany("Votes")
+                        .HasForeignKey("UserAccountID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.Wager", b =>
+                {
+                    b.HasOne("ipman.shared.Entity.UserAccount", "UserAccount")
+                        .WithMany("Wagers")
+                        .HasForeignKey("UserAccountID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

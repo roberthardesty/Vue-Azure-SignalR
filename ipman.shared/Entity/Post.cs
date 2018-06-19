@@ -14,6 +14,7 @@ namespace ipman.shared.Entity
         public Guid UserAccountCreatorID { get; set; }
         public UserAccount UserAccountCreator { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
-        public virtual ICollection<PostTag> PostTag { get; set; }
+        public virtual ICollection<PostTag> PostTags { get; set; }
+        public virtual ICollection<PostWager> PostWagers { get; set; }
     }
 }
