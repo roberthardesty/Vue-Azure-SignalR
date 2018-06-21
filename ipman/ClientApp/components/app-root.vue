@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire" light>
-        <v-toolbar color="secondary" app absolute clipped-left>
+        <v-toolbar color="primary" app absolute clipped-left>
             <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
             <router-link to="/" tag="a">
                 <v-toolbar-title class="black--text">
@@ -34,16 +34,18 @@
                 </a>
             </span>
         </v-toolbar>
-        <nav-menu 
+        <nav-menu
+            app 
             :isOpen="drawerOpen">
         </nav-menu>
-        <main>
-            <v-content fluid>
-                <v-container fluid fill-height class="grey lighten-4">
-                    <router-view></router-view>
-                </v-container>
-            </v-content>
-        </main>
+
+        <v-content>
+            <v-container fluid fill-height class="grey lighten-3">
+                <router-view></router-view>
+            </v-container>
+        </v-content>
+        
+        <v-footer app></v-footer>
     </v-app>
 </template>
 

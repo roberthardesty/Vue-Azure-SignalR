@@ -28,7 +28,13 @@ declare module 'vue/types/vue'
     }
 }
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+    theme: {
+      primary: '#43a047', // #E53935
+      secondary: '#795548', // #FFCDD2
+      accent: '#43a047' // #3F51B5
+    }
+});
 
 sync(store, router);
 
