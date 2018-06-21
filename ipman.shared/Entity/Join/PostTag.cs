@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ipman.shared.Entity.Join
 {
-    public class PostTag: EntityBase
+    public class PostTag
     {
         public Guid PostID { get; set; }
         public Post Post { get; set; }

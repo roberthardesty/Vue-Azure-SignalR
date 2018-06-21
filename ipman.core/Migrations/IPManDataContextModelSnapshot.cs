@@ -51,8 +51,6 @@ namespace ipman.core.Migrations
 
                     b.Property<Guid>("TagID");
 
-                    b.Property<Guid>("ID");
-
                     b.HasKey("PostID", "TagID");
 
                     b.HasIndex("TagID");
@@ -286,7 +284,7 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
                         .WithMany("Departments")
                         .HasForeignKey("SiteAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Join.PostTag", b =>
@@ -294,12 +292,12 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.Post", "Post")
                         .WithMany("PostTags")
                         .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ipman.shared.Entity.Tag", "Tag")
                         .WithMany("PostTags")
                         .HasForeignKey("TagID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Join.PostWager", b =>
@@ -307,12 +305,12 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.Post", "Post")
                         .WithMany("PostWagers")
                         .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ipman.shared.Entity.Wager", "Wager")
                         .WithMany("PostWagers")
                         .HasForeignKey("WagerID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Join.SiteAccountUserAccount", b =>
@@ -320,12 +318,12 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
                         .WithMany("SiteAccountUserAccounts")
                         .HasForeignKey("SiteAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ipman.shared.Entity.UserAccount", "UserAccount")
                         .WithMany("SiteAccountUserAccounts")
                         .HasForeignKey("UserAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Join.SiteAccountUserAccountDepartment", b =>
@@ -333,7 +331,7 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.Department", "Department")
                         .WithMany("SiteAccountUserAccountDepartments")
                         .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ipman.shared.Entity.Join.SiteAccountUserAccount", "SiteAccountUser")
                         .WithMany("SiteAccountUserAccountDepartments")
@@ -345,12 +343,12 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
                         .WithMany("Posts")
                         .HasForeignKey("SiteAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ipman.shared.Entity.UserAccount", "UserAccountCreator")
                         .WithMany("CreatedPosts")
                         .HasForeignKey("UserAccountCreatorID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Tag", b =>
@@ -358,7 +356,7 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.SiteAccount", "SiteAccount")
                         .WithMany("Tags")
                         .HasForeignKey("SiteAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Vote", b =>
@@ -366,12 +364,12 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.Post", "Post")
                         .WithMany("Votes")
                         .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ipman.shared.Entity.UserAccount", "UserAccount")
                         .WithMany("Votes")
                         .HasForeignKey("UserAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Wager", b =>
@@ -379,7 +377,7 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.UserAccount", "UserAccount")
                         .WithMany("Wagers")
                         .HasForeignKey("UserAccountID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

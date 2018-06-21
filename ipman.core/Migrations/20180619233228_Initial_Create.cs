@@ -64,7 +64,7 @@ namespace ipman.core.Migrations
                         column: x => x.SiteAccountID,
                         principalTable: "SiteAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,7 +86,7 @@ namespace ipman.core.Migrations
                         column: x => x.SiteAccountID,
                         principalTable: "SiteAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,13 +107,13 @@ namespace ipman.core.Migrations
                         column: x => x.SiteAccountID,
                         principalTable: "SiteAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Posts_UserAccounts_UserAccountCreatorID",
                         column: x => x.UserAccountCreatorID,
                         principalTable: "UserAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,13 +136,13 @@ namespace ipman.core.Migrations
                         column: x => x.SiteAccountID,
                         principalTable: "SiteAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SiteAccountUserAccount_UserAccounts_UserAccountID",
                         column: x => x.UserAccountID,
                         principalTable: "UserAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,14 +161,13 @@ namespace ipman.core.Migrations
                         column: x => x.UserAccountID,
                         principalTable: "UserAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PostTag",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(nullable: false),
                     PostID = table.Column<Guid>(nullable: false),
                     TagID = table.Column<Guid>(nullable: false)
                 },
@@ -180,13 +179,13 @@ namespace ipman.core.Migrations
                         column: x => x.PostID,
                         principalTable: "Posts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PostTag_Tags_TagID",
                         column: x => x.TagID,
                         principalTable: "Tags",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,13 +207,13 @@ namespace ipman.core.Migrations
                         column: x => x.PostID,
                         principalTable: "Posts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Votes_UserAccounts_UserAccountID",
                         column: x => x.UserAccountID,
                         principalTable: "UserAccounts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -236,7 +235,7 @@ namespace ipman.core.Migrations
                         column: x => x.DepartmentID,
                         principalTable: "Departments",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SiteAccountUserAccountDepartment_SiteAccountUserAccount_SiteAccountUserSiteAccountID_SiteAccountUserUserAccountID",
                         columns: x => new { x.SiteAccountUserSiteAccountID, x.SiteAccountUserUserAccountID },
@@ -262,13 +261,13 @@ namespace ipman.core.Migrations
                         column: x => x.PostID,
                         principalTable: "Posts",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PostWager_Wager_WagerID",
                         column: x => x.WagerID,
                         principalTable: "Wager",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
