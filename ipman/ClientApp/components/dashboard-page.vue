@@ -1,21 +1,38 @@
 <template>
-<v-layout row wrap align-center>
+    <v-layout>
         <v-flex xs12>
-            <h2>
-                welcome, here are your available places
-            </h2>
-        </v-flex>
-        <v-flex xs12>
-            <v-card color="blue-grey darken-2" class="white--text" v-for="site in siteAccounts" :key="site.ID">
-                <v-card-title primary-title>
-                    <div class="headline">{{site.SiteAccountName}}</div>
+            <v-card>
+                <v-card-title primary-title class="secondary">
+                    <div class="headline white--text">
+                        Welcome, here are your available places
+                    </div>
                 </v-card-title>
-                <v-card-actions>
-                    <v-btn flat dark>Enter now</v-btn>
-                </v-card-actions>
+                <v-container grid-list-xs class="secondary lighten-2">
+                    <v-layout row wrap v-if="siteAccounts.length">
+                        <v-flex xs4 ma-3 v-for="site in siteAccounts" :key="site.ID">
+                            <v-card flat tile color="primary lighten-2" class="white--text">
+                                <v-card-title primary-title>
+                                    <div class="headline black--text">{{site.SiteAccountName}}</div>
+                                </v-card-title>
+                                <v-card-actions>
+                                    <v-btn flat>Enter now</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap v-else>
+                        <v-flex>
+                            <v-card flat tile>
+                                <v-card-title primary-title>
+                                    <div class="headline black--text">Loading...</div>
+                                </v-card-title>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
             </v-card>
         </v-flex>
-</v-layout>
+    </v-layout>
 </template>
 
 <script lang="ts">

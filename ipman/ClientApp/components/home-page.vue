@@ -10,7 +10,7 @@
             </v-flex>
         </v-layout>
         <!-- row -->
-        <v-layout row justify-space-between>
+        <v-layout row wrap justify-space-between>
             <v-flex xs2>
                 <router-link to="/login-google" tag="a" >
                     <v-btn style="width: 120px; height: 120px" fab ripple color="white">
