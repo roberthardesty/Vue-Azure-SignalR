@@ -5,7 +5,7 @@
         </v-card>
         <!-- row -->
         <v-layout align-center row justify-center>
-            <v-flex xs2>
+            <v-flex elevation-24 xs2 class="round-flex">
                 <img elevation-24 src="../assets/super-smash-bros.png" class="responsive">
             </v-flex>
         </v-layout>
@@ -54,6 +54,10 @@ export default {
         return {
         }
     },
+    mounted(){
+        this.$vuetify.theme.primary = '#43a047';
+        this.$vuetify.theme.secondary = '#795548';
+    }
 }
 </script>
 
@@ -61,5 +65,9 @@ export default {
 .responsive {
     width: 100%;
     height: auto;
+}
+
+.round-flex {
+    border-radius: 50%;
 }
 </style>

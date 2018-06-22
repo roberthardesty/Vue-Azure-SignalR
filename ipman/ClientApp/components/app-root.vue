@@ -4,15 +4,10 @@
             <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
             <router-link to="/" tag="a">
                 <v-toolbar-title class="black--text">
-                    Ip Man
+                    eGAMEbler
                 </v-toolbar-title>
             </router-link>
             <v-spacer></v-spacer>
-            <router-link to="/counter" tag="div" >
-                <v-btn icon>
-                    <v-icon color="black">add_circle_outline</v-icon>
-                </v-btn>
-            </router-link>
             <router-link to="/dashboard" tag="div">
                 <v-btn icon>
                     <v-icon color="black">cloud</v-icon>
@@ -45,7 +40,35 @@
             </v-container>
         </v-content>
         
-        <v-footer app></v-footer>
+        <!-- <v-footer app height="auto">
+            <v-card flat
+                    tile
+                    class="flex">
+                <v-card-text class="white--text">
+                    eSports Interactive Experience
+                </v-card-text>
+                <v-card-text class="white--text">
+                    &copy;2018 — <strong>eGAMEbler</strong>
+                </v-card-text>
+            </v-card>
+        </v-footer> -->
+        <v-footer height="auto">
+            <v-card flat tile class="flex">
+            <v-card-title class="grey">
+                <strong class="subheading">eSports Interactive Experience</strong>
+            </v-card-title>
+            <!-- <v-card-text class="grey lighten-3">
+                <v-layout>
+                    <v-flex xs6 layout column>
+                        
+                    </v-flex>
+                </v-layout>
+            </v-card-text> -->
+            <v-card-actions class="secondary darken-3 justify-center white--text">
+                &copy;2018 — <strong>eGAMEbler</strong>
+            </v-card-actions>
+            </v-card>
+        </v-footer>
     </v-app>
 </template>
 

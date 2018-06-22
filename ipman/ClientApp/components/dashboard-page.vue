@@ -1,15 +1,15 @@
 <template>
     <v-layout>
         <v-flex xs12>
-            <v-card>
+            <v-card class="secondary lighten-2">
                 <v-card-title primary-title class="secondary">
                     <div class="headline white--text">
                         Welcome, here are your available places
                     </div>
                 </v-card-title>
-                <v-container grid-list-xs class="secondary lighten-2">
+                <v-container grid-list-xs>
                     <v-layout row wrap v-if="siteAccounts.length">
-                        <v-flex xs4 ma-3 v-for="site in siteAccounts" :key="site.ID">
+                        <v-flex elevation-10 xs12 sm5 md3 lg2 ma-3 v-for="site in siteAccounts" :key="site.ID">
                             <v-card flat tile color="primary lighten-2" class="white--text">
                                 <v-card-title primary-title>
                                     <div class="headline black--text">{{site.SiteAccountName}}</div>
@@ -67,6 +67,8 @@ export default class DashboardPage extends Vue
     public async mounted()
     {
         this.siteAccounts = await this._siteAccountSerivice.GetUserSiteAccounts();
+        this.$vuetify.theme.secondary = '#43a047';
+        this.$vuetify.theme.primary = '#795548';
         console.log(this.siteAccounts);
     }
 }
