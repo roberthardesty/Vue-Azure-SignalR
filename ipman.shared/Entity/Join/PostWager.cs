@@ -11,5 +11,6 @@ namespace ipman.shared.Entity.Join
         public Guid WagerID { get; set; }
         public Wager Wager { get; set; }
         public int Prediction { get; set; }
+        public int? RangeLength { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace ipman.shared.Entity.Join
         public Post Post { get; set; }
         public Guid TagID { get; set; }
         public Tag Tag { get; set; }
+        public DateTime CreatedUTC { get; set; }
     }
 }

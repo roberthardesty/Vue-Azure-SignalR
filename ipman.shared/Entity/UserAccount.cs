@@ -17,6 +17,7 @@ namespace ipman.shared.Entity
         public string GitHubID { get; set; }
         public string GoogleID { get; set; }
         public string AvatarLink { get; set; }
+        public bool IsActive { get; set; } = true;
         public AuthenticationProvider LastLoginProvider { get; set; }
         public DateTime LastLoginUTC { get; set; }
         public DateTime CreatedUTC { get; set; }
