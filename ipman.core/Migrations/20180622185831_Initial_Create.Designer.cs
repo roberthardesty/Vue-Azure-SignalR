@@ -10,7 +10,7 @@ using ipman.core.Utilities;
 namespace ipman.core.Migrations
 {
     [DbContext(typeof(IPManDataContext))]
-    [Migration("20180619233228_Initial_Create")]
+    [Migration("20180622185831_Initial_Create")]
     partial class Initial_Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,8 @@ namespace ipman.core.Migrations
 
                     b.Property<Guid>("TagID");
 
+                    b.Property<DateTime>("CreatedUTC");
+
                     b.HasKey("PostID", "TagID");
 
                     b.HasIndex("TagID");
@@ -68,6 +70,8 @@ namespace ipman.core.Migrations
                     b.Property<Guid>("PostID");
 
                     b.Property<int>("Prediction");
+
+                    b.Property<int?>("RangeLength");
 
                     b.Property<Guid>("WagerID");
 
@@ -141,11 +145,25 @@ namespace ipman.core.Migrations
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedUTC");
+
+                    b.Property<DateTime?>("EndTimeUTC");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsLocked");
+
+                    b.Property<DateTime>("LastUpdatedUTC");
+
+                    b.Property<DateTime?>("LockTimeUTC");
+
                     b.Property<string>("PostDescription");
 
                     b.Property<string>("PostTitle");
 
                     b.Property<Guid>("SiteAccountID");
+
+                    b.Property<DateTime?>("StartTimeUTC");
 
                     b.Property<Guid>("UserAccountCreatorID");
 
@@ -156,6 +174,26 @@ namespace ipman.core.Migrations
                     b.HasIndex("UserAccountCreatorID");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.PostChoice", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ChoiceName");
+
+                    b.Property<int>("ChoiceValue");
+
+                    b.Property<int>("Order");
+
+                    b.Property<Guid>("PostID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PostID");
+
+                    b.ToTable("PostChoice");
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.SiteAccount", b =>
@@ -221,6 +259,8 @@ namespace ipman.core.Migrations
 
                     b.Property<string>("GoogleID");
 
+                    b.Property<bool>("IsActive");
+
                     b.Property<int>("LastLoginProvider");
 
                     b.Property<DateTime>("LastLoginUTC");
@@ -236,8 +276,8 @@ namespace ipman.core.Migrations
                     b.ToTable("UserAccounts");
 
                     b.HasData(
-                        new { ID = new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), AvatarLink = "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), EmailAddress = "budnjoe@gmail.com", FirstName = "rob", LastLoginProvider = 0, LastLoginUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), LastName = "Hardesty", LastUpdatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                        new { ID = new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), AvatarLink = "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), EmailAddress = "robert.hardesty.mail@gmail.com", FirstName = "Robert", LastLoginProvider = 0, LastLoginUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), LastName = "Hardesty", LastUpdatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                        new { ID = new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), AvatarLink = "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), EmailAddress = "budnjoe@gmail.com", FirstName = "rob", IsActive = true, LastLoginProvider = 0, LastLoginUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), LastName = "Hardesty", LastUpdatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), Username = "Trundle" },
+                        new { ID = new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), AvatarLink = "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), EmailAddress = "robert.hardesty.mail@gmail.com", FirstName = "Robert", IsActive = true, LastLoginProvider = 0, LastLoginUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), LastName = "Hardesty", LastUpdatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), Username = "DreadPirateRobert" }
                     );
                 });
 
@@ -350,6 +390,14 @@ namespace ipman.core.Migrations
                     b.HasOne("ipman.shared.Entity.UserAccount", "UserAccountCreator")
                         .WithMany("CreatedPosts")
                         .HasForeignKey("UserAccountCreatorID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("ipman.shared.Entity.PostChoice", b =>
+                {
+                    b.HasOne("ipman.shared.Entity.Post", "Post")
+                        .WithMany("PostChoices")
+                        .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

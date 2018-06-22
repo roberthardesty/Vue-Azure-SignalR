@@ -35,6 +35,7 @@ namespace ipman.core.Migrations
                     GitHubID = table.Column<string>(nullable: true),
                     GoogleID = table.Column<string>(nullable: true),
                     AvatarLink = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
                     LastLoginProvider = table.Column<int>(nullable: false),
                     LastLoginUTC = table.Column<DateTime>(nullable: false),
                     CreatedUTC = table.Column<DateTime>(nullable: false),
@@ -96,6 +97,13 @@ namespace ipman.core.Migrations
                     ID = table.Column<Guid>(nullable: false),
                     PostTitle = table.Column<string>(nullable: true),
                     PostDescription = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
+                    IsLocked = table.Column<bool>(nullable: false),
+                    StartTimeUTC = table.Column<DateTime>(nullable: true),
+                    LockTimeUTC = table.Column<DateTime>(nullable: true),
+                    EndTimeUTC = table.Column<DateTime>(nullable: true),
+                    CreatedUTC = table.Column<DateTime>(nullable: false),
+                    LastUpdatedUTC = table.Column<DateTime>(nullable: false),
                     SiteAccountID = table.Column<Guid>(nullable: false),
                     UserAccountCreatorID = table.Column<Guid>(nullable: false)
                 },
@@ -165,11 +173,33 @@ namespace ipman.core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PostChoice",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    ChoiceName = table.Column<string>(nullable: true),
+                    ChoiceValue = table.Column<int>(nullable: false),
+                    Order = table.Column<int>(nullable: false),
+                    PostID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostChoice", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_PostChoice_Posts_PostID",
+                        column: x => x.PostID,
+                        principalTable: "Posts",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PostTag",
                 columns: table => new
                 {
                     PostID = table.Column<Guid>(nullable: false),
-                    TagID = table.Column<Guid>(nullable: false)
+                    TagID = table.Column<Guid>(nullable: false),
+                    CreatedUTC = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,7 +281,8 @@ namespace ipman.core.Migrations
                     ID = table.Column<Guid>(nullable: false),
                     PostID = table.Column<Guid>(nullable: false),
                     WagerID = table.Column<Guid>(nullable: false),
-                    Prediction = table.Column<int>(nullable: false)
+                    Prediction = table.Column<int>(nullable: false),
+                    RangeLength = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -277,13 +308,13 @@ namespace ipman.core.Migrations
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
-                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "Username" },
-                values: new object[] { new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "budnjoe@gmail.com", "rob", null, null, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), null });
+                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "IsActive", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "Username" },
+                values: new object[] { new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "budnjoe@gmail.com", "rob", null, null, true, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Trundle" });
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
-                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "Username" },
-                values: new object[] { new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "robert.hardesty.mail@gmail.com", "Robert", null, null, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), null });
+                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "IsActive", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "Username" },
+                values: new object[] { new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "robert.hardesty.mail@gmail.com", "Robert", null, null, true, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "DreadPirateRobert" });
 
             migrationBuilder.InsertData(
                 table: "Departments",
@@ -314,6 +345,11 @@ namespace ipman.core.Migrations
                 name: "IX_Departments_SiteAccountID",
                 table: "Departments",
                 column: "SiteAccountID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostChoice_PostID",
+                table: "PostChoice",
+                column: "PostID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_SiteAccountID",
@@ -378,6 +414,9 @@ namespace ipman.core.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PostChoice");
+
             migrationBuilder.DropTable(
                 name: "PostTag");
 
