@@ -7,6 +7,7 @@ export default interface Department extends EntityBase {
     CreatedUTC: Date | string;
     LastUpdatedUTC: Date | string;
     IsActive: boolean;
+    SiteAccountID: string;
     SiteAccount: SiteAccount;
-    SiteAccountUserAccountDepartment: SiteAccountUserAccountDepartment[];
+    SiteAccountUserAccountDepartments: SiteAccountUserAccountDepartment[];
 }

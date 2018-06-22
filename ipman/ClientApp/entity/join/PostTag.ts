@@ -6,4 +6,5 @@ export default interface PostTag {
     Post: Post;
     TagID: string;
     Tag: Tag;
+    CreatedUTC: Date;
 }

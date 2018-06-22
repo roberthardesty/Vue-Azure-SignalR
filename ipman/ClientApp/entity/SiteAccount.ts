@@ -1,12 +1,18 @@
 import { EntityBase } from "./EntityBase";
 import SiteAccountUserAccount from "./join/SiteAccountUserAccount";
-import SiteAccountUserAccountDepartment from "./join/SiteAccountUserAccountDepartment";
+import Department from "./Department";
+import Post from "./Post";
+import Tag from "./Tag";
 
 export default interface SiteAccount extends EntityBase
 {
     SiteAccountName: string;
+    SiteAccountImagePath: string;
     IsActive: boolean;
+    CreatedUTC: Date | string;
     LastUpdatedUTC: Date | string;
-    SiteAccountUserAccount: SiteAccountUserAccount[];
-    SiteAccountUserAccountDepartment: SiteAccountUserAccountDepartment[];
+    SiteAccountUserAccounts: SiteAccountUserAccount[];
+    Departments: Department[];
+    Posts: Post[];
+    Tags: Tag[];
 }
