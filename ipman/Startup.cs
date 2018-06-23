@@ -40,7 +40,11 @@ namespace IPMan
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddJsonOptions(options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; });
+            services.AddMvc().AddJsonOptions(options => 
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; 
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
 
             services.AddSignalR().AddAzureSignalR().AddJsonProtocol(p => 
             {
@@ -54,6 +58,7 @@ namespace IPMan
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
             services.AddTransient<UserAccountGetByEmail>();
+            services.AddTransient<PostGetBySiteAccountName>();
             services.AddDbContext<IPManDataContext>();
         }
         public void ConfigureAuthentication(IServiceCollection services)
@@ -113,7 +118,7 @@ namespace IPMan
             app.UseAuthentication();
 
             app.UseStaticFiles();     
-
+            
             app.UseAzureSignalR(routes =>
             {
                 routes.MapHub<CounterHub>("/count");
