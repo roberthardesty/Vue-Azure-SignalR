@@ -1,6 +1,9 @@
 <template>
     <v-app id="inspire" light>
-        <v-toolbar color="primary" app absolute clipped-left>
+        <v-toolbar color="primary"
+                   app 
+                   scroll-off-screen
+                   >
             <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
             <router-link to="/" tag="a">
                 <v-toolbar-title class="black--text">
@@ -40,18 +43,6 @@
             </v-container>
         </v-content>
         
-        <!-- <v-footer app height="auto">
-            <v-card flat
-                    tile
-                    class="flex">
-                <v-card-text class="white--text">
-                    eSports Interactive Experience
-                </v-card-text>
-                <v-card-text class="white--text">
-                    &copy;2018 — <strong>eGAMEbler</strong>
-                </v-card-text>
-            </v-card>
-        </v-footer> -->
         <v-footer height="auto">
             <v-card flat tile class="flex">
             <v-card-title class="grey">

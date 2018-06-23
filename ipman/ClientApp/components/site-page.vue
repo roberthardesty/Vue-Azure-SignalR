@@ -4,20 +4,18 @@
             <v-card class="secondary lighten-2">
                 <v-card-title primary-title class="secondary">
                     <div class="headline white--text">
-                        Welcome, here are your available places
+                        {{SiteName}}
                     </div>
                 </v-card-title>
                 <v-container grid-list-xs>
-                    <v-layout row wrap v-if="siteAccounts.length">
-                        <v-flex elevation-10 xs12 sm5 md3 lg2 ma-3 v-for="site in siteAccounts" :key="site.ID">
+                    <v-layout row wrap v-if="Posts.length">
+                        <v-flex elevation-10 xs12 sm5 md3 lg2 ma-5 v-for="post in Posts" :key="post.ID">
                             <v-card flat tile color="primary lighten-2" class="white--text">
                                 <v-card-title primary-title>
-                                    <div class="headline black--text">{{site.SiteAccountName}}</div>
+                                    <div class="headline black--text">{{ post.PostTitle }}</div>
                                 </v-card-title>
                                 <v-card-actions>
-                                    <router-link :to="'/sites/' + site.SiteAccountName">
                                         <v-btn flat>Enter now</v-btn>
-                                    </router-link>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -43,36 +41,48 @@
 // COPY-PASTE-CUSTOMIZE Components
 
 import Vue from 'vue';
+import PostService from '../services/PostService';
 import { Component } from 'vue-property-decorator';
-import SiteAccountService from '../services/SiteAccountService'
-import SiteAccount from '../entity/SiteAccount';
-@Component({
+import Post from '../entity/Post'
 
+
+@Component({
 })
 
-export default class DashboardPage extends Vue
+export default class SitePage extends Vue
 {
-    private _siteAccountSerivice: SiteAccountService;
-    
-    public siteAccounts: SiteAccount[] = [];
+    private _postService: PostService;
+    private connection;
+
+    public SiteName = "";
+    public Posts: Post[] = [];
     public data(): any
     {
         return { msg: '' };
     }
-
-    public async created()
+    
+    public created()
     {
-        this._siteAccountSerivice = new SiteAccountService(this.$signalR);
-        await this._siteAccountSerivice.Connect()
+        this._postService = new PostService(this.$signalR);
     }
 
     public async mounted()
     {
-        this.siteAccounts = await this._siteAccountSerivice.GetUserSiteAccounts();
-        this.$vuetify.theme.secondary = '#43a047';
-        this.$vuetify.theme.primary = '#795548';
-        console.log(this.siteAccounts);
+        let self = this;
+        self.SiteName = self.$route.params.site
+        self._postService.GetPostsBySiteAccountName(this.$route.params.site)
+        .then(response => 
+        {
+            self.Posts = response.data as Post[];
+            console.log(self.Posts)
+        })
+        .catch(reason =>
+        {
+            console.log(reason);
+        });
     }
+
+
 }
 </script>
 
