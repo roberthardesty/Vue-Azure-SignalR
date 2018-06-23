@@ -1,21 +1,14 @@
 import { HubConnection } from "@aspnet/signalr";
+import { ServiceBase } from "./ServiceBase";
 
-export default class SiteAccountService 
+export default class SiteAccountService extends ServiceBase
 {
-    private _signalR: any;
-    private _connection: HubConnection
     constructor(signalR: any) 
     {
-        this._signalR = signalR;
+        super(signalR)
     }
 
-    public async Connect() 
-    {
-        this._connection = new this._signalR.HubConnectionBuilder()
-            .withUrl("/siteAccount")
-            .configureLogging(this._signalR.LogLevel.Error)
-            .build();
-    }
+    public ServiceName ="siteAccount";
 
     public async GetUserSiteAccounts(): Promise<any> 
     {

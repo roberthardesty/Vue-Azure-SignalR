@@ -1,9 +1,9 @@
-import CounterExample from 'components/counter-example.vue'
+import SitePage from 'components/site-page.vue'
 import HomePage from 'components/home-page.vue'
 import DashBoardPage from 'components/dashboard-page.vue';
 
 export const routes = [
-    { path: '/', component: HomePage, display: 'Home', style: 'glyphicon glyphicon-home' },
-    { path: '/counter', component: CounterExample, display: 'Counter', style: 'glyphicon glyphicon-education' },
-    { path: '/dashboard', component: DashBoardPage, display: 'Dashboard', style: 'home'}
+    { path: '/', component: HomePage, display: 'Home', style: 'home' },
+    { path: '/sites/:site', component: SitePage, display: 'Sites', style: 'phone' },
+    { path: '/dashboard', component: DashBoardPage, display: 'Dashboard', style: 'person'}
 ]
