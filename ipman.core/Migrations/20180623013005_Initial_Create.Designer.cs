@@ -10,7 +10,7 @@ using ipman.core.Utilities;
 namespace ipman.core.Migrations
 {
     [DbContext(typeof(IPManDataContext))]
-    [Migration("20180622185831_Initial_Create")]
+    [Migration("20180623013005_Initial_Create")]
     partial class Initial_Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,11 +55,21 @@ namespace ipman.core.Migrations
 
                     b.Property<DateTime>("CreatedUTC");
 
+                    b.Property<bool>("IsActive");
+
                     b.HasKey("PostID", "TagID");
 
                     b.HasIndex("TagID");
 
                     b.ToTable("PostTag");
+
+                    b.HasData(
+                        new { PostID = new Guid("f723bae5-b6c0-43e0-8828-82adb3e9b088"), TagID = new Guid("1a24966b-2979-49f9-8cc4-b21b6449f53e"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = false },
+                        new { PostID = new Guid("f723bae5-b6c0-43e0-8828-82adb3e9b088"), TagID = new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = false },
+                        new { PostID = new Guid("7e6333c5-8223-4ff4-a3f5-27e97fa087a6"), TagID = new Guid("afd3afe9-f67a-47e4-81f2-91efa7a2fccd"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = false },
+                        new { PostID = new Guid("8c84658a-2210-4f5d-a7e2-7da2b32e64c3"), TagID = new Guid("09965041-0340-4fc7-82c4-0e65811c2ca2"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = false },
+                        new { PostID = new Guid("8c84658a-2210-4f5d-a7e2-7da2b32e64c3"), TagID = new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = false }
+                    );
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.Join.PostWager", b =>
@@ -174,6 +184,12 @@ namespace ipman.core.Migrations
                     b.HasIndex("UserAccountCreatorID");
 
                     b.ToTable("Posts");
+
+                    b.HasData(
+                        new { ID = new Guid("7e6333c5-8223-4ff4-a3f5-27e97fa087a6"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, IsLocked = false, LastUpdatedUTC = new DateTime(2018, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), PostDescription = "Lawyers were not obtained and therefore this endeavor has led to all of us going directly to jail. See you there! Also if you know any lawyers please send me their contact info.", PostTitle = "I BET: All Admins Go Directly To Jail, Do Not Pass GO. Do Not Collect 200 Dollars", SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), UserAccountCreatorID = new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43") },
+                        new { ID = new Guid("8c84658a-2210-4f5d-a7e2-7da2b32e64c3"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, IsLocked = false, LastUpdatedUTC = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), PostDescription = "How else could this all have been possible?", PostTitle = "I BET: Rob is 80% Wizard", SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), UserAccountCreatorID = new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30") },
+                        new { ID = new Guid("f723bae5-b6c0-43e0-8828-82adb3e9b088"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, IsLocked = false, LastUpdatedUTC = new DateTime(2018, 6, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), PostDescription = "How many kills will mango average on a daily basis for the month of may?", PostTitle = "Average Kills Per Day In The Month May for MANG0", SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), UserAccountCreatorID = new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30") }
+                    );
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.PostChoice", b =>
@@ -209,9 +225,12 @@ namespace ipman.core.Migrations
 
                     b.Property<string>("SiteAccountImagePath");
 
-                    b.Property<string>("SiteAccountName");
+                    b.Property<string>("SiteAccountName")
+                        .IsRequired();
 
                     b.HasKey("ID");
+
+                    b.HasAlternateKey("SiteAccountName");
 
                     b.ToTable("SiteAccounts");
 
@@ -240,6 +259,13 @@ namespace ipman.core.Migrations
                     b.HasIndex("SiteAccountID");
 
                     b.ToTable("Tags");
+
+                    b.HasData(
+                        new { ID = new Guid("afd3afe9-f67a-47e4-81f2-91efa7a2fccd"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "admins.svg", TagName = "Admin" },
+                        new { ID = new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "user.svg", TagName = "BasedOnUser" },
+                        new { ID = new Guid("1a24966b-2979-49f9-8cc4-b21b6449f53e"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "admins.svg", TagName = "PickANumber" },
+                        new { ID = new Guid("09965041-0340-4fc7-82c4-0e65811c2ca2"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "admins.svg", TagName = "TrueFalse" }
+                    );
                 });
 
             modelBuilder.Entity("ipman.shared.Entity.UserAccount", b =>
