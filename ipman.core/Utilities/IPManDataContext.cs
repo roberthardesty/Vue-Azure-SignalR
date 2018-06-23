@@ -32,6 +32,7 @@ namespace ipman.core.Utilities
             {
                 site.HasKey(s => s.ID);
                 site.HasData(SeedData.Sites);
+                site.HasAlternateKey((s => s.SiteAccountName));
             });
 
             modelBuilder.Entity<UserAccount>(user =>
@@ -46,6 +47,7 @@ namespace ipman.core.Utilities
 
             modelBuilder.Entity<Post>(post =>
             {
+                post.HasData(SeedData.Posts);
                 //post.HasOne<SiteAccount>()
                 //    .WithMany(site => site.Posts)
                 //    .IsRequired()
@@ -53,9 +55,17 @@ namespace ipman.core.Utilities
                 //    .OnDelete(DeleteBehavior.Restrict);
             });
 
+
+            modelBuilder.Entity<Tag>(pt =>
+            {
+                pt.HasData(SeedData.Tags);
+            });
             // JOIN ENTITIES
-            modelBuilder.Entity<PostTag>()
-            .HasKey(x => new { x.PostID, x.TagID });
+            modelBuilder.Entity<PostTag>(pt =>
+            {
+                pt.HasKey(x => new { x.PostID, x.TagID });
+                pt.HasData(SeedData.PostTags);
+            });
 
             modelBuilder.Entity<SiteAccountUserAccount>(saua =>
             {

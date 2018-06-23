@@ -113,7 +113,7 @@ namespace ipman.core.Utilities
             },
             new Post
             {
-                ID = PostRobWizardID,
+                ID = PostAverageKillCountID,
                 PostTitle = "Average Kills Per Day In The Month May for MANG0",
                 PostDescription = "How many kills will mango average on a daily basis for the month of may?",
                 SiteAccountID = SiteAdminID,
@@ -147,6 +147,15 @@ namespace ipman.core.Utilities
             {
                 ID = TagPickANumberID,
                 TagName = "PickANumber",
+                TagImage = "admins.svg",
+                IsActive = true,
+                SiteAccountID = SiteAdminID,
+                CreatedUTC = TheDate
+            },
+            new Tag
+            {
+                ID = TagTrueFalseID,
+                TagName = "TrueFalse",
                 TagImage = "admins.svg",
                 IsActive = true,
                 SiteAccountID = SiteAdminID,
