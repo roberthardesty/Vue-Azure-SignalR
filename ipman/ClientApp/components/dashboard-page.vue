@@ -9,7 +9,7 @@
                 </v-card-title>
                 <v-container grid-list-xs>
                     <v-layout row wrap v-if="siteAccounts.length">
-                        <v-flex elevation-10 xs12 sm5 md3 lg2 ma-3 v-for="site in siteAccounts" :key="site.ID">
+                        <v-flex elevation-10 xs12 sm5 md3 lg2 pa-2 v-for="site in siteAccounts" :key="site.ID">
                             <v-card flat tile color="primary lighten-2" class="white--text">
                                 <v-card-title primary-title>
                                     <div class="headline black--text">{{site.SiteAccountName}}</div>
