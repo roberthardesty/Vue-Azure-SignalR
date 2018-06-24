@@ -91,7 +91,7 @@ export default class App extends Vue
     }
     public mounted()
     {
-        console.log(this.username);
+
     }
 }
 </script>

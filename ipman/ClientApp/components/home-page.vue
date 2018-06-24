@@ -4,13 +4,14 @@
             <h2  style="text-align:center">Let's make a bet</h2>
         </v-card>
         <!-- row -->
-        <v-layout align-center row justify-center>
+        <!-- <v-layout align-center row justify-center>
             <v-flex elevation-24 xs2 class="round-flex">
                 <img elevation-24 src="../assets/super-smash-bros.png" class="responsive">
             </v-flex>
-        </v-layout>
+        </v-layout> -->
+        
         <!-- row -->
-        <v-layout row wrap justify-space-between>
+        <v-layout row wrap align-center justify-space-between>
             <v-flex xs2>
                 <router-link to="/login-google" tag="a" >
                     <v-btn style="width: 120px; height: 120px" fab ripple color="white">

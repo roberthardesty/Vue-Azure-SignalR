@@ -1,5 +1,5 @@
 <template>
-    <v-card color="primary lighten-2" class="white--text">
+    <v-card hover color="primary lighten-2" class="white--text">
         <v-container fluid grid-list-sm>
             <v-layout row wrap>
                 <!-- Row 1 -->
@@ -33,11 +33,11 @@
                 <v-flex xs12>
                     <v-card-actions>
                         <v-layout row wrap>
-                            <v-btn flat>{{post.UserAccountCreator.Username}}</v-btn>
-                            <v-spacer></v-spacer>
                             <v-btn icon @click.native="showDescription = !showDescription">
                                 <v-icon>{{ showDescription ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
                             </v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn flat>{{post.UserAccountCreator.Username}}</v-btn>
                             <v-slide-y-transition>
                                 <v-card-text v-show="showDescription">
                                     {{post.PostDescription}}

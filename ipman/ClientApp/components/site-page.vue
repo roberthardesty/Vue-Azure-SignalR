@@ -9,7 +9,7 @@
                 </v-card-title>
                 <v-container grid-list-xs>
                     <v-layout row wrap v-if="Posts.length">
-                        <v-flex xs12 sm6 md4 mt-2 mb-2 pr-2 pl-2 v-for="post in Posts" :key="post.ID">
+                        <v-flex xs12 sm6 md4 lg3 mt-2 mb-2 pr-2 pl-2 v-for="post in Posts" :key="post.ID">
                             <!-- <v-card flat tile color="primary lighten-2" class="white--text">
                                 <v-card-title primary-title>
                                     <div class="headline black--text">{{ post.PostTitle }}</div>
