@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const utils = require('./ClientApp/buildSettings/utils')
-const config = require('./ClientApp/config')
+const config = require('./ClientApp/buildSettings/config')
 const vueLoaderConfig = require('./ClientApp/buildSettings/vue-loader.conf')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -18,8 +18,12 @@ module.exports = (env) => {
                 'vue$': 'vue/dist/vue',
                 'components': path.resolve(__dirname, './ClientApp/components'),
                 'views': path.resolve(__dirname, './ClientApp/views'),
-                'utils': path.resolve(__dirname, './ClientApp/build/utils'),
+                'utils': path.resolve(__dirname, './ClientApp/buildSettings/utils'),
                 'api': path.resolve(__dirname, './ClientApp/store/api'),
+                '@paths': path.resolve(__dirname, './ClientApp/store/Api/ApiRoutes.ts'),
+                '@store': path.resolve(__dirname, './ClientApp/store/index.ts'),
+                '@entity': path.resolve(__dirname, './ClientApp/entity/index.ts'),
+                '@router': path.resolve(__dirname, './ClientApp/router.ts'),
                 '@': path.resolve('ClientApp')
             }
         },
