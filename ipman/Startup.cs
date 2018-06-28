@@ -59,6 +59,7 @@ namespace IPMan
             services.AddSingleton<IHostedService, Weather>();
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<PostGetBySiteAccountName>();
+            services.AddTransient<SiteAccountGetByUserAccountEmail>();
             services.AddDbContext<IPManDataContext>();
         }
         public void ConfigureAuthentication(IServiceCollection services)
