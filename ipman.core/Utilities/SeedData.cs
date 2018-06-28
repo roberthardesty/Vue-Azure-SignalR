@@ -129,7 +129,7 @@ namespace ipman.core.Utilities
             {
                 ID = TagAdminsID,
                 TagName = "Admin",
-                TagImage = "admins.svg",
+                TagImage = "gavel",
                 IsActive = true,
                 SiteAccountID = SiteAdminID,
                 CreatedUTC = TheDate
@@ -138,7 +138,7 @@ namespace ipman.core.Utilities
             {
                 ID = TagBasedOnUserID,
                 TagName = "BasedOnUser",
-                TagImage = "user.svg",
+                TagImage = "accessibility_new",
                 IsActive = true,
                 SiteAccountID = SiteAdminID,
                 CreatedUTC = TheDate
@@ -147,7 +147,7 @@ namespace ipman.core.Utilities
             {
                 ID = TagPickANumberID,
                 TagName = "PickANumber",
-                TagImage = "admins.svg",
+                TagImage = "format_list_numbered_rtl",
                 IsActive = true,
                 SiteAccountID = SiteAdminID,
                 CreatedUTC = TheDate
@@ -156,7 +156,7 @@ namespace ipman.core.Utilities
             {
                 ID = TagTrueFalseID,
                 TagName = "TrueFalse",
-                TagImage = "admins.svg",
+                TagImage = "check_box",
                 IsActive = true,
                 SiteAccountID = SiteAdminID,
                 CreatedUTC = TheDate
