@@ -64,14 +64,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
+import Vuex, { Store } from 'vuex';
+import { sync } from 'vuex-router-sync'
+import { RootState, storeBuilder} from "@store";
 import { Component } from 'vue-property-decorator';
 import NavMenu from './nav-menu.vue'
+import router from "../router";
 
+const store: Store<RootState> = storeBuilder.vuexStore({
+    strict: false
+});
+
+sync(store, router);
+
+  
 @Component({
+    store: store,
     components:{
         NavMenu,
-    }
+    },
+    router
 })
 export default class App extends Vue
 {

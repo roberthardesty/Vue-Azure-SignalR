@@ -44,17 +44,17 @@
 
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import SiteAccountService from '../services/SiteAccountService'
 import SiteAccount from '../entity/SiteAccount';
+import {SiteAccountStore} from '@store';
 @Component({
 
 })
 
 export default class DashboardPage extends Vue
 {
-    private _siteAccountSerivice: SiteAccountService;
     
-    public siteAccounts: SiteAccount[] = [];
+    public get siteAccounts (){ return SiteAccountStore.getters.siteAccountList};
+    
     public data(): any
     {
         return { msg: '' };
@@ -62,16 +62,14 @@ export default class DashboardPage extends Vue
 
     public async created()
     {
-        this._siteAccountSerivice = new SiteAccountService(this.$signalR);
-        await this._siteAccountSerivice.Connect()
+
     }
 
     public async mounted()
     {
-        this.siteAccounts = await this._siteAccountSerivice.GetUserSiteAccounts();
+        SiteAccountStore.actions.fetchUserSiteAccounts();
         this.$vuetify.theme.secondary = '#43a047';
         this.$vuetify.theme.primary = '#795548';
-        console.log(this.siteAccounts);
     }
 }
 </script>

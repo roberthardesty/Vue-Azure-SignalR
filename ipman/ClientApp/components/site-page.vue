@@ -8,8 +8,8 @@
                     </div>
                 </v-card-title>
                 <v-container grid-list-xs>
-                    <v-layout row wrap v-if="Posts.length">
-                        <v-flex xs12 sm6 md4 lg3 mt-2 mb-2 pr-2 pl-2 v-for="post in Posts" :key="post.ID">
+                    <v-layout row wrap v-if="postList.length">
+                        <v-flex xs12 sm6 md4 lg3 mt-2 mb-2 pr-2 pl-2 v-for="post in postList" :key="post.ID">
                             <!-- <v-card flat tile color="primary lighten-2" class="white--text">
                                 <v-card-title primary-title>
                                     <div class="headline black--text">{{ post.PostTitle }}</div>
@@ -43,9 +43,9 @@
 
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import PostCard from './cards/post-card.vue'
-import PostService from '../services/PostService';
-import Post from '../entity/Post'
+import PostCard from './cards/post-card.vue';
+import Post from '../entity/Post';
+import { PostStore } from '@store'; 
 
 
 @Component({
@@ -56,11 +56,11 @@ import Post from '../entity/Post'
 
 export default class SitePage extends Vue
 {
-    private _postService: PostService;
     private connection;
 
     public SiteName = "";
-    public Posts: Post[] = [];
+    public get postList() { return PostStore.getters.postList; }
+    
     public data(): any
     {
         return { msg: '' };
@@ -68,22 +68,14 @@ export default class SitePage extends Vue
     
     public created()
     {
-        this._postService = new PostService(this.$signalR);
+
     }
 
     public async mounted()
     {
-        let self = this;
-        self.SiteName = self.$route.params.site
-        self._postService.GetPostsBySiteAccountName(this.$route.params.site)
-        .then(response => 
-        {
-            self.Posts = response.data as Post[];
-        })
-        .catch(reason =>
-        {
-            console.log(reason);
-        });
+        let self = this; 
+        self.SiteName = self.$route.params.site 
+        PostStore.actions.fetchPostList(self.$route.params.site);
     }
 
 
