@@ -40,6 +40,7 @@ namespace IPMan
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
             services.AddMvc().AddJsonOptions(options => 
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; 
@@ -74,7 +75,7 @@ namespace IPMan
                         options.Scope.Add("user:email");
                         options.Events = new OAuthEvents
                         {
-                            OnCreatingTicket = UserLoginTask.Execute(AuthenticationProvider.Github)
+                            OnCreatingTicket = UserLoginTaskFactory.New(AuthenticationProvider.Github)
                         };
                     })
                     .AddGoogle("Google", googleOptions =>
@@ -88,7 +89,7 @@ namespace IPMan
 
                         googleOptions.Events = new OAuthEvents
                         {
-                            OnCreatingTicket = UserLoginTask.Execute(AuthenticationProvider.Google)
+                            OnCreatingTicket = UserLoginTaskFactory.New(AuthenticationProvider.Google)
                         };
                         //googleOptions.ClaimActions.MapJsonKey("urn:google:image","image");
                         googleOptions.ClaimActions.Remove(ClaimTypes.GivenName);

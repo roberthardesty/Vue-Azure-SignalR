@@ -14,9 +14,9 @@ using ipman.core.Utilities;
 
 namespace IPMan.Utilities
 {
-    public static class UserLoginTask
+    public static class UserLoginTaskFactory
     {
-        public static Func<OAuthCreatingTicketContext, Task> Execute(AuthenticationProvider provider)
+        public static Func<OAuthCreatingTicketContext, Task> New(AuthenticationProvider provider)
         {
 
             async Task CreateTask(OAuthCreatingTicketContext context)
@@ -64,6 +64,9 @@ namespace IPMan.Utilities
                 userAccount.AddLoginData(provider);
 
                 await userAccountUpsert.Execute(userAccount, preExistingUser == null);
+
+                context.User.Add("TempSalt", userAccount.UserAccountSalt);
+
                 context.Success();
             }
 
@@ -119,6 +122,7 @@ namespace IPMan.Utilities
         private static UserAccount AddCreatedData(this UserAccount userAccount)
         {
             DateTime createdDate = DateTime.UtcNow;
+            userAccount.UserAccountSalt = Cryptography.GenerateSalt();
             userAccount.CreatedUTC = createdDate;
             userAccount.LastUpdatedUTC = createdDate;
             return userAccount;
