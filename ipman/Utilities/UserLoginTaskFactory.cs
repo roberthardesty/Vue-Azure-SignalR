@@ -11,6 +11,7 @@ using ipman.shared.Entity;
 using ipman.core.Query;
 using ipman.core.Command;
 using ipman.core.Utilities;
+using System.Collections.Generic;
 
 namespace IPMan.Utilities
 {
@@ -65,8 +66,7 @@ namespace IPMan.Utilities
 
                 await userAccountUpsert.Execute(userAccount, preExistingUser == null);
 
-                context.User.Add("TempSalt", userAccount.UserAccountSalt);
-
+                context.Identity.AddClaim(new Claim("TempSalt", userAccount.UserAccountSalt));
                 context.Success();
             }
 
