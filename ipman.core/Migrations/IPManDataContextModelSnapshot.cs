@@ -259,10 +259,10 @@ namespace ipman.core.Migrations
                     b.ToTable("Tags");
 
                     b.HasData(
-                        new { ID = new Guid("afd3afe9-f67a-47e4-81f2-91efa7a2fccd"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "admins.svg", TagName = "Admin" },
-                        new { ID = new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "user.svg", TagName = "BasedOnUser" },
-                        new { ID = new Guid("1a24966b-2979-49f9-8cc4-b21b6449f53e"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "admins.svg", TagName = "PickANumber" },
-                        new { ID = new Guid("09965041-0340-4fc7-82c4-0e65811c2ca2"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "admins.svg", TagName = "TrueFalse" }
+                        new { ID = new Guid("afd3afe9-f67a-47e4-81f2-91efa7a2fccd"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "gavel", TagName = "Admin" },
+                        new { ID = new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "accessibility_new", TagName = "BasedOnUser" },
+                        new { ID = new Guid("1a24966b-2979-49f9-8cc4-b21b6449f53e"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "format_list_numbered_rtl", TagName = "PickANumber" },
+                        new { ID = new Guid("09965041-0340-4fc7-82c4-0e65811c2ca2"), CreatedUTC = new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), IsActive = true, SiteAccountID = new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), TagImage = "check_box", TagName = "TrueFalse" }
                     );
                 });
 
@@ -292,6 +292,8 @@ namespace ipman.core.Migrations
                     b.Property<string>("LastName");
 
                     b.Property<DateTime>("LastUpdatedUTC");
+
+                    b.Property<string>("UserAccountSalt");
 
                     b.Property<string>("Username");
 

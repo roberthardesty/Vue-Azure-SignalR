@@ -31,6 +31,7 @@ namespace ipman.core.Migrations
                     ID = table.Column<Guid>(nullable: false),
                     EmailAddress = table.Column<string>(nullable: true),
                     Username = table.Column<string>(nullable: true),
+                    UserAccountSalt = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     GitHubID = table.Column<string>(nullable: true),
@@ -310,13 +311,13 @@ namespace ipman.core.Migrations
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
-                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "IsActive", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "Username" },
-                values: new object[] { new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "budnjoe@gmail.com", "rob", null, null, true, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Trundle" });
+                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "IsActive", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "UserAccountSalt", "Username" },
+                values: new object[] { new Guid("4d8881bd-db0a-4725-9cf0-2c4390013a30"), "https://lh4.googleusercontent.com/-gPvw9sU8Mpc/AAAAAAAAAAI/AAAAAAAAAOY/HQ2yjXFKeEk/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "budnjoe@gmail.com", "rob", null, null, true, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Trundle" });
 
             migrationBuilder.InsertData(
                 table: "UserAccounts",
-                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "IsActive", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "Username" },
-                values: new object[] { new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "robert.hardesty.mail@gmail.com", "Robert", null, null, true, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "DreadPirateRobert" });
+                columns: new[] { "ID", "AvatarLink", "CreatedUTC", "EmailAddress", "FirstName", "GitHubID", "GoogleID", "IsActive", "LastLoginProvider", "LastLoginUTC", "LastName", "LastUpdatedUTC", "UserAccountSalt", "Username" },
+                values: new object[] { new Guid("f84d5d8f-131e-4554-a45d-e1d03c02bc43"), "https://lh3.googleusercontent.com/-pu8oCttY3pE/AAAAAAAAAAI/AAAAAAAAAAA/h5YVW6XWCK4/photo.jpg?sz=50", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "robert.hardesty.mail@gmail.com", "Robert", null, null, true, 0, new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hardesty", new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "DreadPirateRobert" });
 
             migrationBuilder.InsertData(
                 table: "Departments",
@@ -347,10 +348,10 @@ namespace ipman.core.Migrations
                 columns: new[] { "ID", "CreatedUTC", "IsActive", "SiteAccountID", "TagImage", "TagName" },
                 values: new object[,]
                 {
-                    { new Guid("afd3afe9-f67a-47e4-81f2-91efa7a2fccd"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "admins.svg", "Admin" },
-                    { new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "user.svg", "BasedOnUser" },
-                    { new Guid("1a24966b-2979-49f9-8cc4-b21b6449f53e"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "admins.svg", "PickANumber" },
-                    { new Guid("09965041-0340-4fc7-82c4-0e65811c2ca2"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "admins.svg", "TrueFalse" }
+                    { new Guid("afd3afe9-f67a-47e4-81f2-91efa7a2fccd"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "gavel", "Admin" },
+                    { new Guid("221e7112-b974-4269-b3c2-1f9a0c5e8fff"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "accessibility_new", "BasedOnUser" },
+                    { new Guid("1a24966b-2979-49f9-8cc4-b21b6449f53e"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "format_list_numbered_rtl", "PickANumber" },
+                    { new Guid("09965041-0340-4fc7-82c4-0e65811c2ca2"), new DateTime(2018, 6, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("4a93afc2-8ef0-4d91-9374-67e60fc336a8"), "check_box", "TrueFalse" }
                 });
 
             migrationBuilder.InsertData(
