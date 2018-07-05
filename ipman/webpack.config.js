@@ -20,6 +20,7 @@ module.exports = (env) => {
                 'views': path.resolve(__dirname, './ClientApp/views'),
                 'utils': path.resolve(__dirname, './ClientApp/buildSettings/utils'),
                 'api': path.resolve(__dirname, './ClientApp/store/api'),
+                "@serviceModels": path.resolve(__dirname, "./ClientApp/store/Api/ServiceModels/index.ts"),
                 '@paths': path.resolve(__dirname, './ClientApp/store/Api/ApiRoutes.ts'),
                 '@store': path.resolve(__dirname, './ClientApp/store/index.ts'),
                 '@entity': path.resolve(__dirname, './ClientApp/entity/index.ts'),

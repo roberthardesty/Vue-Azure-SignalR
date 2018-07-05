@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@paths": ["./ClientApp/store/Api/ApiRoutes.ts"],
+      "@serviceModels": ["./ClientApp/store/Api/ServiceModels/index.ts"],
       "@entity": ["ClientApp/entity/index.ts"],
       "@store": ["ClientApp/store/index.ts"],
       "@router": ["ClientApp/router.ts"],
