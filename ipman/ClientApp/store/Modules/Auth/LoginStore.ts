@@ -1,219 +1,166 @@
-// import jwtDecode from 'jwt-decode';
-// import { merge } from 'lodash'
-// import Api, { ApiError, ApiSuccess, ApiWarning, ApiResponse, addAuthHeaders, removeAuthHeaders, API_URL } from '../../Api';
-// import NotificationsModule from '../Interface/NotificationsStore';
-// import router from '@router';
-// import { ILoginState } from '@types';
-// import { capitalize } from 'lodash';
-// import { storeBuilder } from "../Store/Store";
-// import { JWT } from './TokenStore';
-// import Paths from '@paths';
+import Router from '../../../router';
+import { storeBuilder } from '../Store/Store';
+import { ILoginState } from '../../Types';
+import { UserAccount, AuthenticationProvider } from '@entity';
+import { JWT } from './TokenStore';
+import { AuthService } from '../../Api/Services';
+import { ValidateUserContextRequest, ValidateUserContextResponse } from '@serviceModels';
+import { EventBus } from '@store';
 
-// const initialState: ILoginState = {
-//   userInfos: {
-//     surname: null,
-//     username: null,
-//     profile: null,
-//     name: null,
-//     id: null,
-//     avatar: null,
-//     avatarName: null,
-//     birthdate: null,
-//     description: null,
-//     firstname: null,
-//     lastname: null,
-//     isMover: null,
-//     address: null,
-//     roles: [],
-//     phone: null,
-//     userToken: null,
-//   },
-//   sessionChecked: false,
-//   isLoggedIn: false,
-//   requesting: false,
-//   RouteAfter: null,
-//   showModal: false
-// }
+const state: ILoginState = 
+{
+    isLoadingUserContext: false,
 
-// // State
-// const state = {...initialState};
+    userContext: {
+        isLoggedIn: false,
+        user: {
+            ID: "",
+            EmailAddress: "",
+            Username: "",
+            FirstName: "",
+            LastName: "",
+            GitHubID: "",
+            GoogleID: "",
+            AvatarLink: "",
+            IsActive: false,
+            LastLoginProvider: null,
+            LastLoginUTC: "",
+            CreatedUTC: "",
+            LastUpdatedUTC: "",
+            Votes: [],
+            Wagers: [],
+            CreatedPosts: [],
+            SiteAccountUserAccounts: [],
+            SiteAccounts: [],
+        }
+    }
+};
 
-// const b = storeBuilder.module<ILoginState>('LoginModule', state);
-// const stateGetter = b.state();
+const b = storeBuilder.module<ILoginState>("LoginModule", state);
+const stateGetter = b.state()
 
+const authService = new AuthService();
 
-// // Getters
-// namespace Getters {
-//   const fullName = b.read(function fullName(state): string {
-//     return state.userInfos.firstname?capitalize(state.userInfos.firstname) + " " + capitalize(state.userInfos.lastname):null;
-//   })
+namespace Getters {
+    const isLoading = b.read(function isLoading(state: ILoginState){
+        return state.isLoadingUserContext;
+    });
 
-//   const isAdmin = b.read(function isAdmin(state) : boolean {
-//     return state.userInfos.roles.includes("ROLE_ADMIN");
-//   })
+    const isLoggedin = b.read(function isLoggedin(state: ILoginState){
+        return state.userContext.isLoggedIn;
+    })
 
-//   const userPicture = b.read(function userPicture(state) : string {
-//     return state.userInfos.avatar || require('@images/user.jpg');
-//   })
+    const user = b.read(function user(state: ILoginState){
+        state.userContext.user;
+    })
 
-//   export const getters = {
-//     get fullName() { return fullName();},
-//     get isAdmin() {return isAdmin();},
-//     get userPicture() {return userPicture();}
-//   }
-// }
+    export const getters = {
+        get user() { return user()},
+        get isLoading() {return isLoading()},
+        get isLoggedIn() { return isLoggedin()}
+    } 
+}
 
-// // Mutations
-// namespace Mutations {
-//   function showLogin(state: ILoginState) {
-//     if(!state.isLoggedIn) {
-//       state.showModal = true;
-//     }
-//   }
-//   function showLoginRoute(state: ILoginState, route: string) {
-//     state.showModal = true;
-//     state.RouteAfter = route;
-//   }
-//   function closeModal(state: ILoginState) {
-//     state.showModal = false;
-//     state.RouteAfter = null;
-//   }
-//   function sessionChecked(state: ILoginState) {
-//     state.sessionChecked = true;
-//   }
-//   function connectUser(state: ILoginState, {userData, token, redirect = null}) {
-//     state.userInfos = {...state.userInfos, ...userData};
-//     state.userInfos.userToken = token;
-//     state.isLoggedIn = true;
-//     state.showModal = false;
-//     addAuthHeaders();
-//     if (state.RouteAfter || redirect) {
-//       router.push(state.RouteAfter?state.RouteAfter:redirect);
-//     }
-//   }
+namespace Mutations {
 
-//   function updateUserInfos(state: ILoginState, {userData, token}) {
-//     state.userInfos = {...state.userInfos, ...userData};
-//     state.userInfos.userToken = token;
-//     state.isLoggedIn = true;
-//     state.showModal = false;
-//     addAuthHeaders();
-//   }
+    function updateUser(state:ILoginState, user: UserAccount)
+    {
+        state.userContext.user = user;
+    }
 
-//   function disconnectUser(state: ILoginState) {
-//     JWT.clear();
-//     Object.keys(initialState).forEach(key => {
-//       state[key] = initialState[key]
-//     });
-//     state.isLoggedIn = false;
-//     state.sessionChecked = true;
-//     removeAuthHeaders();
-//     if (router.currentRoute.meta.requiresAuth) {
-//       router.push('/');
-//       mutations.showLoginRoute(router.currentRoute.fullPath);
-//     }
-//     // window.location.reload();
-//   }
+    function updateLoadingState(state: ILoginState, isLoading: boolean)
+    {
+        state.isLoadingUserContext = isLoading;
+    }
 
-//   export const mutations = {
-//     showLogin: b.commit(showLogin),
-//     showLoginRoute: b.commit(showLoginRoute),
-//     closeModal: b.commit(closeModal),
-//     connectUser: b.commit(connectUser),
-//     disconnectUser: b.commit(disconnectUser),
-//     sessionChecked: b.commit(sessionChecked),
-//     updateUserInfos: b.commit(updateUserInfos)
-//   }
-// }
+    export const mutations = {
+        updateUser: b.commit(updateUser),
+        updateLoadingState: b.commit(updateLoadingState)
+    }
+}
 
+namespace Actions {
 
-// // Actions
-// namespace Actions {
-//   async function connexionRequest(context,{loginData, redirect}: {loginData: any, redirect?: string}){
-//     try {
-//       state.requesting = true;
-//       let { success, status, data } = await Api.post(Paths.LOGIN, loginData);
-//       JWT.set(data);
-//       LoginModule.actions.connexionSuccess({token: data.token, redirect});
-//       return new ApiSuccess()
-//     } catch(err) {
-//       console.log(err)
-//       if (err.status === 401) {
-//         return new ApiError({message: 'Adresse email ou mot de passe incorrect'})
-//       } else if (err.status === 404 || err.status === 500) {
-//         return new ApiWarning({message: `Une erreur s'est produite`});
-//       } else if (err.status === 0) {
-//         return new ApiWarning({message: `Vérifiez votre connexion internet`});
-//       }
-//     } finally {
-//       state.requesting = false;
-//     }
-//   }
+    async function initializeUserContext(context, data: {email: string, refresh_token: string})
+    {
+        Mutations.mutations.updateLoadingState(true);
+        await buildAndSendValidateionRequest({refresh_token: data.refresh_token, email_token: data.email}, async (response) =>
+        {
+            validationSuccess(response);
+            while(!state.userContext.user.Username)
+            {
+                await requestUsername();
+            }
+        });
+        Mutations.mutations.updateLoadingState(false);
+    }
 
-//   async function connexionSuccess(context, {token, redirect}) {
-//     let userData = await jwtDecode(token);
-//     LoginModule.mutations.connectUser({userData, token, redirect});
-//     NotificationsModule.actions.addNotification({ type: "success", message: `Vous etes connecté en tant que ${capitalize(userData.username)}` })
-//   }
+    async function validateUserContext(context) {
+        Mutations.mutations.updateLoadingState(true);
+        let tokens = JWT.fetch();
+        await buildAndSendValidateionRequest(tokens, validateUserContext);
+        Mutations.mutations.updateLoadingState(false);
+    }
 
-//   function disconnectRequest() {
-//     LoginModule.mutations.disconnectUser();
-//     router.push('/');
-//     NotificationsModule.actions.addNotification({ type: "alert", message: `Vous avez été deconnecté` })
-//   }
+    async function buildAndSendValidateionRequest(tokens: {refresh_token: string, email_token: string},
+                                                  callback: (response: ValidateUserContextResponse) => void )
+    {
+        if(!!tokens.refresh_token)
+        {
+            let validateUserContextRequest: ValidateUserContextRequest = 
+            { 
+                Token : tokens.refresh_token,
+                Email: tokens.email_token
+            };
+            let apiReponse = await authService.ValidateUserContext(validateUserContextRequest);
+            if(apiReponse.success)
+            {
+                let validationResponse = apiReponse.data as ValidateUserContextResponse;
+                if(validationResponse.IsError)
+                {
+                    console.log(validationResponse.ResponseError.ToFormattedString());
+                }
+                else
+                    callback(validationResponse)
+            }
+        }
+    }
+    function validationSuccess(response: ValidateUserContextResponse)
+    {
+        JWT.set({email_token: response.UserAcount.EmailAddress, refresh_token: response.NewToken})
+        Mutations.mutations.updateUser(response.UserAcount)
+        state.userContext.isLoggedIn = true;
+    }
 
-//   async function checkUserSession(){
-//     let {token, refresh_token} = JWT.fetch();
-//     if (!!token) {
-//       try {
-//         let { data } = await Api.checkSession({token, refresh_token});
-//         JWT.set(data);
-//         let userData = await jwtDecode(data.token);
-//         LoginModule.mutations.connectUser({userData, token: data.token});
-//       } catch(e) {
-//         Mutations.mutations.disconnectUser();
-//       }
-//     } else {
-//       console.log('User not logged');
-//     }
-//     LoginModule.mutations.sessionChecked();
-//     return;
-//   }
+    function requestUsername(): Promise<void>
+    {
+        return new Promise((resolve,reject) => 
+        {
+            EventBus.$emit("username_popup_open");
+            EventBus.$on("username_popup_close", (username: string) =>
+            {
+                if(username)
+                    resolve();
+                else
+                    reject();
+            });
+        })
+    }
 
-//   async function refreshUserInfos(){
-//     let {token, refresh_token} = JWT.fetch();
-//     if (!!token) {
-//       try {
-//         let { data } = await Api.checkSession({token, refresh_token});
-//         JWT.set(data);
-//         let userData = await jwtDecode(data.token);
-//         LoginModule.mutations.updateUserInfos({userData, token: data.token});
-//       } catch(e) {
-//         Mutations.mutations.disconnectUser();
-//       }
-//     }
-//   }
+    export const actions = {
+        validateUserContext: b.dispatch(validateUserContext),
+        initializeUserContext: b.dispatch(initializeUserContext)
+    }
+}
 
-
-
-//   export const actions = {
-//     connexionRequest: b.dispatch(connexionRequest),
-//     connexionSuccess: b.dispatch(connexionSuccess),
-//     disconnectRequest: b.dispatch(disconnectRequest),
-//     checkUserSession: b.dispatch(checkUserSession),
-//     refreshUserInfos: b.dispatch(refreshUserInfos)
-//   }
-// }
-
-
-// // Module
-// const LoginModule = {
-//   get state() { return stateGetter() },
-//   getters: Getters.getters,
-//   mutations: Mutations.mutations,
-//   actions: Actions.actions
-// }
-
-
-// export default LoginModule;
-
+const PostModule = {
+    get state() { return stateGetter()},
+    getters: Getters.getters,
+    mutations: Mutations.mutations,
+    actions: Actions.actions
+  }
+  
+  
+  export default PostModule;
+  
+  

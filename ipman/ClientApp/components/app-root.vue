@@ -66,8 +66,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
+import * as Cookies from 'es-cookie';
 import { sync } from 'vuex-router-sync'
-import { RootState, storeBuilder} from "@store";
+import { RootState, storeBuilder, LoginStore, EventBus} from "@store";
 import { Component } from 'vue-property-decorator';
 import NavMenu from './nav-menu.vue'
 import router from "../router";
@@ -86,17 +87,23 @@ sync(store, router);
     },
     router
 })
+const accessTokenId = 'access_token_ggl';
+const tempEmailId = 'temp_email';
 export default class App extends Vue
 {
     // Get the user name cookie.
-    private getCookie(key) {
-        var cookies = document.cookie.split(';').map(c => c.trim());
-        for (var i = 0; i < cookies.length; i++) {
-            if (cookies[i].startsWith(key + '=')) return unescape(cookies[i].slice(key.length + 1));
+    public username = Cookies.get('github_username');    
+
+    public checkUser(){
+        let token = Cookies.get(accessTokenId);
+        let tempEmail = Cookies.get(tempEmailId)
+        if(token && !LoginStore.getters.isLoggedIn)
+        {
+            Cookies.remove(accessTokenId);
+            Cookies.remove(tempEmail);
+            LoginStore.actions.initializeUserContext({email: tempEmail, refresh_token: token});
         }
-        return '';
     }
-    public username = this.getCookie('github_username');    
     data() {
         return {
             drawerOpen: false
@@ -104,7 +111,10 @@ export default class App extends Vue
     }
     public mounted()
     {
-
+        EventBus.$on("username_popup_open", () => 
+        {
+            //TODO Make a username popup that you can open.
+        });
     }
 }
 </script>
