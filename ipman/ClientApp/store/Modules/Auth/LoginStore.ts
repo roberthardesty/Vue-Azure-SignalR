@@ -137,7 +137,7 @@ namespace Actions {
         return new Promise((resolve,reject) => 
         {
             EventBus.$emit("username_popup_open");
-            EventBus.$on("username_popup_close", (username: string) =>
+            EventBus.$once("username_popup_close", (username: string) =>
             {
                 if(username)
                     resolve();

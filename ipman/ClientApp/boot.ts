@@ -2,7 +2,7 @@ import 'vuetify/dist/vuetify.min.css'
 import Vue from 'vue'
 import App from 'components/app-root.vue'
 import Vuetify from 'vuetify'
-
+import Vuelidate from 'vuelidate'
 import 'bootstrap'
 
 import jquery from 'jquery'
@@ -10,6 +10,7 @@ import jquery from 'jquery'
 (<any>window).$ = jquery
 (<any>window).jQuery = jquery
 
+Vue.use(Vuelidate)
 Vue.use(Vuetify, {
     theme: {
       primary: '#43a047', // #E53935

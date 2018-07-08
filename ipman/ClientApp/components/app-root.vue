@@ -16,6 +16,9 @@
                     <v-icon color="black">cloud</v-icon>
                 </v-btn>
             </router-link>
+                <v-btn icon @click="test()">
+                    <v-icon color="black">person</v-icon>
+                </v-btn>
             <v-subheader id="usernameTitle" v-if="username">
                     {{username}}
             </v-subheader>
@@ -31,6 +34,7 @@
                     </v-btn>
                 </a>
             </span>
+        <username-form />
         </v-toolbar>
         <nav-menu
             app 
@@ -71,6 +75,7 @@ import { sync } from 'vuex-router-sync'
 import { RootState, storeBuilder, LoginStore, EventBus} from "@store";
 import { Component } from 'vue-property-decorator';
 import NavMenu from './nav-menu.vue'
+import UsernameForm from './forms/username-form.vue'
 import router from "../router";
 
 const store: Store<RootState> = storeBuilder.vuexStore({
@@ -80,20 +85,20 @@ const store: Store<RootState> = storeBuilder.vuexStore({
 sync(store, router);
 
   
+const accessTokenId = 'access_token_ggl';
+const tempEmailId = 'temp_email';
 @Component({
     store: store,
     components:{
         NavMenu,
+        UsernameForm
     },
     router
 })
-const accessTokenId = 'access_token_ggl';
-const tempEmailId = 'temp_email';
 export default class App extends Vue
 {
     // Get the user name cookie.
-    public username = Cookies.get('github_username');    
-
+    public username = Cookies.get('github_username') || "";    
     public checkUser(){
         let token = Cookies.get(accessTokenId);
         let tempEmail = Cookies.get(tempEmailId)
@@ -104,6 +109,7 @@ export default class App extends Vue
             LoginStore.actions.initializeUserContext({email: tempEmail, refresh_token: token});
         }
     }
+
     data() {
         return {
             drawerOpen: false
@@ -111,10 +117,12 @@ export default class App extends Vue
     }
     public mounted()
     {
-        EventBus.$on("username_popup_open", () => 
-        {
-            //TODO Make a username popup that you can open.
-        });
+
+    }
+
+    public test()
+    {
+        EventBus.$emit("username_popup_open");
     }
 }
 </script>

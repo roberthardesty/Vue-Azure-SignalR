@@ -45,7 +45,10 @@ namespace IPMan.Controllers
 
             string userSalt  = User.FindFirstValue("TempSalt");
             if (string.IsNullOrEmpty(userSalt))
-                throw new Exception("User Salt Null, This Should Never Happen");
+            {
+                HttpContext.SignOutAsync();
+                //throw new Exception("User Salt Null, This Should Never Happen");
+            }
 
             string userToken = Guid.NewGuid().ToString();
             string userEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
