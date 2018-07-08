@@ -51,7 +51,7 @@ namespace Getters {
     })
 
     const user = b.read(function user(state: ILoginState){
-        state.userContext.user;
+        return state.userContext.user;
     })
 
     export const getters = {
@@ -87,18 +87,19 @@ namespace Actions {
         await buildAndSendValidateionRequest({refresh_token: data.refresh_token, email_token: data.email}, async (response) =>
         {
             validationSuccess(response);
-            while(!state.userContext.user.Username)
+            if(!Getters.getters.user.Username)
             {
-                await requestUsername();
+                state.userContext.user.Username = await requestUsername();
             }
         });
         Mutations.mutations.updateLoadingState(false);
     }
 
-    async function validateUserContext(context) {
+    async function validateUserContext(context) 
+    {
         Mutations.mutations.updateLoadingState(true);
         let tokens = JWT.fetch();
-        await buildAndSendValidateionRequest(tokens, validateUserContext);
+        await buildAndSendValidateionRequest(tokens, validationSuccess);
         Mutations.mutations.updateLoadingState(false);
     }
 
@@ -132,18 +133,15 @@ namespace Actions {
         state.userContext.isLoggedIn = true;
     }
 
-    function requestUsername(): Promise<void>
+    function requestUsername(): Promise<string>
     {
         return new Promise((resolve,reject) => 
         {
-            EventBus.$emit("username_popup_open");
             EventBus.$once("username_popup_close", (username: string) =>
             {
-                if(username)
-                    resolve();
-                else
-                    reject();
+                resolve(username);
             });
+            EventBus.$emit("username_popup_open");
         })
     }
 

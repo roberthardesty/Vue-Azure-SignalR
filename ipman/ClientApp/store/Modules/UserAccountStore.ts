@@ -2,7 +2,10 @@ import Router from '../../router';
 import { UserAccount } from '@entity';
 import { IUserAccountState } from '../Types';
 import { UserAccountService } from '../Api/Services';
-import { storeBuilder } from './Store/Store';
+import { LoginStore } from '@store';
+import { storeBuilder } from './Store/Store'
+import { SearchUserAccountsResponse } from '../Api/ServiceModels/SearchUserAccountsResponse';
+
 
 const state: IUserAccountState = 
 {
@@ -32,12 +35,24 @@ namespace Actions {
     async function checkUsernameAvailability(context, username: string)
     {
         console.log('in the user account store: ', username);
-        let apiResponse = await userAccountService.SearchUserAccounts({username: username});
-        console.log(apiResponse);
+        let apiResponse = await userAccountService.SearchUserAccounts({Username: username, SiteAccountID: null, Email: "" });
+        if(!apiResponse.success)
+            return false;
+        let searchResponse = apiResponse.data as SearchUserAccountsResponse;
+        return !searchResponse.IsError && !searchResponse.UserAccounts.length
+    }
+
+    async function saveUserAccount(context, userAccount: UserAccount)
+    {
+        if(LoginStore.getters.user.ID != userAccount.ID)
+            return;
+        
+        await userAccountService.SaveUserAccount(userAccount);
     }
 
     export const actions = {
-        checkUsernameAvailability: b.dispatch(checkUsernameAvailability)
+        checkUsernameAvailability: b.dispatch(checkUsernameAvailability),
+        saveUserAccount: b.dispatch(saveUserAccount)
     }
 }
 

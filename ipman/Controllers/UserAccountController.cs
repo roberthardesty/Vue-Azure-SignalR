@@ -21,14 +21,14 @@ namespace IPMan.Controllers
         }
 
         [HttpPost("[action]")] 
-        public SearchUserAccountsResponse SearchUserAccounts(SearchUserAccountsRequest request) 
+        public SearchUserAccountsResponse SearchUserAccounts([FromBody]SearchUserAccountsRequest request) 
         {
             var response = new SearchUserAccountsResponse();
-            if (string.IsNullOrWhiteSpace(request.Email))
+            if (!string.IsNullOrWhiteSpace(request.Email))
             {
                 throw new NotImplementedException();
             }
-            else if (string.IsNullOrWhiteSpace(request.Username))
+            else if (!string.IsNullOrWhiteSpace(request.Username))
             {
                 response.UserAccounts = _userAccountGetByUsername.Execute(request.Username);
             }

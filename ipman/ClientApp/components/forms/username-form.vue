@@ -11,7 +11,7 @@
                             v-model="username"
                             color="cyan darken"
                             label="Username"
-                            placeholder="Start typing..."
+                            placeholder="Start isUserTyping..."
                             autofocus
                             loading
                             required
@@ -20,7 +20,7 @@
                             @blur="usernameDirty = true"
                             >
                             <v-progress-linear
-                                v-if="typing"
+                                v-if="isUserTyping"
                                 slot="progress"
                                 :value="progress"
                                 :color="color"
@@ -32,7 +32,7 @@
                 </v-card-text>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" flat @click="submit">Submit</v-btn>
+                <v-btn color="primary" :disabled="!isValid || isDebounceLoading" flat @click="submit">Submit</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -60,25 +60,29 @@ export default class UsernameForm extends Vue
 {
     public username: string = "";
     public usernameDirty: boolean = false;
-    public typing: boolean = true;
+    public isUserTyping: boolean = true;
     public isOpen: boolean = false;
     public isUsernameTaken = false;
+    public isDebounceLoading = false;
 
     @Watch('username') onUsernameChanged(newVal: string, oldVal: string)
     {
-        if(this.username.length < 8)
-        {
-            this.typing = true;
-            return;
-        }
+        this.isDebounceLoading = true;
         this.debouncedCheckUsername();
     }
 
     private debouncedCheckUsername: any = {};
     private async checkUsername()
     {
-        this.typing = false;
-        await UserAccountStore.actions.checkUsernameAvailability(this.username);
+        if(this.username.length < 8)
+        {
+            this.isUserTyping = true;
+            return;
+        }
+        this.isUserTyping = false;
+        this.isUsernameTaken = !(await UserAccountStore.actions.checkUsernameAvailability(this.username));
+        this.isUserTyping = true;
+        this.isDebounceLoading = false;
     }
 
     public get progress () {
@@ -92,10 +96,14 @@ export default class UsernameForm extends Vue
     public get usernameErrors () {
         const errors = []
         if (!this.usernameDirty) return errors
-        //!(this.username.length > 8) && errors.push('Name must be at least 8 characters long')
+        !(!this.isUsernameTaken) && errors.push('Username taken.')
         !this.username.length && errors.push('Username is required.')
         return errors
     };
+
+    public get isValid () {
+        return !(this.usernameErrors.length) && this.progress == 100
+    }
 
     public validations = 
     {
@@ -117,6 +125,9 @@ export default class UsernameForm extends Vue
 
     public submit()
     {
+        this.usernameDirty = true;
+        if(!this.isValid || this.isDebounceLoading)
+            return;
         EventBus.$emit("username_popup_close", this.username);
         this.isOpen = false;
     }
