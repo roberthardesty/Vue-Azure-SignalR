@@ -47,7 +47,7 @@ namespace Actions {
         if(LoginStore.getters.user.ID != userAccount.ID)
             return;
         
-        await userAccountService.SaveUserAccount(userAccount);
+        await userAccountService.SaveUserAccount({ UserAccount: userAccount, ShouldUpdateAllProps: true, PropsToUpdate: [] });
     }
 
     export const actions = {

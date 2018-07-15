@@ -7,6 +7,10 @@ using ipman.core.Query;
 using ipman.shared.Entity;
 using System.Security.Claims;
 using ipman.shared.WebServiceModels;
+using ipman.core.Command;
+using System.Threading.Tasks;
+using IPMan.Utilities;
+using ipman.shared.Utilities;
 
 namespace IPMan.Controllers 
 { 
@@ -14,10 +18,39 @@ namespace IPMan.Controllers
     [Route("api/[controller]")] 
     public class UserAccountController : Controller 
     { 
-        private UserAccountGetByUsername _userAccountGetByUsername;
-        public UserAccountController(UserAccountGetByUsername userAccountGetByUsername)
+        private readonly UserAccountGetByUsername _userAccountGetByUsername;
+        private readonly UserAccountGetByEmail _userAccountGetByEmail;
+        private readonly UserAccountUpsert _userAccountUpsert;
+        public UserAccountController(UserAccountGetByUsername userAccountGetByUsername,
+                                     UserAccountUpsert userAccountUpsert,
+                                     UserAccountGetByEmail userAccountGetByEmail)
         {
             _userAccountGetByUsername = userAccountGetByUsername;
+            _userAccountUpsert = userAccountUpsert;
+            _userAccountGetByEmail = userAccountGetByEmail;
+        }
+
+        [HttpPost("[action]")]
+        public async Task<SaveUserAccountResponse> SaveUserAccount([FromBody]SaveUserAccountRequest request)
+        {
+            SaveUserAccountResponse response = new SaveUserAccountResponse();
+
+            if (response.InitializeFromModelStateIfInvalid(ModelState))
+                return response;
+
+            if (request.ShouldUpdateAllProps)
+                await _userAccountUpsert.ExecuteAsync(request.UserAccount);
+            else
+            {
+                var existingUser = _userAccountGetByEmail.Execute(request.UserAccount.EmailAddress);
+
+                request.UserAccount.CopyProperties(existingUser,
+                    (propInfo, source, target) => request.PropsToUpdate.Contains(propInfo.Name));
+
+                await _userAccountUpsert.ExecuteAsync(existingUser);
+            }
+
+            return response;
         }
 
         [HttpPost("[action]")] 
@@ -37,6 +70,6 @@ namespace IPMan.Controllers
                 throw new NotImplementedException();
             }
             return response;
-        } 
+        }
     } 
 } 

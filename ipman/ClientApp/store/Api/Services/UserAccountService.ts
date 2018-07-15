@@ -2,7 +2,7 @@ import { HubConnection } from "@aspnet/signalr";
 import { ServiceBase } from "./ServiceBase";
 import { UserAccount } from "@entity";
 import { AxiosSuccess, AxiosError } from "../ApiTypes";
-import { SearchUserAccountsRequest } from "../ServiceModels/SearchUserAccountsRequest";
+import { SearchUserAccountsRequest, SaveUserAccountRequest } from "@serviceModels";
 
 export default class UserAccountService extends ServiceBase
 {
@@ -13,7 +13,7 @@ export default class UserAccountService extends ServiceBase
         return await this.Post(this.SearchUserAccounts.name, searchCriteria);
     }
 
-    public async SaveUserAccount(userAccount: UserAccount): Promise<AxiosSuccess | AxiosError>
+    public async SaveUserAccount(userAccount: SaveUserAccountRequest): Promise<AxiosSuccess | AxiosError>
     {
         return await this.Post(this.SaveUserAccount.name, userAccount);
     }

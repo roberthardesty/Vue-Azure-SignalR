@@ -6,12 +6,12 @@
                 <v-card-title class="headline">Enter your username</v-card-title>
                 <v-card-text>
                     <v-container fluid>
-                        <form>
+                        <v-form v-on:submit="submit($event)">
                             <v-text-field
                             v-model="username"
                             color="cyan darken"
                             label="Username"
-                            placeholder="Start isUserTyping..."
+                            placeholder="Start Typing..."
                             autofocus
                             loading
                             required
@@ -27,7 +27,7 @@
                                 height="7"
                             ></v-progress-linear>
                             </v-text-field>
-                        </form>
+                        </v-form>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -123,14 +123,13 @@ export default class UsernameForm extends Vue
         self.debouncedCheckUsername = debounce(this.checkUsername, 750);
     }
 
-    public submit()
+    public submit(event)
     {
+        event.preventDefault();
         this.usernameDirty = true;
         if(!this.isValid || this.isDebounceLoading)
             return;
 
-        // todo save username
-        
         EventBus.$emit("username_popup_close", this.username);
         this.isOpen = false;
     }

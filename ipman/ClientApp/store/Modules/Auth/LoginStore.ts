@@ -3,7 +3,7 @@ import { storeBuilder } from '../Store/Store';
 import { ILoginState } from '../../Types';
 import { UserAccount, AuthenticationProvider } from '@entity';
 import { JWT } from './TokenStore';
-import { AuthService } from '../../Api/Services';
+import { AuthService, UserAccountService } from '../../Api/Services';
 import { ValidateUserContextRequest, ValidateUserContextResponse } from '@serviceModels';
 import { EventBus } from '@store';
 
@@ -40,6 +40,7 @@ const b = storeBuilder.module<ILoginState>("LoginModule", state);
 const stateGetter = b.state()
 
 const authService = new AuthService();
+const userService = new UserAccountService();
 
 namespace Getters {
     const isLoading = b.read(function isLoading(state: ILoginState){
@@ -90,6 +91,8 @@ namespace Actions {
             if(!Getters.getters.user.Username)
             {
                 state.userContext.user.Username = await requestUsername();
+                console.log(state.userContext.user)
+                userService.SaveUserAccount({ UserAccount: state.userContext.user, PropsToUpdate: ["Username"], ShouldUpdateAllProps: false } );
             }
         });
         Mutations.mutations.updateLoadingState(false);
@@ -126,6 +129,7 @@ namespace Actions {
             }
         }
     }
+
     function validationSuccess(response: ValidateUserContextResponse)
     {
         JWT.set({email_token: response.UserAcount.EmailAddress, refresh_token: response.NewToken})
@@ -151,7 +155,7 @@ namespace Actions {
     }
 }
 
-const PostModule = {
+const LoginModule = {
     get state() { return stateGetter()},
     getters: Getters.getters,
     mutations: Mutations.mutations,
@@ -159,6 +163,6 @@ const PostModule = {
   }
   
   
-  export default PostModule;
+  export default LoginModule;
   
   

@@ -16,21 +16,13 @@
                     <v-icon color="black">cloud</v-icon>
                 </v-btn>
             </router-link>
-                <v-btn icon @click="test()">
-                    <v-icon color="black">person</v-icon>
-                </v-btn>
-            <v-subheader id="usernameTitle" v-if="username">
-                    {{username}}
+            <v-subheader id="usernameTitle" v-if="Username">
+                    {{Username}}
             </v-subheader>
             <span v-else>
                 <a href="/login-google">
                     <v-btn icon>
                         <img height="25" elevation-24 src="../assets/Google.png">
-                    </v-btn>
-                </a>
-                <a href="/login-github">
-                    <v-btn icon>
-                        <img height="25" elevation-24 src="../assets/Github.svg">
                     </v-btn>
                 </a>
             </span>
@@ -97,8 +89,11 @@ const tempEmailId = 'temp_email';
 })
 export default class App extends Vue
 {
+    public get Username()
+    {
+        return LoginStore.getters.user ? LoginStore.getters.user.Username : "";
+    }
     // Get the user name cookie.
-    public username = Cookies.get('github_username') || "";    
     public checkUser(){
         let token = Cookies.get(accessTokenId);
         let tempEmail = Cookies.get(tempEmailId)
@@ -106,9 +101,11 @@ export default class App extends Vue
         if(token && !LoginStore.getters.isLoggedIn)
         {
             Cookies.remove(accessTokenId);
-            Cookies.remove(tempEmail);
+            Cookies.remove(tempEmailId);
             LoginStore.actions.initializeUserContext({email: tempEmail, refresh_token: token});
         }
+        else
+            LoginStore.actions.validateUserContext();
     }
 
     data() {

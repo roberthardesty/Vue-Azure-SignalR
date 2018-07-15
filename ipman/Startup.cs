@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication;
 using ipman.core.Query;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using ipman.core.Command;
 
 namespace IPMan
 {
@@ -58,6 +59,7 @@ namespace IPMan
 
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
+            services.AddTransient<UserAccountUpsert>();
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<UserAccountGetByUsername>();
             services.AddTransient<PostGetBySiteAccountName>();

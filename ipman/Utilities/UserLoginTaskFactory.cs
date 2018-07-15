@@ -64,7 +64,7 @@ namespace IPMan.Utilities
 
                 userAccount.AddLoginData(provider);
 
-                await userAccountUpsert.Execute(userAccount, preExistingUser == null);
+                await userAccountUpsert.ExecuteAsync(userAccount, preExistingUser == null);
 
                 context.Identity.AddClaim(new Claim("TempSalt", userAccount.UserAccountSalt));
                 context.Success();

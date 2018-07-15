@@ -16,7 +16,7 @@ namespace ipman.core.Command
             _ipManDataContext = ipManDataContext;
         }
 
-        public async Task Execute(UserAccount userAccount, bool isInsert = false)
+        public async Task ExecuteAsync(UserAccount userAccount, bool isInsert = false)
         {
             if(isInsert)
             {

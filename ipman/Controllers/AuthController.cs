@@ -100,7 +100,7 @@ namespace IPMan.Controllers
 
             _cache.Set<string>(Cryptography.Hash(response.NewToken, user.UserAccountSalt), user.EmailAddress, TimeSpan.FromMinutes(30));
 
-            response.UserAcount = user.RemoveSensitiveData();
+            response.UserAcount = user;//.RemoveSensitiveData();
 
             return response;
         }
