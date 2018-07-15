@@ -128,6 +128,9 @@ export default class UsernameForm extends Vue
         this.usernameDirty = true;
         if(!this.isValid || this.isDebounceLoading)
             return;
+
+        // todo save username
+        
         EventBus.$emit("username_popup_close", this.username);
         this.isOpen = false;
     }

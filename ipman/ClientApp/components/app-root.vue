@@ -102,6 +102,7 @@ export default class App extends Vue
     public checkUser(){
         let token = Cookies.get(accessTokenId);
         let tempEmail = Cookies.get(tempEmailId)
+        console.log("Checking user: ",token, tempEmail);
         if(token && !LoginStore.getters.isLoggedIn)
         {
             Cookies.remove(accessTokenId);
@@ -119,7 +120,10 @@ export default class App extends Vue
     {
 
     }
-
+    public created()
+    {
+        this.checkUser();
+    }
     public test()
     {
         EventBus.$emit("username_popup_open");

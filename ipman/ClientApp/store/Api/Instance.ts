@@ -32,7 +32,7 @@ export const removeAuthHeaders = () => {
 
 async function Request(type: string, path: string, payload: any, noAuth?: boolean): Promise<Types.AxiosSuccess | Types.AxiosError> {
   try {
-    console.log(`Axios Request [${type}]:`, axiosInstance.defaults);
+    console.log(`Axios Request [${type}]:`, axiosInstance.defaults,path, payload);
     if (type === 'post' || type === 'put') {
       let response: AxiosResponse = await axiosInstance[type](path, payload, {
         headers: {
