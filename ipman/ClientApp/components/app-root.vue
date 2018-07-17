@@ -7,7 +7,7 @@
             <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
             <router-link to="/" tag="a">
                 <v-toolbar-title class="black--text">
-                    eGAMEbler
+                    Codename
                 </v-toolbar-title>
             </router-link>
             <v-spacer></v-spacer>
@@ -52,7 +52,7 @@
                 </v-layout>
             </v-card-text> -->
             <v-card-actions class="secondary darken-3 justify-center white--text">
-                &copy;2018 — <strong>eGAMEbler</strong>
+                &copy;2018 — <strong>Codename</strong>
             </v-card-actions>
             </v-card>
         </v-footer>

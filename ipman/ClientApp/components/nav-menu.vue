@@ -1,9 +1,9 @@
 ﻿<template>
     <v-navigation-drawer
-      v-model="isOpen"
-      :stateless="true"
-      fixed
+      v-model="drawer"
       clipped
+      absolute
+      temporary
       class="secondary darken-2"
       app
     >
@@ -48,7 +48,13 @@ import { routes } from '../routes'
 })
 export default class NavMenu extends Vue 
 {
-    public drawer = true;
+    public get drawer()
+    {
+      return this.$props.isOpen
+    };
+    public set drawer(r)
+    {
+    };
     public data(): any
     {
         return {

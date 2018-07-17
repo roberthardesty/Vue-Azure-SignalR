@@ -122,7 +122,7 @@ namespace Actions {
                 let validationResponse = apiReponse.data as ValidateUserContextResponse;
                 if(validationResponse.IsError)
                 {
-                    console.log(validationResponse.ResponseError.ToFormattedString());
+                    console.log(validationResponse.ResponseError.ErrorMessage);
                 }
                 else
                     callback(validationResponse)

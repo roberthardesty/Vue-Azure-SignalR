@@ -25,6 +25,7 @@ module.exports = (env) => {
                 '@store': path.resolve(__dirname, './ClientApp/store/index.ts'),
                 '@entity': path.resolve(__dirname, './ClientApp/entity/index.ts'),
                 '@router': path.resolve(__dirname, './ClientApp/router.ts'),
+                '@assets': path.resolve(__dirname, './ClientApp/assets'),
                 '@': path.resolve('ClientApp')
             }
         },

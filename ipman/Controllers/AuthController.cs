@@ -72,18 +72,13 @@ namespace IPMan.Controllers
 
             string authedEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             if(authedEmail != request.Email)
-            {
-                response.ResponseError.ErrorType = ResponseError.ResponseErrorType.ModelValidation;
-                return response;
-            }
+                return BuildErrorResponse(response, ResponseError.ResponseErrorType.ModelValidation, "invalid email");
 
             var user = _userAccountGetByEmail.Execute(request.Email);
 
             if(user == null)
-            {
-                response.ResponseError.ErrorType = ResponseError.ResponseErrorType.ModelValidation;
-                return response;
-            }
+                return BuildErrorResponse(response, ResponseError.ResponseErrorType.ModelValidation, "invalid email");
+
             // Try to pull out a cached key using the provided token
             string hashedToken = Cryptography.Hash(request.Token, user.UserAccountSalt);
             string serverToken = _cache.Get<string>(hashedToken);
@@ -91,10 +86,7 @@ namespace IPMan.Controllers
             _cache.Remove(hashedToken);
 
             if(serverToken != user.EmailAddress)// Make sure it matches the user making the request.
-            {
-                response.ResponseError.ErrorType = ResponseError.ResponseErrorType.ModelValidation;
-                return response;
-            }
+                return BuildErrorResponse(response, ResponseError.ResponseErrorType.ModelValidation, "invalid token");
 
             response.NewToken = Guid.NewGuid().ToString();
 
@@ -102,6 +94,16 @@ namespace IPMan.Controllers
 
             response.UserAcount = user;//.RemoveSensitiveData();
 
+            return response;
+        }
+
+        private T BuildErrorResponse<T>(T response, ResponseError.ResponseErrorType type, string message) where T : BaseResponse
+        {
+            response.ResponseError = new ResponseError()
+            {
+                ErrorType = type,
+                ErrorMessage = message
+            };
             return response;
         }
 
