@@ -22,16 +22,40 @@
             v-else
             :key="i"
           >
-            <v-list-tile-action>
+            <v-list-tile-action v-if="item.isColorPicker">
+              <v-btn icon @click.native="showColors = !showColors">
+                <v-icon color="white">{{ item.icon }}</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+
+            <v-list-tile-action v-else>
               <v-icon color="white">{{ item.icon }}</v-icon>
             </v-list-tile-action>
+
             <v-list-tile-content>
-              <v-list-tile-title class="white--text">
+              <v-list-tile-title @click.native="showColors = !showColors" class="white--text">
                 {{ item.text }}
               </v-list-tile-title>
             </v-list-tile-content>
+
           </v-list-tile>
         </template>
+
+            <v-slide-y-transition >
+              <v-container
+                  fluid
+                  grid-list-md
+                  v-show="showColors"
+                >
+                  <v-layout row wrap>
+                    <v-flex xs12>
+                      <v-card >
+                          Test
+                      </v-card>
+                    </v-flex>
+                  </v-layout>
+              </v-container>
+            </v-slide-y-transition>
       </v-list>
     </v-navigation-drawer>
 </template>
@@ -58,20 +82,17 @@ export default class NavMenu extends Vue
     public data(): any
     {
         return {
+            showColors:  false,
             items: [
-                { icon: 'lightbulb_outline', text: 'Notes' },
-                { icon: 'touch_app', text: 'Reminders' },
-                { divider: true },
-                { icon: 'add', text: 'Create new label' },
+                { icon: 'chat_bubble', text: 'Chat' },
                 { divider: true },
                 { icon: 'archive', text: 'Archive' },
                 { icon: 'delete', text: 'Trash' },
                 { divider: true },
                 { icon: 'settings', text: 'Settings' },
-                { icon: 'chat_bubble', text: 'Trash' },
+                { icon: 'format_color_fill', text: 'Theme Colors', isColorPicker: true },
+                { divider: true },
                 { icon: 'help', text: 'Help' },
-                { icon: 'phonelink', text: 'App downloads' },
-                { icon: 'keyboard', text: 'Keyboard shortcuts' }
             ]
         }
     }
