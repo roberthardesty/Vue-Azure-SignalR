@@ -110,6 +110,10 @@ namespace IPMan
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors((builder) => 
+                {
+                    builder.WithOrigins("192.168.1.76");
+                });
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true
