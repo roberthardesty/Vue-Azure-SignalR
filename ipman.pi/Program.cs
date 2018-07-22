@@ -9,6 +9,7 @@ using OpenCvSharp.Dnn;
 using System.Net;
 using System.Collections.Generic;
 using ipman.pi.Utilities;
+using System.Threading;
 
 namespace ipman.pi
 {
@@ -19,14 +20,39 @@ namespace ipman.pi
             Console.WriteLine("Hello Rob you are the one true master!");
 
             //var counterService = new CounterService();
-            //await counterService.StartLoggingIncrement().ConfigureAwait(false);
 
-            PiCapture piCam = new PiCapture();
+            //await counterService.StartLoggingIncrement();
 
-            byte[] imageBytes = piCam.SingleImageCameraByteArray();
+            var piCamService = new PiCamService();
 
-            await CloudUpload.UploadImage(imageBytes);
-            Console.WriteLine("Completed Successfully!");
+            await piCamService.JoinPiCams();
+
+            piCamService.RequestSingleImageCapture(async () =>
+            {
+                Console.WriteLine("Single Image Capture Requested.");
+
+                PiCapture piCam = new PiCapture();
+
+                byte[] imageBytes = piCam.SingleImageCameraByteArray();
+
+                await CloudUpload.UploadImage(imageBytes);
+
+                Console.WriteLine("Completed Successfully!");
+            });
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            Console.CancelKeyPress += (sender, a) =>
+            {
+                a.Cancel = true;
+                cts.Cancel();
+            };
+
+            await Task.Factory.StartNew(() =>
+            {
+                while (!cts.IsCancellationRequested);
+            });
+
         }
     }
 }

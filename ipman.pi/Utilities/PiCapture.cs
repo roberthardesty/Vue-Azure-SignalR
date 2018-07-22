@@ -27,23 +27,24 @@ namespace ipman.pi.Utilities
             try
             {
                 _captureInstance = new VideoCapture(0);
-                double height = _captureInstance.Get(CaptureProperty.FrameHeight);
-                double width = _captureInstance.Get(CaptureProperty.FrameWidth);
-                Console.WriteLine("Current Capture Width x Height : {0} x {1}", width, height);
+
                 while (!_captureInstance.IsOpened())
                 {
                     Console.WriteLine("Video Capture being reopened.");
                     _captureInstance.Open(0);
-                    Thread.Sleep(200);
+                    Thread.Sleep(500);
                 }
 
-                _captureInstance.Set(CaptureProperty.FrameHeight, 720);
-                _captureInstance.Set(CaptureProperty.FrameWidth, 1280);
+                double desiredHeight = 600;
+                double desiredWidth = 800;
 
-                Console.WriteLine("Set Capture Width x Height : {0} x {1}", 1280, 720);
+                _captureInstance.Set(CaptureProperty.FrameHeight, desiredHeight);
+                _captureInstance.Set(CaptureProperty.FrameWidth, desiredWidth);
 
-                height = _captureInstance.Get(CaptureProperty.FrameHeight);
-                width = _captureInstance.Get(CaptureProperty.FrameWidth);
+                Console.WriteLine("Set Capture Width x Height : {0} x {1}", desiredWidth, desiredHeight);
+
+                double height = _captureInstance.Get(CaptureProperty.FrameHeight);
+                double width = _captureInstance.Get(CaptureProperty.FrameWidth);
 
                 Console.WriteLine("Current Capture Width x Height : {0} x {1}", width, height);
                 _captureInstance.Read(captureImage);
