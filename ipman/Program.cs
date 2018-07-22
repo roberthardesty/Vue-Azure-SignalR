@@ -12,7 +12,8 @@ namespace IPMan
 
         public static IWebHost BuildWebHost(string[] args) =>
            WebHost.CreateDefaultBuilder(args)
-               .UseStartup<Startup>()
+            .UseStartup<Startup>()
+            .UseUrls("http://0.0.0.0:5005", "http://localhost:5005")
                .Build();
     }
 }

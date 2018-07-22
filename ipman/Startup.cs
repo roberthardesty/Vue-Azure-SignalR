@@ -21,6 +21,7 @@ using ipman.core.Query;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using ipman.core.Command;
+using System.Collections.Generic;
 
 namespace IPMan
 {
@@ -41,6 +42,7 @@ namespace IPMan
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMemoryCache();
             services.AddMvc().AddJsonOptions(options => 
             {
@@ -112,11 +114,14 @@ namespace IPMan
                 app.UseDeveloperExceptionPage();
                 app.UseCors((builder) => 
                 {
-                    builder.WithOrigins("192.168.1.76");
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
                 });
+                
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                    HotModuleReplacement = true
+                    HotModuleReplacement = true,
                 });
             }
             else
@@ -131,8 +136,7 @@ namespace IPMan
             app.UseAzureSignalR(routes =>
             {
                 routes.MapHub<CounterHub>("/count");
-                routes.MapHub<WeatherHub>("/weather");
-                routes.MapHub<SiteAccountHub>("/siteAccount");
+                routes.MapHub<PiCamHub>("/PiCam");
             });
 
             app.UseMvc(routes =>
