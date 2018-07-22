@@ -3,3 +3,4 @@ export * from './IPostState';
 export * from './ISiteAccountState';
 export * from './IUserAccountState';
 export * from './RootState';
+export * from './IPiCamState';

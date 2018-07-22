@@ -15,7 +15,8 @@
                 </v-card>
             </v-flex>
             <v-card color="secondary lighten-3">
-                <v-parallax :src="require('@assets/forest.jpg')" >
+                <v-parallax src="https://robfunctionstorage.blob.core.windows.net/pi-images/HomeImage.jpeg">
+                <!-- :src="require('@assets/forest.jpg')" > -->
                     <h2  style="text-align:center">Let's make a bet</h2>
                     <v-layout row wrap align-center justify-space-between>
                         <v-flex xs4>
@@ -28,13 +29,9 @@
                             </router-link>
                         </v-flex>
                         <v-flex xs4>
-                            <router-link to="/github-login" tag="a" >
-                                <v-btn style="width: 120px; height: 120px" fab color="white">
-                                    <v-flex xs12 ma-2>
-                                        <img elevation-24 src="../assets/Github.svg" class="responsive">
-                                    </v-flex>
-                                </v-btn>
-                            </router-link>
+                            <v-btn icon style="width: 120px; height: 120px" fab color="white" @click="requestSingleImageCapture()">
+                               <v-icon color="primary">fingerprint</v-icon> 
+                            </v-btn>
                         </v-flex>
                     </v-layout>
                 </v-parallax>
@@ -43,12 +40,29 @@
     </v-layout>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import { PiCamStore } from '@store'
+
+@Component({
+
+})
+export default class HomePage extends Vue {
+    
+    public async requestSingleImageCapture()
+    {
+        console.log("Requesting Image.");
+        await PiCamStore.actions.requestSingleImageCapture();
+        console.log("Should be finished.");
+
+    }
+    
     data() {
         return {
         }
-    },
+    };
+
     mounted(){
         this.$vuetify.theme.primary = '#43a047';
         this.$vuetify.theme.secondary = '#795548';
