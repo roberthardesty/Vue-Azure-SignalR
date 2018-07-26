@@ -13,6 +13,7 @@ namespace ipman.core.Utilities
         public static Guid UserBudNJoeID = Guid.Parse("4D8881BD-DB0A-4725-9CF0-2C4390013A30");
 
         public static Guid SiteAdminID = Guid.Parse("4a93afc2-8ef0-4d91-9374-67e60fc336a8");
+        public static Guid SiteRobsRaspID = Guid.Parse("6b93aaaa-8ef0-4d91-9574-fae60fc336a8");
 
         public static Guid DepartmentWalrusID = Guid.Parse("e29241de-853c-4a05-9928-1c6ac7f73b25");
 
@@ -72,6 +73,14 @@ namespace ipman.core.Utilities
             {
                 ID = SiteAdminID,
                 SiteAccountName = "Awesome Possum Admins",
+                IsActive = true,
+                LastUpdatedUTC = TheDate,
+                CreatedUTC = TheDate
+            },
+            new SiteAccount()
+            {
+                ID = SiteRobsRaspID,
+                SiteAccountName = "Rob's Raspberries",
                 IsActive = true,
                 LastUpdatedUTC = TheDate,
                 CreatedUTC = TheDate
@@ -201,6 +210,26 @@ namespace ipman.core.Utilities
 
         public static SiteAccountUserAccount[] SiteUsers =
         {
+            new SiteAccountUserAccount
+            {
+                UserAccountID = UserBudNJoeID,
+                SiteAccountID = SiteRobsRaspID,
+                RoleID = Role.OwnerRoleID,
+                IsActive = true,
+                IsMemberOfAllDepartments = true,
+                LastLoginUTC = TheDate,
+                CreatedUTC = TheDate
+            },
+            new SiteAccountUserAccount
+            {
+                UserAccountID = UserRobertID,
+                SiteAccountID = SiteRobsRaspID,
+                RoleID = Role.OwnerRoleID,
+                IsActive = true,
+                IsMemberOfAllDepartments = true,
+                LastLoginUTC = TheDate,
+                CreatedUTC = TheDate
+            },
             new SiteAccountUserAccount
             {
                 UserAccountID = UserBudNJoeID,
