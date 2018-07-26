@@ -9,6 +9,7 @@ namespace ipman.shared.Entity
     {
         public string PostTitle { get; set; }
         public string PostDescription { get; set; }
+        public string PostImageUri { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsLocked { get; set; }
         public DateTime? StartTimeUTC { get; set; }
