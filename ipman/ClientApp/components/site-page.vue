@@ -45,7 +45,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import PostCard from './cards/post-card.vue';
 import Post from '../entity/Post';
-import { PostStore } from '@store'; 
+import { PostStore, SiteAccountStore } from '@store'; 
 
 
 @Component({
@@ -60,7 +60,8 @@ export default class SitePage extends Vue
 
     public SiteName = "";
     public get postList() { return PostStore.getters.postList; }
-    
+    public get activeSite() { return SiteAccountStore.getters.activeSiteAccount; }
+
     public data(): any
     {
         return { msg: '' };
@@ -75,7 +76,9 @@ export default class SitePage extends Vue
     {
         let self = this; 
         self.SiteName = self.$route.params.site 
-        PostStore.actions.fetchPostList(self.$route.params.site);
+        PostStore.actions.fetchPostList(self.activeSite.ID);
+        self.$vuetify.theme.primary = self.activeSite.SiteAccountThemeColorPrimary;
+        self.$vuetify.theme.secondary = self.activeSite.SiteAccountThemeColorSecondary;
     }
 
 

@@ -1,6 +1,6 @@
 <template>
     <v-card hover color="primary lighten-2" class="white--text">
-        <v-card-media
+        <v-card-media v-if="post.PostImageUri"
           :src="post.PostImageUri"
           height="200px"
         ></v-card-media>

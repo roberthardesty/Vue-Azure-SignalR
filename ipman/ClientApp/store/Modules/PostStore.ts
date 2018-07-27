@@ -39,9 +39,9 @@ namespace Mutations {
 }
 
 namespace Actions {
-    async function fetchPostList(context, siteName: string)
+    async function fetchPostList(context, siteId: string)
     {
-        let response = await postApiService.GetPostsBySiteAccountName(siteName);
+        let response = await postApiService.GetPostsBySiteAccount(siteId);
         if(!response.success)
             throw "a fit";
         Mutations.mutations.updatePostList(response.data as Post[])

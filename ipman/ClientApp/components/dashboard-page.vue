@@ -9,14 +9,15 @@
                 </v-card-title>
                 <v-container grid-list-xs>
                     <v-layout row wrap v-if="siteAccounts.length">
-                        <v-flex elevation-10 xs12 sm5 md3 lg2 pa-2 v-for="site in siteAccounts" :key="site.ID">
-                            <v-card flat tile color="primary lighten-2" class="white--text">
+                        <v-flex xs12 sm5 md3 lg2 pa-2 v-for="site in siteAccounts" :key="site.ID">
+                            <v-card :style="style_color(site.SiteAccountThemeColorPrimary)" >
                                 <v-card-title primary-title>
                                     <div class="headline black--text">{{site.SiteAccountName}}</div>
                                 </v-card-title>
                                 <v-card-actions>
                                     <router-link :to="'/sites/' + site.SiteAccountName">
-                                        <v-btn flat>Enter now</v-btn>
+                                        <v-btn @click="updateActiveSite(site)"
+                                               :style="style_color(site.SiteAccountThemeColorSecondary)">Enter now</v-btn>
                                     </router-link>
                                 </v-card-actions>
                             </v-card>
@@ -46,6 +47,7 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import SiteAccount from '../entity/SiteAccount';
 import {SiteAccountStore} from '@store';
+import { SiteAccountUserAccount } from '@entity';
 @Component({
 
 })
@@ -55,6 +57,16 @@ export default class DashboardPage extends Vue
     
     public get siteAccounts (){ return SiteAccountStore.getters.siteAccountList};
     
+    public updateActiveSite(site: SiteAccount)
+    {
+        console.log("Updating Active Site To: ", site);
+        SiteAccountStore.mutations.updateActiveSiteAccount(site);
+    }
+    
+    public style_color(colorHex) {
+      return "background-color:" + colorHex
+    };
+
     public data(): any
     {
         return { msg: '' };
@@ -68,8 +80,8 @@ export default class DashboardPage extends Vue
     public async mounted()
     {
         SiteAccountStore.actions.fetchUserSiteAccounts();
-        this.$vuetify.theme.secondary = '#43a047';
-        this.$vuetify.theme.primary = '#795548';
+        this.$vuetify.theme.primary = '#43a047';
+        this.$vuetify.theme.secondary = '#795548';
     }
 }
 </script>

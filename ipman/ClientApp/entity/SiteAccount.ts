@@ -7,7 +7,10 @@ import Tag from "./Tag";
 export default interface SiteAccount extends EntityBase
 {
     SiteAccountName: string;
-    SiteAccountImagePath: string;
+    SiteAccountImagePath: string; 
+    SiteAccountThemeColorPrimary: string;
+    SiteAccountThemeColorSecondary: string;
+    SiteAccountType: any;
     IsActive: boolean;
     CreatedUTC: Date | string;
     LastUpdatedUTC: Date | string;

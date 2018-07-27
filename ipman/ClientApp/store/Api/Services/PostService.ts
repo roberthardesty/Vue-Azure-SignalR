@@ -1,12 +1,14 @@
 import { ServiceBase } from "./ServiceBase";
 import { AxiosSuccess, AxiosError } from "../ApiTypes";
+import { GetPostsBySiteAccountRequest } from "../ServiceModels/GetPostsBySiteAccountRequest";
 
 export default class PostService extends ServiceBase
 {
     public ServiceName ="Post";
 
-    public async GetPostsBySiteAccountName(name: string): Promise<AxiosSuccess | AxiosError> 
+    public async GetPostsBySiteAccount(id: string): Promise<AxiosSuccess | AxiosError> 
     {
-        return await this.Get(this.GetPostsBySiteAccountName.name + "?name=" + name);
+        let request: GetPostsBySiteAccountRequest = { SiteAccountID: id };
+        return await this.Get(this.GetPostsBySiteAccount.name, request);
     }
 }
