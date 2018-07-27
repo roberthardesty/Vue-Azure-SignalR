@@ -11,8 +11,8 @@ namespace ipman.pi.Utilities
     {
         private const string _storageConnectionString = @"DefaultEndpointsProtocol=https;AccountName=robfunctionstorage;AccountKey=KrRmLOidXY7C8zMolkzBceJ4HFk2PTgOrMV1ug7s8Pwzyt8S2n6lfIBUwZc1UkLcqdgTT4WXtgsiCT62N2QGAg==;EndpointSuffix=core.windows.net";
         private const string _imageContainerName = "pi-images";
-        private const string _homePageImageName = "HomeImage.jpeg";
-        public static async Task UploadImage(byte[] imageData)
+        public const string IMAGE_NAME = "image.jpeg";
+        public static async Task<string> UploadPostImage(Guid postID, byte[] imageData)
         {
             CloudStorageAccount storageAccount = null;
             CloudBlobContainer cloudBlobContainer = null;
@@ -38,9 +38,11 @@ namespace ipman.pi.Utilities
 
                     await cloudBlobContainer.SetPermissionsAsync(permissions);
 
-                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(_homePageImageName);
+                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference($"{postID}/{IMAGE_NAME}");
 
                     await cloudBlockBlob.UploadFromByteArrayAsync(imageData, 0, imageData.Length);
+
+                    return cloudBlockBlob.Uri.ToString();
                 }
                 catch(Exception e)
                 {

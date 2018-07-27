@@ -9,5 +9,6 @@ namespace ipman.pi.Services
         public static string ProgressHub = "Progress";
         public static string CounterHub = "count";
         public static string PiCamHub = "PiCam";
+        public static string PostHub = "Post";
     }
 }

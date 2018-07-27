@@ -10,11 +10,15 @@ using System.Net;
 using System.Collections.Generic;
 using ipman.pi.Utilities;
 using System.Threading;
+using ipman.shared.Entity;
 
 namespace ipman.pi
 {
     class Program
     {
+        public static Guid SiteRobsRaspID = Guid.Parse("6b93aaaa-8ef0-4d91-9574-fae60fc336a8");
+        public static Guid UserBudNJoeID = Guid.Parse("4D8881BD-DB0A-4725-9CF0-2C4390013A30");
+
         static async Task Main(string[] args)
         {
             Console.WriteLine("Hello Rob you are the one true master!");
@@ -25,19 +29,43 @@ namespace ipman.pi
 
             var piCamService = new PiCamService();
 
+            var postService = new PostService();
+
             await piCamService.JoinPiCams();
 
             piCamService.RequestSingleImageCapture(async () =>
             {
+                Guid piPostID = Guid.NewGuid();
+                DateTime nowTime = DateTime.UtcNow;
+                Post piPost = new Post
+                {
+                    PostTitle = $"Requested Image {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}",
+                    PostDescription = "Eventually this should be generated",
+                    IsActive = true,
+                    IsLocked = false,
+                    StartTimeUTC = nowTime,
+                    LockTimeUTC = nowTime,
+                    EndTimeUTC = nowTime,
+                    CreatedUTC = nowTime,
+                    LastUpdatedUTC = nowTime,
+                    SiteAccountID = SiteRobsRaspID,
+                    UserAccountCreatorID = UserBudNJoeID
+                };
+
                 Console.WriteLine("Single Image Capture Requested.");
 
                 PiCapture piCam = new PiCapture();
 
                 byte[] imageBytes = piCam.SingleImageCameraByteArray();
 
-                await CloudUpload.UploadImage(imageBytes);
+                piPost.PostImageUri = await CloudUpload.UploadPostImage(piPostID, imageBytes);
 
-                Console.WriteLine("Completed Successfully!");
+                var savePostResponse = await postService.AddPost(piPost);
+
+                if (savePostResponse.Success)
+                    Console.WriteLine("Completed Successfully! A New Post Should Be Availible.");
+                else
+                    Console.WriteLine($"An Error happened while saving the post: {savePostResponse.Error.Message}");
             });
 
             CancellationTokenSource cts = new CancellationTokenSource();
