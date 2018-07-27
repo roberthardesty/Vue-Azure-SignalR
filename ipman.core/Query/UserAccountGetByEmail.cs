@@ -24,5 +24,14 @@ namespace ipman.core.Query
                                       .ThenInclude(saua => saua.SiteAccount);
             return baseQuery.FirstOrDefault();
         }
+
+        public async Task<UserAccount> ExecuteAsync(string email, bool includeSiteAccounts = false)
+        {
+            IQueryable<UserAccount> baseQuery = _ipManDataContext.UserAccounts.Where(user => user.EmailAddress == email);
+            if (includeSiteAccounts)
+                baseQuery = baseQuery.Include(user => user.SiteAccountUserAccounts)
+                                      .ThenInclude(saua => saua.SiteAccount);
+            return await baseQuery.FirstOrDefaultAsync();
+        }
     }
 }
