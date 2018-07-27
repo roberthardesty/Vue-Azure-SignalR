@@ -6,8 +6,8 @@
             <v-flex mb-2 xs12>
                 <v-card color="blue-grey darken-2" class="white--text">
                 <v-card-title primary-title>
-                    <div class="headline">Bobby Newport</div>
-                    <div>Has never had a real job... in his life.</div>
+                    <div class="headline">This is a forest</div>
+                    <div>Forests are cool places, don't you agree?</div>
                 </v-card-title>
                 <v-card-actions>
                     <v-btn flat dark>Vote now</v-btn>
@@ -15,9 +15,9 @@
                 </v-card>
             </v-flex>
             <v-card color="secondary lighten-3">
-                <v-parallax src="https://robfunctionstorage.blob.core.windows.net/pi-images/HomeImage.jpeg">
+                <v-parallax :src="require('@assets/forest.jpg')">
                 <!-- :src="require('@assets/forest.jpg')" > -->
-                    <h2  style="text-align:center">Let's make a bet</h2>
+                    <h2  style="text-align:center">Welcome</h2>
                     <v-layout row wrap align-center justify-space-between>
                         <v-flex xs4>
                             <router-link to="/login-google" tag="a" >

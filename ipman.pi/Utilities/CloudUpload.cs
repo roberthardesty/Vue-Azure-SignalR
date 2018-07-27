@@ -44,11 +44,14 @@ namespace ipman.pi.Utilities
 
                     return cloudBlockBlob.Uri.ToString();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("Error: {0}", e.Message);
                 }
             }
+            else
+                throw new Exception("Storage Account Does not exist.");
+            return "";
         }
     }
 }

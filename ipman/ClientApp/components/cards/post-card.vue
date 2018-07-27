@@ -1,5 +1,9 @@
 <template>
     <v-card hover color="primary lighten-2" class="white--text">
+        <v-card-media
+          :src="post.PostImageUri"
+          height="200px"
+        ></v-card-media>
         <v-container fluid grid-list-sm>
             <v-layout row wrap>
                 <!-- Row 1 -->
