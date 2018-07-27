@@ -10,34 +10,29 @@ using System.Threading.Tasks;
 
 namespace IPMan.Authorization
 {
-    public class SiteAccountRoleHandler : AuthorizationHandler<SiteAccountRoleRequirement, SiteAccount>
+    public class SiteAccountRoleHandler : AuthorizationHandler<SiteAccountRoleRequirement, SiteAccountUserAccountRoleModel>
     {
-        private readonly UserAccountGetByEmail _userAccountGetByEmail;
-        public SiteAccountRoleHandler(UserAccountGetByEmail userAccountGetByEmail)
+        //private readonly UserAccountGetByEmail _userAccountGetByEmail;
+        //public SiteAccountRoleHandler(UserAccountGetByEmail userAccountGetByEmail)
+        //{
+        //    _userAccountGetByEmail = userAccountGetByEmail;
+        //}
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+                                                             SiteAccountRoleRequirement requirement,
+                                                             SiteAccountUserAccountRoleModel siteAccountUserAccountRoleModel)
         {
-            _userAccountGetByEmail = userAccountGetByEmail;
-        }
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, SiteAccountRoleRequirement requirement, SiteAccount site)
-        {
-            string email = context.User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            UserAccount user = siteAccountUserAccountRoleModel.UserAccount;
+            // await _userAccountGetByEmail.ExecuteAsync(email, true);
 
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                context.Fail();
-                return;
-            }
-
-            UserAccount user = await _userAccountGetByEmail.ExecuteAsync(email, true);
-
-            SiteAccountUserAccount saua = user.SiteAccountUserAccounts.FirstOrDefault(s => s.SiteAccountID == site.ID);
+            SiteAccountUserAccount saua = user.SiteAccountUserAccounts.FirstOrDefault(s => s.SiteAccountID == siteAccountUserAccountRoleModel.SiteAccountID);
 
             if(saua == null || !requirement.RolesRequired.Contains(saua.Role))
             {
                 context.Fail();
-                return;
             }
 
             context.Succeed(requirement);
+            return Task.CompletedTask;
         }
     }
 }

@@ -8,6 +8,7 @@ using ipman.shared.Entity;
 using ipman.shared.WebServiceModels;
 using System.Threading.Tasks;
 using IPMan.Authorization;
+using System.Security.Claims;
 
 namespace IPMan.Controllers 
 { 
@@ -17,14 +18,17 @@ namespace IPMan.Controllers
     { 
         private PostGetBySiteAccountName _postGetBySiteAccountName;
         private PostGetBySiteAccountID _postGetBySiteAccountID;
+        private UserAccountGetByEmail _userAccountGetByEmail;
         private IAuthorizationService _authorizationService;
         public PostController(PostGetBySiteAccountName postGetBySiteAccountName,
                               PostGetBySiteAccountID postGetBySiteAccountID,
+                              UserAccountGetByEmail userAccountGetByEmail,
                               IAuthorizationService authorizationService)
         {
             _postGetBySiteAccountName = postGetBySiteAccountName;
             _postGetBySiteAccountID = postGetBySiteAccountID;
-
+            _userAccountGetByEmail = userAccountGetByEmail;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("[action]")] 
@@ -37,9 +41,10 @@ namespace IPMan.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<Post>> GetPostsBySiteAccount(GetPostsBySiteAccountRequest request)
         {
-
+            string email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            UserAccount user = await _userAccountGetByEmail.ExecuteAsync(email, true);
             AuthorizationResult authResult = await _authorizationService.AuthorizeAsync(User,
-                                                                                        new SiteAccount { ID = request.SiteAccountID },
+                                                                                        new SiteAccountUserAccountRoleModel { SiteAccountID = request.SiteAccountID, UserAccount = user },
                                                                                         new SiteAccountRoleRequirement(new Role[]{ Role.AdminRole, Role.OwnerRole, Role.BasicRole }));
 
             if(authResult.Succeeded)

@@ -58,10 +58,6 @@ namespace IPMan
                 p.PayloadSerializerSettings.ContractResolver = new DefaultContractResolver();
             });
 
-            services.AddAuthorization((options) =>
-            {
-            });
-
             ConfigureAuthentication(services);
             ConfigureAuthorization(services);
 
