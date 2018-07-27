@@ -9,7 +9,7 @@ namespace IPMan.Authorization
 {
     public class SiteAccountRoleRequirement: IAuthorizationRequirement
     {
-        Role[] RolesRequired { get; }
+        public Role[] RolesRequired { get; }
         public SiteAccountRoleRequirement(Role[] rolesRequired)
         {
             RolesRequired = rolesRequired;
