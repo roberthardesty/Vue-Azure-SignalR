@@ -22,6 +22,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using ipman.core.Command;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using IPMan.Authorization;
 
 namespace IPMan
 {
@@ -56,16 +58,22 @@ namespace IPMan
                 p.PayloadSerializerSettings.ContractResolver = new DefaultContractResolver();
             });
 
+            services.AddAuthorization((options) =>
+            {
+            });
+
             ConfigureAuthentication(services);
             ConfigureAuthorization(services);
 
+            services.AddSingleton<IAuthorizationHandler, SiteAccountRoleHandler>();
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
             services.AddTransient<UserAccountUpsert>();
             services.AddTransient<PostUpsert>();
+            services.AddTransient<PostGetBySiteAccountName>();
+            services.AddTransient<PostGetBySiteAccountID>();
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<UserAccountGetByUsername>();
-            services.AddTransient<PostGetBySiteAccountName>();
             services.AddTransient<SiteAccountGetByUserAccountEmail>();
             services.AddDbContext<IPManDataContext>();
         }

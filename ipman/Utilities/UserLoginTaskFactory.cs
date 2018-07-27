@@ -55,7 +55,7 @@ namespace IPMan.Utilities
                 UserAccountGetByEmail userAccountGetByEmail = new UserAccountGetByEmail(new IPManDataContext(ConfigurationService.Configuration));
                 UserAccountUpsert userAccountUpsert = new UserAccountUpsert(new IPManDataContext(ConfigurationService.Configuration));
 
-                UserAccount preExistingUser = userAccountGetByEmail.Execute(userAccount.EmailAddress, true);
+                UserAccount preExistingUser = await userAccountGetByEmail.ExecuteAsync(userAccount.EmailAddress, true);
 
                 if (preExistingUser == null)
                     userAccount.AddCreatedData();
@@ -67,6 +67,7 @@ namespace IPMan.Utilities
                 await userAccountUpsert.ExecuteAsync(userAccount, preExistingUser == null);
 
                 context.Identity.AddClaim(new Claim("TempSalt", userAccount.UserAccountSalt));
+
                 context.Success();
             }
 

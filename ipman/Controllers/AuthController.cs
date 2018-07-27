@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using AspNet.Security.OAuth.GitHub;
 using ipman.core.Query;
 using ipman.core.Utilities;
@@ -64,7 +65,7 @@ namespace IPMan.Controllers
 
         [HttpPost("api/auth/[action]")]
         [Authorize]
-        public ValidateUserContextResponse ValidateUserContext([FromBody]ValidateUserContextRequest request)
+        public async Task<ValidateUserContextResponse> ValidateUserContext([FromBody]ValidateUserContextRequest request)
         {
             var response = new ValidateUserContextResponse();
             if (response.InitializeFromModelStateIfInvalid(ModelState))
@@ -74,7 +75,7 @@ namespace IPMan.Controllers
             if(authedEmail != request.Email)
                 return BuildErrorResponse(response, ResponseError.ResponseErrorType.ModelValidation, "invalid email");
 
-            var user = _userAccountGetByEmail.Execute(request.Email);
+            var user = await _userAccountGetByEmail.ExecuteAsync(request.Email);
 
             if(user == null)
                 return BuildErrorResponse(response, ResponseError.ResponseErrorType.ModelValidation, "invalid email");

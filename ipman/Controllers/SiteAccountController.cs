@@ -13,17 +13,17 @@ namespace IPMan.Controllers
     [Route("api/[controller]")] 
     public class SiteAccountController : Controller 
     { 
-        private SiteAccountGetByUserAccountEmail _siteAccountGetBySiteAccountName;
+        private SiteAccountGetByUserAccountEmail _siteAccountGetByUserAccountEmail;
         public SiteAccountController(SiteAccountGetByUserAccountEmail SiteAccountGetBySiteAccountName)
         {
-            _siteAccountGetBySiteAccountName = SiteAccountGetBySiteAccountName;
+            _siteAccountGetByUserAccountEmail = SiteAccountGetBySiteAccountName;
         }
 
         [HttpGet("[action]")] 
         public IEnumerable<SiteAccount> GetUserSiteAccounts() 
         {
             string email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            List<SiteAccount> siteAccounts = _siteAccountGetBySiteAccountName.Execute(email);
+            List<SiteAccount> siteAccounts = _siteAccountGetByUserAccountEmail.Execute(email);
             return siteAccounts;
         } 
     } 
