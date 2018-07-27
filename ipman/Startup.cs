@@ -62,6 +62,7 @@ namespace IPMan
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
             services.AddTransient<UserAccountUpsert>();
+            services.AddTransient<PostUpsert>();
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<UserAccountGetByUsername>();
             services.AddTransient<PostGetBySiteAccountName>();
@@ -137,6 +138,7 @@ namespace IPMan
             {
                 routes.MapHub<CounterHub>("/count");
                 routes.MapHub<PiCamHub>("/PiCam");
+                routes.MapHub<PostHub>("/Post");
             });
 
             app.UseMvc(routes =>
