@@ -75,7 +75,10 @@ namespace ipman.core.Utilities
                 SiteAccountName = "Awesome Possum Admins",
                 IsActive = true,
                 LastUpdatedUTC = TheDate,
-                CreatedUTC = TheDate
+                CreatedUTC = TheDate,
+                SiteAccountThemeColorPrimary = "#01579b",
+                SiteAccountThemeColorSecondary = "#8d6e63",
+                SiteAccountType = SiteAccountType.Basic
             },
             new SiteAccount()
             {
@@ -83,7 +86,10 @@ namespace ipman.core.Utilities
                 SiteAccountName = "Rob's Raspberries",
                 IsActive = true,
                 LastUpdatedUTC = TheDate,
-                CreatedUTC = TheDate
+                CreatedUTC = TheDate,
+                SiteAccountThemeColorPrimary = "#004d40",
+                SiteAccountThemeColorSecondary = "#bf360c",
+                SiteAccountType = SiteAccountType.RaspberryPi
             }
         };
 
