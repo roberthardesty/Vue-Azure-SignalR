@@ -14,6 +14,11 @@ namespace ipman.pi.Services
 
         }
 
+        public async Task<SignalRServerResponse> TestConnection()
+        {
+            return await CallTheSameMethodOnTheHub<SignalRServerResponse>();
+        }
+
         public async Task<SignalRServerResponse> AddPost(Post post)
         {
             return await CallTheSameMethodOnTheHub<SignalRServerResponse>(new object[] { post });

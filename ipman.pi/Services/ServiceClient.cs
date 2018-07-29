@@ -118,6 +118,7 @@ namespace ipman.pi.Services
                 catch (Exception exception)
                 {
                     Console.WriteLine($"{loggingHeader} Error while invoking SignalR method.", exception);
+                    Console.WriteLine($"Error: {exception.Message}");
                     lastException = exception;
                 }
                 finally

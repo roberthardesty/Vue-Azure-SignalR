@@ -30,7 +30,7 @@ namespace ipman.pi
             var piCamService = new PiCamService();
 
             var postService = new PostService();
-
+            var test = await postService.TestConnection();
             await piCamService.JoinPiCams();
 
             piCamService.RequestSingleImageCapture(async () =>
@@ -54,9 +54,17 @@ namespace ipman.pi
 
                 Console.WriteLine("Single Image Capture Requested.");
 
+                var testConnection = await postService.TestConnection();
+
+                if (!testConnection.Success)
+                {
+                    Console.WriteLine("Connection Error!");
+                    return;
+                }
                 PiCapture piCam = new PiCapture();
 
                 byte[] imageBytes = piCam.SingleImageCameraByteArray();
+
 
                 piPost.PostImageUri = await CloudUpload.UploadPostImage(piPostID, imageBytes);
 
