@@ -1,31 +1,28 @@
 <template>
     <v-app id="inspire" light>
         <v-toolbar color="primary"
-                   app 
                    scroll-off-screen
                    >
             <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>
-            <router-link to="/" tag="a">
+            <v-btn flat color="primary" to="/">
                 <v-toolbar-title class="black--text">
                     Codename
                 </v-toolbar-title>
-            </router-link>
+            </v-btn>
             <v-spacer></v-spacer>
-            <router-link to="/dashboard" tag="div">
-                <v-btn icon>
-                    <v-icon color="black">cloud</v-icon>
-                </v-btn>
-            </router-link>
-            <v-subheader id="usernameTitle" v-if="Username">
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-btn icon to="/dashboard" v-if="Username">
+                <v-icon>cloud</v-icon>
+            </v-btn>
+            <v-btn flat id="usernameTitle" tag="div" v-if="Username">
                     {{Username}}
-            </v-subheader>
-            <span v-else>
-                <a href="/login-google">
-                    <v-btn icon>
-                        <img height="25" elevation-24 src="../assets/Google.png">
-                    </v-btn>
-                </a>
-            </span>
+            </v-btn>
+            <v-btn v-else icon color="primary" href="/login-google">
+                <img height="25" elevation-24 src="../assets/Google.png">
+            </v-btn>
         <username-form />
         </v-toolbar>
         <nav-menu
@@ -41,16 +38,6 @@
         
         <v-footer height="auto">
             <v-card flat tile class="flex">
-            <v-card-title class="grey">
-                <strong class="subheading">eSports Interactive Experience</strong>
-            </v-card-title>
-            <!-- <v-card-text class="grey lighten-3">
-                <v-layout>
-                    <v-flex xs6 layout column>
-                        
-                    </v-flex>
-                </v-layout>
-            </v-card-text> -->
             <v-card-actions class="secondary darken-3 justify-center white--text">
                 &copy;2018 — <strong>Codename</strong>
             </v-card-actions>
