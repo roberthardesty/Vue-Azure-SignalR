@@ -18,6 +18,10 @@ namespace IPMan.Services.Hubs
             _postUpsert = postUpsert;
         }
 
+        public Task<SignalRServerResponse> TestConnection()
+        {
+            return Task.FromResult(new SignalRServerResponse() { Success = true });
+        }
         public async Task<SignalRServerResponse> AddPost(Post post)
         {
             try

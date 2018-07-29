@@ -7,17 +7,14 @@
                         {{SiteName}}
                     </div>
                 </v-card-title>
+                <v-flex v-if="isPiCamSite">
+                    <v-btn block @click="requestSingleImageCapture">
+                        Capture Image
+                    </v-btn>
+                </v-flex>
                 <v-container grid-list-xs>
                     <v-layout row wrap v-if="postList.length">
                         <v-flex xs12 sm6 md4 lg3 mt-2 mb-2 pr-2 pl-2 v-for="post in postList" :key="post.ID">
-                            <!-- <v-card flat tile color="primary lighten-2" class="white--text">
-                                <v-card-title primary-title>
-                                    <div class="headline black--text">{{ post.PostTitle }}</div>
-                                </v-card-title>
-                                <v-card-actions>
-                                        <v-btn flat>Enter now</v-btn>
-                                </v-card-actions>
-                            </v-card> -->
                             <post-card :post="post"/>
                         </v-flex>
                     </v-layout>
@@ -45,7 +42,8 @@ import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import PostCard from './cards/post-card.vue';
 import Post from '../entity/Post';
-import { PostStore, SiteAccountStore } from '@store'; 
+import {SiteAccountType} from '../entity/lookups/SiteAccountType'
+import { PostStore, SiteAccountStore, PiCamStore } from '@store'; 
 
 
 @Component({
@@ -61,7 +59,13 @@ export default class SitePage extends Vue
     public SiteName = "";
     public get postList() { return PostStore.getters.postList; }
     public get activeSite() { return SiteAccountStore.getters.activeSiteAccount; }
-
+    public get isPiCamSite() { return SiteAccountStore.getters.activeSiteAccount.SiteAccountType == SiteAccountType.RaspberryPi }
+    public async requestSingleImageCapture()
+    {
+        console.log("Requesting Image.");
+        await PiCamStore.actions.requestSingleImageCapture();
+        console.log("Should be finished.");
+    }
     public data(): any
     {
         return { msg: '' };
@@ -71,7 +75,6 @@ export default class SitePage extends Vue
     {
 
     }
-
     public async mounted()
     {
         let self = this; 
@@ -80,8 +83,6 @@ export default class SitePage extends Vue
         self.$vuetify.theme.primary = self.activeSite.SiteAccountThemeColorPrimary;
         self.$vuetify.theme.secondary = self.activeSite.SiteAccountThemeColorSecondary;
     }
-
-
 }
 </script>
 

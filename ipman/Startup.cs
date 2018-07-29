@@ -62,8 +62,10 @@ namespace IPMan
             ConfigureAuthorization(services);
 
             services.AddSingleton<IAuthorizationHandler, SiteAccountRoleHandler>();
+
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
+
             services.AddTransient<UserAccountUpsert>();
             services.AddTransient<PostUpsert>();
             services.AddTransient<PostGetBySiteAccountName>();
@@ -71,6 +73,7 @@ namespace IPMan
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<UserAccountGetByUsername>();
             services.AddTransient<SiteAccountGetByUserAccountEmail>();
+            
             services.AddDbContext<IPManDataContext>();
         }
         public void ConfigureAuthentication(IServiceCollection services)

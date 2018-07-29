@@ -23,9 +23,6 @@
     <ProjectReference Include="..\ipman.core\ipman.core.csproj" />
     <ProjectReference Include="..\ipman.shared\ipman.shared.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\Attributes\" />
-  </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <Exec Command="npm install" />
     <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod" />
