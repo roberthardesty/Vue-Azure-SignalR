@@ -39,6 +39,7 @@ namespace ipman.pi
                 DateTime nowTime = DateTime.UtcNow;
                 Post piPost = new Post
                 {
+                    ID = piPostID,
                     PostTitle = $"Requested Image {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}",
                     PostDescription = "Eventually this should be generated",
                     IsActive = true,
@@ -52,7 +53,7 @@ namespace ipman.pi
                     UserAccountCreatorID = UserBudNJoeID
                 };
 
-                Console.WriteLine("Single Image Capture Requested.");
+                Console.WriteLine($"Single Image Capture Requested. {piPostID}");
 
                 var testConnection = await postService.TestConnection();
 

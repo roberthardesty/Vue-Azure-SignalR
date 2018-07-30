@@ -1,6 +1,7 @@
 <template>
     <v-app id="inspire" light>
         <v-toolbar color="primary"
+                   app
                    scroll-off-screen
                    >
             <v-toolbar-side-icon @click.native="drawerOpen = !drawerOpen"></v-toolbar-side-icon>

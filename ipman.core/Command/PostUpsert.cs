@@ -20,7 +20,7 @@ namespace ipman.core.Command
         {
             if (isInsert)
             {
-                _ipManDataContext.Add<Post>(post);
+                var savedPost = _ipManDataContext.Add<Post>(post).Entity;
             }
             else
             {

@@ -1,5 +1,5 @@
 <template>
-    <v-layout>
+    <v-layout wrap>
         <v-flex xs12>
             <v-card class="secondary lighten-2">
                 <v-card-title primary-title class="secondary">
@@ -30,6 +30,28 @@
                 </v-container>
             </v-card>
         </v-flex>
+        <v-flex>
+         <v-toolbar
+            dense
+            floating
+            id="piToolBar"
+            >
+            <v-text-field
+                hide-details
+                prepend-icon="search"
+                single-line
+            ></v-text-field>
+
+            <v-btn icon>
+                <v-icon>my_location</v-icon>
+            </v-btn>
+
+            <v-btn icon>
+                <v-icon>more_vert</v-icon>
+            </v-btn>
+         </v-toolbar>
+        </v-flex>
+
     </v-layout>
 </template>
 
@@ -43,7 +65,7 @@ import { Component } from 'vue-property-decorator';
 import PostCard from './cards/post-card.vue';
 import Post from '../entity/Post';
 import {SiteAccountType} from '../entity/lookups/SiteAccountType'
-import { PostStore, SiteAccountStore, PiCamStore } from '@store'; 
+import { PostStore, SiteAccountStore, PiCamStore, EventBus } from '@store'; 
 
 
 @Component({
@@ -60,12 +82,25 @@ export default class SitePage extends Vue
     public get postList() { return PostStore.getters.postList; }
     public get activeSite() { return SiteAccountStore.getters.activeSiteAccount; }
     public get isPiCamSite() { return SiteAccountStore.getters.activeSiteAccount.SiteAccountType == SiteAccountType.RaspberryPi }
+
+    public async deletePost(postID: string)
+    {
+        if(!this.activeSite) return;
+        await PostStore.actions.deletePost({ postID: postID, siteID: this.activeSite.ID });
+    }
+
     public async requestSingleImageCapture()
     {
         console.log("Requesting Image.");
         await PiCamStore.actions.requestSingleImageCapture();
         console.log("Should be finished.");
     }
+
+    public registerEvents()
+    {
+        EventBus.$on(this.deletePost.name, this.deletePost);
+    }
+
     public data(): any
     {
         return { msg: '' };
@@ -73,12 +108,18 @@ export default class SitePage extends Vue
     
     public created()
     {
-
+        this.registerEvents();
     }
     public async mounted()
     {
         let self = this; 
-        self.SiteName = self.$route.params.site 
+        self.SiteName = self.$route.params.site
+        if(!self.activeSite)
+        {
+            self.$router.push('/dashboard');
+            return;
+        }
+
         PostStore.actions.fetchPostList(self.activeSite.ID);
         self.$vuetify.theme.primary = self.activeSite.SiteAccountThemeColorPrimary;
         self.$vuetify.theme.secondary = self.activeSite.SiteAccountThemeColorSecondary;
@@ -87,5 +128,15 @@ export default class SitePage extends Vue
 </script>
 
 <style scoped>
+
+#piToolBar {
+  z-index:5;  
+  bottom: 0;
+  position: fixed;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  transition: all 1s ease;
+  right: 30px;
+}
 
 </style>

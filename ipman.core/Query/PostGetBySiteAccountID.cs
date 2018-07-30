@@ -19,7 +19,7 @@ namespace ipman.core.Query
 
         public List<Post> Execute(Guid id, bool includeTags = false, bool includeUser = false)
         {
-            IQueryable<Post> posts = _dbContext.Posts.Where(p => p.SiteAccount.ID == id);
+            IQueryable<Post> posts = _dbContext.Posts.Where(p => p.SiteAccount.ID == id).OrderByDescending(sa=> sa.CreatedUTC);
 
             if (includeTags)
                 posts = posts.Include(p => p.PostTags)

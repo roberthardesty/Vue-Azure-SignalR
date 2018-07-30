@@ -17,7 +17,7 @@
                             </v-card>
                         </v-flex>
                         <v-flex xs2 sm3>
-                            <v-card flat tile color="primary ">
+                            <v-card flat tile color="primary" width="60">
                                 <div class="text-xs-center">
                                     <v-chip small color="grey" text-color="white">
                                         <v-icon>label</v-icon>
@@ -41,6 +41,11 @@
                                 <v-icon>{{ showDescription ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
                             </v-btn>
                             <v-spacer></v-spacer>
+                            <v-btn icon @click="deletePost(post.ID)">
+                                <v-icon>
+                                    delete
+                                </v-icon>
+                            </v-btn>
                             <v-btn flat>{{post.UserAccountCreator.Username}}</v-btn>
                             <v-slide-y-transition>
                                 <v-card-text v-show="showDescription">
@@ -62,6 +67,7 @@
 
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { EventBus } from '@store';
 
 
 @Component({
@@ -74,6 +80,12 @@ export default class PostCard extends Vue
 {
     private connection;
     private showDescription: boolean = false;
+
+    private deletePost(postID: string)
+    {
+        EventBus.$emit(this.deletePost.name, postID);
+    }
+
     public data(): any
     {
         return { msg: '' };

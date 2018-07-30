@@ -12,7 +12,7 @@ namespace ipman.Utilities
         private const string _storageConnectionString = @"DefaultEndpointsProtocol=https;AccountName=robfunctionstorage;AccountKey=KrRmLOidXY7C8zMolkzBceJ4HFk2PTgOrMV1ug7s8Pwzyt8S2n6lfIBUwZc1UkLcqdgTT4WXtgsiCT62N2QGAg==;EndpointSuffix=core.windows.net";
         private const string _imageContainerName = "pi-images";
         public const string IMAGE_NAME = "image.jpeg";
-        public static async Task<string> UploadPostImage(Guid postID, byte[] imageData)
+        public static async Task<bool> DeletePostImage(Guid postID)
         {
             CloudStorageAccount storageAccount = null;
             CloudBlobContainer cloudBlobContainer = null;
@@ -28,30 +28,22 @@ namespace ipman.Utilities
 
                     cloudBlobContainer = cloudBlobClient.GetContainerReference(_imageContainerName);
 
-                    await cloudBlobContainer.CreateIfNotExistsAsync();
-
-                    // Set the permissions so the blobs are public. 
-                    BlobContainerPermissions permissions = new BlobContainerPermissions
-                    {
-                        PublicAccess = BlobContainerPublicAccessType.Blob
-                    };
-
-                    await cloudBlobContainer.SetPermissionsAsync(permissions);
+                    bool exists = await cloudBlobContainer.ExistsAsync();
+                    if (!exists)
+                        return false;
 
                     CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference($"{postID}/{IMAGE_NAME}");
 
-                    await cloudBlockBlob.UploadFromByteArrayAsync(imageData, 0, imageData.Length);
-
-                    return cloudBlockBlob.Uri.ToString();
+                    return await cloudBlockBlob.DeleteIfExistsAsync();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Error: {0}", e.Message);
+                    return false;
                 }
             }
             else
                 throw new Exception("Storage Account Does not exist.");
-            return "";
         }
     }
 }
