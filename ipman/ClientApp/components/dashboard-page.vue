@@ -15,8 +15,9 @@
                                     <div class="headline black--text">{{site.SiteAccountName}}</div>
                                 </v-card-title>
                                 <v-card-actions>
-                                    <router-link :to="'/sites/' + site.SiteAccountName" tag="div">
-                                        <v-btn @click="updateActiveSite(site)"
+                                    <router-link :to= tag="div">
+                                        <v-btn @click="updateActiveSite(site)" 
+                                               tag="div"
                                                :style="style_color(site.SiteAccountThemeColorSecondary)">Enter now</v-btn>
                                     </router-link>
                                 </v-card-actions>
@@ -57,10 +58,11 @@ export default class DashboardPage extends Vue
     
     public get siteAccounts (){ return SiteAccountStore.getters.siteAccountList};
     
-    public updateActiveSite(site: SiteAccount)
+    public async updateActiveSite(site: SiteAccount)
     {
         console.log("Updating Active Site To: ", site);
-        SiteAccountStore.mutations.updateActiveSiteAccount(site);
+        await SiteAccountStore.actions.loadSiteAccount(site);
+        this.$router.push('/sites/' + site.SiteAccountName);
     }
     
     public style_color(colorHex) {

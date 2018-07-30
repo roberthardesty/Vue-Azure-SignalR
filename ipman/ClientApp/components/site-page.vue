@@ -32,6 +32,7 @@
         </v-flex>
         <v-flex>
          <v-toolbar
+            v-if="isPiCamSite"
             dense
             floating
             id="piToolBar"
@@ -120,7 +121,6 @@ export default class SitePage extends Vue
             return;
         }
 
-        PostStore.actions.fetchPostList(self.activeSite.ID);
         self.$vuetify.theme.primary = self.activeSite.SiteAccountThemeColorPrimary;
         self.$vuetify.theme.secondary = self.activeSite.SiteAccountThemeColorSecondary;
     }

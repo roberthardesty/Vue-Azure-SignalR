@@ -4,6 +4,7 @@ import { ISiteAccountState } from '../Types';
 import { storeBuilder } from './Store/Store';
 import { SiteAccountService } from '../Api/Services';
 import { SiteAccountType } from '../../entity/lookups/SiteAccountType';
+import { PostStore } from '@store'
 
 const siteAccountApiService = new SiteAccountService();
 const state: ISiteAccountState = 
@@ -66,6 +67,12 @@ namespace Mutations {
 }
 
 namespace Actions {
+    async function loadSiteAccount(context, site: SiteAccount)
+    {
+        await PostStore.actions.fetchPostList(site.ID);
+        Mutations.mutations.updateActiveSiteAccount(site);
+    }
+
     async function fetchUserSiteAccounts(context){
         let response = await siteAccountApiService.GetUserSiteAccounts();
         console.log(response);
@@ -73,8 +80,10 @@ namespace Actions {
             return; // maybe do better error handling
         Mutations.mutations.updateSiteAccountList(response.data as SiteAccount[])
     }
+
     export const actions = {
-        fetchUserSiteAccounts: b.dispatch(fetchUserSiteAccounts)
+        fetchUserSiteAccounts: b.dispatch(fetchUserSiteAccounts),
+        loadSiteAccount: b.dispatch(loadSiteAccount)
     }
 }
 
