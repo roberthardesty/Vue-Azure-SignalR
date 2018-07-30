@@ -5,3 +5,5 @@ export * from './SaveUserAccountRequest';
 export * from './SaveUserAccountResponse';
 export * from './SearchUserAccountsRequest';
 export * from './SearchUserAccountsResponse';
+export * from './DeletePostRequest';
+export * from './DeletePostResponse';
