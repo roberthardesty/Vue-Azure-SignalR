@@ -1,4 +1,5 @@
-﻿using ipman.shared.Communications;
+﻿using ipman.pi.Utilities;
+using ipman.shared.Communications;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,8 +11,6 @@ namespace ipman.pi.Services
     public abstract class ServiceClient
     {
         private const int METHOD_INVOCATION_MAX_RETRY_COUNT = 3;
-        private const string SIGNALR_URL = @"https://ipman-dev.service.signalr.net;AccessKey=raggloQ3WDUyhSOIKg6BFqb9wKTryYbYh288YoPLs+s=;";
-        private const string DEV_SIGNALR_URL = @"http://192.168.1.68:5005";
 
         #region Member Variables
 
@@ -136,7 +135,7 @@ namespace ipman.pi.Services
         protected HubConnection GetHubConnection()
         {
             var hubConnection = new HubConnectionBuilder()
-                                                .WithUrl($"{DEV_SIGNALR_URL}/{_hubName}")
+                                                .WithUrl($"{PiConfiguration.DevSignalRAddress}/{_hubName}")
                                                 .Build();
             return hubConnection;
         }

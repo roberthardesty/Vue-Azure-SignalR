@@ -30,27 +30,9 @@
                 </v-container>
             </v-card>
         </v-flex>
-        <v-flex>
-         <v-toolbar
-            v-if="isPiCamSite"
-            dense
-            floating
-            id="piToolBar"
-            >
-            <v-text-field
-                hide-details
-                prepend-icon="search"
-                single-line
-            ></v-text-field>
-
-            <v-btn icon>
-                <v-icon>my_location</v-icon>
-            </v-btn>
-
-            <v-btn icon>
-                <v-icon>more_vert</v-icon>
-            </v-btn>
-         </v-toolbar>
+        <v-flex v-if="isPiCamSite">
+         <pi-cam-controller>
+         </pi-cam-controller>
         </v-flex>
 
     </v-layout>
@@ -64,6 +46,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import PostCard from './cards/post-card.vue';
+import PiCamController from './widgets/pi-cam-controller';
 import Post from '../entity/Post';
 import {SiteAccountType} from '../entity/lookups/SiteAccountType'
 import { PostStore, SiteAccountStore, PiCamStore, EventBus } from '@store'; 
@@ -71,7 +54,8 @@ import { PostStore, SiteAccountStore, PiCamStore, EventBus } from '@store';
 
 @Component({
     components: {
-        PostCard
+        PostCard,
+        PiCamController
     }
 })
 
@@ -115,7 +99,7 @@ export default class SitePage extends Vue
     {
         let self = this; 
         self.SiteName = self.$route.params.site
-        if(!self.activeSite)
+        if(!self.activeSite.ID)
         {
             self.$router.push('/dashboard');
             return;

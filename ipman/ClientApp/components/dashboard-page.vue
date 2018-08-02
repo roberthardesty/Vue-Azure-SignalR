@@ -15,11 +15,10 @@
                                     <div class="headline black--text">{{site.SiteAccountName}}</div>
                                 </v-card-title>
                                 <v-card-actions>
-                                    <router-link :to= tag="div">
                                         <v-btn @click="updateActiveSite(site)" 
                                                tag="div"
-                                               :style="style_color(site.SiteAccountThemeColorSecondary)">Enter now</v-btn>
-                                    </router-link>
+                                               :style="style_color(site.SiteAccountThemeColorSecondary)">
+                                               Enter now</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>

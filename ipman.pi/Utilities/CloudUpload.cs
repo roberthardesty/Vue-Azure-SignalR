@@ -9,7 +9,6 @@ namespace ipman.pi.Utilities
 {
     public static class CloudUpload
     {
-        private const string _storageConnectionString = @"DefaultEndpointsProtocol=https;AccountName=robfunctionstorage;AccountKey=KrRmLOidXY7C8zMolkzBceJ4HFk2PTgOrMV1ug7s8Pwzyt8S2n6lfIBUwZc1UkLcqdgTT4WXtgsiCT62N2QGAg==;EndpointSuffix=core.windows.net";
         private const string _imageContainerName = "pi-images";
         public const string IMAGE_NAME = "image.jpeg";
         public static async Task<string> UploadPostImage(Guid postID, byte[] imageData)
@@ -19,7 +18,7 @@ namespace ipman.pi.Utilities
             string sourceFile = null;
             string destinationFile = null;
 
-            if (CloudStorageAccount.TryParse(_storageConnectionString, out storageAccount))
+            if (CloudStorageAccount.TryParse(PiConfiguration.AzureStorageConnectionString, out storageAccount))
             {
                 try
                 {
