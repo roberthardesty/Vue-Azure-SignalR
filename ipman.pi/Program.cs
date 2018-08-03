@@ -19,6 +19,8 @@ namespace ipman.pi
         public static Guid SiteRobsRaspID = Guid.Parse("6b93aaaa-8ef0-4d91-9574-fae60fc336a8");
         public static Guid UserBudNJoeID = Guid.Parse("4D8881BD-DB0A-4725-9CF0-2C4390013A30");
 
+        public static int STEP_COUNT = 6;
+
         static async Task Main(string[] args)
         {
             Console.WriteLine("Hello Rob you are the one true master!");
@@ -35,6 +37,7 @@ namespace ipman.pi
 
             piCamService.RequestSingleImageCapture(async () =>
             {
+
                 Guid piPostID = Guid.NewGuid();
                 DateTime nowTime = DateTime.UtcNow;
                 Post piPost = new Post
@@ -59,22 +62,44 @@ namespace ipman.pi
 
                 if (!testConnection.Success)
                 {
+                    await piCamService.UpdateProgress("Error connecting :(", -1, STEP_COUNT);
                     Console.WriteLine("Connection Error!");
                     return;
                 }
+
+                await piCamService.UpdateProgress("Received", 1, STEP_COUNT);
+
                 PiCapture piCam = new PiCapture();
+
+                if(!piCam.TryOpenVideoCapture())
+                {
+                    await piCamService.UpdateProgress("Opening Camera", 2, STEP_COUNT);
+                    piCam.ForceOpenVideoCapture();
+                }
+                await piCamService.UpdateProgress("Capturing", 3, STEP_COUNT);
 
                 byte[] imageBytes = piCam.SingleImageCameraByteArray();
 
+                await piCamService.UpdateProgress("Uploading Image", 4, STEP_COUNT);
 
                 piPost.PostImageUri = await CloudUpload.UploadPostImage(piPostID, imageBytes);
+
+                await piCamService.UpdateProgress("Creating Post", 5, STEP_COUNT);
 
                 var savePostResponse = await postService.AddPost(piPost);
 
                 if (savePostResponse.Success)
+                {
+                    await piCamService.UpdateProgress("Success!", 6, STEP_COUNT);
                     Console.WriteLine("Completed Successfully! A New Post Should Be Availible.");
+                }
                 else
+                {
+                    await piCamService.UpdateProgress("Error saving post :(", -1, 6);
                     Console.WriteLine($"An Error happened while saving the post: {savePostResponse.Error.Message}");
+
+                }
+                piCam.DisposeCaptureInstance();
             });
 
             CancellationTokenSource cts = new CancellationTokenSource();

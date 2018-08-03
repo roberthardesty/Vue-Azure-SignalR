@@ -21,48 +21,45 @@ namespace ipman.pi.Utilities
             _fileName = fileName;
         }
 
+        public bool TryOpenVideoCapture()
+        {
+            _captureInstance = new VideoCapture(0);
+            return _captureInstance.IsOpened();
+        }
+
+        public void ForceOpenVideoCapture()
+        {
+            _captureInstance =  _captureInstance ?? new VideoCapture(0);
+            while (!_captureInstance.IsOpened())
+            {
+                Console.WriteLine("Video Capture being reopened.");
+                _captureInstance.Open(0);
+                Thread.Sleep(500);
+            }
+        }
+        public void DisposeCaptureInstance()
+        {
+            _captureInstance.Release();
+            _captureInstance.Dispose();
+            _captureInstance = null;
+        }
         public byte[] SingleImageCameraByteArray()
         {
             Mat captureImage = new Mat();
-            try
-            {
-                _captureInstance = new VideoCapture(0);
+           if (_captureInstance == null || !_captureInstance.IsOpened())
+                throw new Exception("Camera was not properly opened before calling SingleImageCameraByteArray - Rob Error");
+            double desiredHeight = 600;
+            double desiredWidth = 800;
 
-                while (!_captureInstance.IsOpened())
-                {
-                    Console.WriteLine("Video Capture being reopened.");
-                    _captureInstance.Open(0);
-                    Thread.Sleep(500);
-                }
+            _captureInstance.Set(CaptureProperty.FrameHeight, desiredHeight);
+            _captureInstance.Set(CaptureProperty.FrameWidth, desiredWidth);
 
-                double desiredHeight = 600;
-                double desiredWidth = 800;
+            _captureInstance.Read(captureImage);
 
-                _captureInstance.Set(CaptureProperty.FrameHeight, desiredHeight);
-                _captureInstance.Set(CaptureProperty.FrameWidth, desiredWidth);
+            if (captureImage.Empty())
+                throw new Exception("Image is empty - Rob Error.");
 
-                Console.WriteLine("Set Capture Width x Height : {0} x {1}", desiredWidth, desiredHeight);
-
-                double height = _captureInstance.Get(CaptureProperty.FrameHeight);
-                double width = _captureInstance.Get(CaptureProperty.FrameWidth);
-
-                Console.WriteLine("Current Capture Width x Height : {0} x {1}", width, height);
-                _captureInstance.Read(captureImage);
-
-                if (captureImage.Empty())
-                    throw new Exception("Image is empty - Rob Error.");
-
-                Console.WriteLine("Image successfully captured.");
-            }
-            catch(Exception e)
-            {
-                throw;
-            }
-            finally
-            {
-                _captureInstance.Release();
-                _captureInstance.Dispose();
-            }
+            Console.WriteLine("Image successfully captured.");
 
             Mat copy = captureImage.Clone();
 

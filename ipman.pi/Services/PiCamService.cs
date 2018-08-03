@@ -31,11 +31,19 @@ namespace ipman.pi.Services
             };
         }
 
+
         public async Task<SignalRServerResponse> JoinPiCams()
         {
             await _connection.StartAsync();
 
             return await MutableCallSameMethodOnTheHub<SignalRServerResponse>(connection: _connection).ConfigureAwait(false);
+        }
+
+        public async Task<SignalRServerResponse> UpdateProgress(string stepName, int stepNumber, int totalSteps)
+        {
+            if (_cts.IsCancellationRequested) return new SignalRServerResponse { Success = false };
+
+            return await MutableCallSameMethodOnTheHub<SignalRServerResponse>(connection: _connection, new object[] { stepName, stepNumber, totalSteps });
         }
 
         public void RequestSingleImageCapture(Action handler)

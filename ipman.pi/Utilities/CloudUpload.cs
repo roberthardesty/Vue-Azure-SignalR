@@ -15,8 +15,6 @@ namespace ipman.pi.Utilities
         {
             CloudStorageAccount storageAccount = null;
             CloudBlobContainer cloudBlobContainer = null;
-            string sourceFile = null;
-            string destinationFile = null;
 
             if (CloudStorageAccount.TryParse(PiConfiguration.AzureStorageConnectionString, out storageAccount))
             {
