@@ -4,9 +4,11 @@
     floating
     id="piToolBar"
     >
-    
+    <div class="text-xs-center" v-if="stepDescription">
+          <v-chip>{{ stepDescription }}</v-chip>
+    </div>
 
-    <v-btn icon @click="requestSingleImageCapture()">
+    <v-btn icon @click="requestSingleImageCapture()" :loading="isCameraBusy" >
         <v-icon>my_location</v-icon>
     </v-btn>
 
@@ -27,7 +29,7 @@ import { PiCamStore, EventBus } from '@store';
  
 @Component({ 
     props: { 
-        siteAccount: Object 
+        siteAccountID: String 
     } 
 }) 
  
@@ -35,10 +37,17 @@ export default class PiCamController extends Vue
 { 
     private connection; 
 
+    public get stepNumber() { return PiCamStore.getters.stepNumber; }
+    public get totalSteps() { return PiCamStore.getters.totalSteps; }
+    public get stepDescription() { return PiCamStore.getters.stepDescription; }
+    public get isCameraBusy() { return PiCamStore.getters.isCameraBusy; }
+
+
     public async requestSingleImageCapture()
     {
         console.log("Requesting Image.");
-        await PiCamStore.actions.requestSingleImageCapture();
+        if(PiCamStore.getters.isCameraBusy) return;
+        await PiCamStore.actions.requestSingleImageCapture(this.$props.siteAccountID);
         console.log("Should be finished.");
     }
 

@@ -34,14 +34,6 @@ import { PiCamStore } from '@store'
 })
 export default class HomePage extends Vue {
     
-    public async requestSingleImageCapture()
-    {
-        console.log("Requesting Image.");
-        await PiCamStore.actions.requestSingleImageCapture();
-        console.log("Should be finished.");
-
-    }
-    
     data() {
         return {
         }

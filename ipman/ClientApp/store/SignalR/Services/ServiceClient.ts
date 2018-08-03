@@ -10,8 +10,14 @@ export abstract class ServiceClient
 
     protected BuildConnection() : signalR.HubConnection
     {
-        return new signalR.HubConnectionBuilder()
-                          .withUrl("/" + this._serviceName)
-                          .build();
+        let connection =  new signalR.HubConnectionBuilder()
+                                .withUrl("/" + this._serviceName)
+                                .build();
+
+        connection.onclose(this.OnConnectionClosed);
+        
+        return connection;
     }
+
+    public abstract OnConnectionClosed(error: Error): void
 }

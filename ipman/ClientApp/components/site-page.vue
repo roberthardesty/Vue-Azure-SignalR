@@ -7,11 +7,6 @@
                         {{SiteName}}
                     </div>
                 </v-card-title>
-                <v-flex v-if="isPiCamSite">
-                    <v-btn block @click="requestSingleImageCapture">
-                        Capture Image
-                    </v-btn>
-                </v-flex>
                 <v-container grid-list-xs>
                     <v-layout row wrap v-if="postList.length">
                         <v-flex xs12 sm6 md4 lg3 mt-2 mb-2 pr-2 pl-2 v-for="post in postList" :key="post.ID">
@@ -31,7 +26,8 @@
             </v-card>
         </v-flex>
         <v-flex v-if="isPiCamSite">
-         <pi-cam-controller>
+         <pi-cam-controller
+            :siteAccountID="activeSite.ID">
          </pi-cam-controller>
         </v-flex>
 
@@ -46,7 +42,7 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import PostCard from './cards/post-card.vue';
-import PiCamController from './widgets/pi-cam-controller';
+import PiCamController from './widgets/pi-cam-controller.vue';
 import Post from '../entity/Post';
 import {SiteAccountType} from '../entity/lookups/SiteAccountType'
 import { PostStore, SiteAccountStore, PiCamStore, EventBus } from '@store'; 
@@ -71,18 +67,13 @@ export default class SitePage extends Vue
     public async deletePost(postID: string)
     {
         if(!this.activeSite) return;
+        console.log("Deleteing Post Event Called!")
         await PostStore.actions.deletePost({ postID: postID, siteID: this.activeSite.ID });
-    }
-
-    public async requestSingleImageCapture()
-    {
-        console.log("Requesting Image.");
-        await PiCamStore.actions.requestSingleImageCapture();
-        console.log("Should be finished.");
     }
 
     public registerEvents()
     {
+        EventBus.$off(this.deletePost.name);
         EventBus.$on(this.deletePost.name, this.deletePost);
     }
 
