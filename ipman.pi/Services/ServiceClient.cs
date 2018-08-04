@@ -135,7 +135,11 @@ namespace ipman.pi.Services
         protected HubConnection GetHubConnection()
         {
             var hubConnection = new HubConnectionBuilder()
-                                                .WithUrl($"{PiConfiguration.DevSignalRAddress}/{_hubName}")
+                                                .WithUrl($"{PiConfiguration.AzureSignalRAddress}/{_hubName}",
+                                                    (options) => 
+                                                    {
+                                                        options.AccessTokenProvider = () => Task.FromResult(PiConfiguration.AzureSignalRAccessKey);
+                                                    })
                                                 .Build();
             return hubConnection;
         }
