@@ -32,7 +32,6 @@ namespace IPMan.Controllers
             {
                 return Challenge(GitHubAuthenticationDefaults.AuthenticationScheme);
             }
-            HttpContext.Response.Cookies.Append("github_username", User.Identity.Name);
             HttpContext.SignInAsync(User);
             return Redirect("/dashboard");
         }
@@ -56,7 +55,6 @@ namespace IPMan.Controllers
 
             _cache.Set<string>(Cryptography.Hash(userToken, userSalt), userEmail, TimeSpan.FromMinutes(30));
 
-            HttpContext.Response.Cookies.Append("github_username", User.Identity.Name);
             HttpContext.Response.Cookies.Append("temp_email", userEmail);
             HttpContext.Response.Cookies.Append("access_token_ggl", userToken, new Microsoft.AspNetCore.Http.CookieOptions());
             HttpContext.SignInAsync(User);

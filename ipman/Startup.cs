@@ -74,7 +74,8 @@ namespace IPMan
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<UserAccountGetByUsername>();
             services.AddTransient<SiteAccountGetByUserAccountEmail>();
-            
+            services.AddTransient<SiteAccountSearch>();
+
             services.AddDbContext<IPManDataContext>();
         }
         public void ConfigureAuthentication(IServiceCollection services)

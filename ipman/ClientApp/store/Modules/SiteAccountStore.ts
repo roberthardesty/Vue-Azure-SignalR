@@ -1,17 +1,31 @@
 import Router from '../../router';
-import { SiteAccount } from '@entity';
+import { SiteAccount, SiteAccountSearchCriteria } from '@entity';
 import { ISiteAccountState } from '../Types';
 import { storeBuilder } from './Store/Store';
 import { SiteAccountService } from '../Api/Services';
 import { SiteAccountType } from '../../entity/lookups/SiteAccountType';
 import { PostStore } from '@store'
+import { SearchSiteAccountResponse } from '@serviceModels';
 
 const siteAccountApiService = new SiteAccountService();
 const state: ISiteAccountState = 
-{
-    siteAccountSearchCriteria: {},
+{    
     isSearchingSiteAccountList: false,
-    siteAccountList: [],
+    userSiteAccountList: [],
+    searchSiteAccountList: [],
+    searchCriteria: 
+    {
+        Keyword: '',
+        OtherUserSites: false,
+        CurrentUserSites: false,
+        UserEmail: '',
+        IncludeSiteAccountUserAccounts: false,
+        ExcludedSiteAccounts: [],
+        PageNumber: 0,
+        PageSize: 0,
+        RecordsToSkip: 0,
+        SortBy: []
+    },
     activeSiteAccount: {
         ID: "",
         SiteAccountImagePath: "",
@@ -39,7 +53,7 @@ namespace Getters {
     })
 
     const siteAccountList = b.read(function postList(state) {
-        return state.siteAccountList;
+        return state.userSiteAccountList;
     })
     
     export const getters = {
@@ -55,14 +69,43 @@ namespace Mutations {
         state.activeSiteAccount = site;
     }
 
-    function updateSiteAccountList(state:ISiteAccountState, newList: SiteAccount[])
+    function updateUserSiteAccountList(state:ISiteAccountState, newList: SiteAccount[])
     {
-        state.siteAccountList = newList;
+        state.userSiteAccountList = newList;
+    }
+
+    function updateSearchCriteria(state: ISiteAccountState, searchCriteria: SiteAccountSearchCriteria)
+    {
+        state.searchCriteria = searchCriteria;
+    }
+
+    function resetSearchCriteria(state: ISiteAccountState)
+    {
+        mutations.updateSearchCriteria({
+                Keyword: '',
+                OtherUserSites: false,
+                CurrentUserSites: false,
+                UserEmail: '',
+                IncludeSiteAccountUserAccounts: false,
+                ExcludedSiteAccounts: [],
+                PageNumber: 0,
+                PageSize: 0,
+                RecordsToSkip: 0,
+                SortBy: []
+            });
+    }
+
+    function updateSearchSiteAccountList(state: ISiteAccountState, newList: SiteAccount[])
+    {
+        state.searchSiteAccountList = newList;
     }
 
     export const mutations = {
-        updateSiteAccountList: b.commit(updateSiteAccountList),
-        updateActiveSiteAccount: b.commit(updateActiveSiteAccount)
+        updateUserSiteAccountList: b.commit(updateUserSiteAccountList),
+        updateActiveSiteAccount: b.commit(updateActiveSiteAccount),
+        updateSearchCriteria: b.commit(updateSearchCriteria),
+        updateSearchSiteAccountList: b.commit(updateSearchSiteAccountList),
+        resetSearchCriteria: b.commit(resetSearchCriteria)
     }
 }
 
@@ -74,16 +117,44 @@ namespace Actions {
     }
 
     async function fetchUserSiteAccounts(context){
-        let response = await siteAccountApiService.GetUserSiteAccounts();
-        console.log(response);
-        if(!response.success)
+        Mutations.mutations.resetSearchCriteria();
+        state.searchCriteria.CurrentUserSites = true;
+        let apiResponse = await siteAccountApiService.Search(state.searchCriteria);
+
+        console.log(apiResponse);
+        if(!apiResponse.success)
             return; // maybe do better error handling
-        Mutations.mutations.updateSiteAccountList(response.data as SiteAccount[])
+
+        let searchResponse = apiResponse.data as SearchSiteAccountResponse;
+        if(searchResponse.IsError)
+        {
+            console.log(searchResponse.ResponseError.ToFormattedString());
+            return;
+        }
+        Mutations.mutations.updateUserSiteAccountList(searchResponse.SiteAccounts);
+    }
+
+    async function search(context, searchCriteria: SiteAccountSearchCriteria){
+        Mutations.mutations.updateSearchCriteria(searchCriteria);
+        let apiResponse = await siteAccountApiService.Search(searchCriteria);
+        console.log(apiResponse);
+        if(!apiResponse.success)
+            return; // maybe do better error handling
+        
+        let searchResponse = apiResponse.data as SearchSiteAccountResponse;
+        if(searchResponse.IsError)
+        {
+            console.log(searchResponse.ResponseError.ToFormattedString());
+            return;
+        }
+
+        Mutations.mutations.updateSearchSiteAccountList(searchResponse.SiteAccounts);
     }
 
     export const actions = {
         fetchUserSiteAccounts: b.dispatch(fetchUserSiteAccounts),
-        loadSiteAccount: b.dispatch(loadSiteAccount)
+        loadSiteAccount: b.dispatch(loadSiteAccount),
+        search: b.dispatch(search)
     }
 }
 

@@ -1,9 +1,10 @@
-import { SiteAccount } from "@entity";
+import { SiteAccount, SiteAccountSearchCriteria } from "@entity";
 
 export interface ISiteAccountState
 {
-    siteAccountSearchCriteria: any;
+    searchCriteria: SiteAccountSearchCriteria;
     isSearchingSiteAccountList: boolean;
-    siteAccountList: SiteAccount[];
+    userSiteAccountList: SiteAccount[];
+    searchSiteAccountList: SiteAccount[];
     activeSiteAccount: SiteAccount;
 }
