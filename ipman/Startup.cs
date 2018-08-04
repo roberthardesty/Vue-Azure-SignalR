@@ -136,6 +136,11 @@ namespace IPMan
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseCors((builder) =>
+                {
+                    builder.WithOrigins("71.150.189.142");
+                });
+
             }
 
             app.UseAuthentication();
