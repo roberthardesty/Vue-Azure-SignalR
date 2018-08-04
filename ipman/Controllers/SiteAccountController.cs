@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ipman.core.Query;
 using ipman.shared.Entity;
 using System.Security.Claims;
+using ipman.shared.WebServiceModels;
 
 namespace IPMan.Controllers 
 { 
@@ -13,10 +14,13 @@ namespace IPMan.Controllers
     [Route("api/[controller]")] 
     public class SiteAccountController : Controller 
     { 
-        private SiteAccountGetByUserAccountEmail _siteAccountGetByUserAccountEmail;
-        public SiteAccountController(SiteAccountGetByUserAccountEmail SiteAccountGetBySiteAccountName)
+        private readonly SiteAccountGetByUserAccountEmail _siteAccountGetByUserAccountEmail;
+        private readonly SiteAccountSearch _siteAccountSearch;
+        public SiteAccountController(SiteAccountGetByUserAccountEmail siteAccountGetBySiteAccountName,
+                                     SiteAccountSearch siteAccountSearch)
         {
-            _siteAccountGetByUserAccountEmail = SiteAccountGetBySiteAccountName;
+            _siteAccountGetByUserAccountEmail = siteAccountGetBySiteAccountName;
+            _siteAccountSearch = siteAccountSearch;
         }
 
         [HttpGet("[action]")] 
@@ -25,6 +29,23 @@ namespace IPMan.Controllers
             string email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
             List<SiteAccount> siteAccounts = _siteAccountGetByUserAccountEmail.Execute(email);
             return siteAccounts;
-        } 
+        }
+
+        [HttpPost("[action]")]
+        public SearchSiteAccountResponse Search([FromBody] SearchSiteAccountRequest request)
+        {
+            SearchSiteAccountResponse searchResponse = new SearchSiteAccountResponse
+            {
+                SiteAccounts = new List<SiteAccount>(),
+            };
+
+            string email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
+            request.SiteAccountSearchCriteria.UserEmail = email;
+
+            searchResponse.SiteAccounts = _siteAccountSearch.Execute(request.SiteAccountSearchCriteria);
+
+            return searchResponse;
+        }
     } 
 } 

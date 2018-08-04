@@ -10,3 +10,4 @@ export {default as Wager} from './Wager';
 
 export * from './lookups';
 export * from './join';
+export * from './searchCriteria'
