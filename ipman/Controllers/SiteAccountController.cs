@@ -14,21 +14,10 @@ namespace IPMan.Controllers
     [Route("api/[controller]")] 
     public class SiteAccountController : Controller 
     { 
-        private readonly SiteAccountGetByUserAccountEmail _siteAccountGetByUserAccountEmail;
         private readonly SiteAccountSearch _siteAccountSearch;
-        public SiteAccountController(SiteAccountGetByUserAccountEmail siteAccountGetBySiteAccountName,
-                                     SiteAccountSearch siteAccountSearch)
+        public SiteAccountController(SiteAccountSearch siteAccountSearch)
         {
-            _siteAccountGetByUserAccountEmail = siteAccountGetBySiteAccountName;
             _siteAccountSearch = siteAccountSearch;
-        }
-
-        [HttpGet("[action]")] 
-        public IEnumerable<SiteAccount> GetUserSiteAccounts() 
-        {
-            string email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-            List<SiteAccount> siteAccounts = _siteAccountGetByUserAccountEmail.Execute(email);
-            return siteAccounts;
         }
 
         [HttpPost("[action]")]
