@@ -20,6 +20,7 @@ namespace ipman.core.Utilities
         }
 
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
+        public virtual DbSet<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         public virtual DbSet<SiteAccount> SiteAccounts { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
