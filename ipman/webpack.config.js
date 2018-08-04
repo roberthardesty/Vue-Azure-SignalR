@@ -97,7 +97,7 @@ module.exports = (env) => {
             })
         ] : [
                 // Plugins that apply in production builds only
-                new UglifyJsPlugin({ uglifyOptions: { ecma: 5, compress: { keep_fnames: true }, warnings: false, mangle: { keep_fnames: true } }, parallel: 4 }),
+                new UglifyJsPlugin({ uglifyOptions: { compress: { keep_fnames: true }, warnings: false, mangle: { keep_fnames: true } }, parallel: 4 }),
                 new webpack.DefinePlugin({
                     'process.env': {
                         'NODE_ENV': JSON.stringify("production")
