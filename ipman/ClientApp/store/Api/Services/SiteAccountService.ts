@@ -2,7 +2,7 @@ import { HubConnection } from "@aspnet/signalr";
 import { ServiceBase } from "./ServiceBase";
 import { SiteAccount, SiteAccountSearchCriteria } from "@entity";
 import { AxiosSuccess, AxiosError } from "../ApiTypes";
-import { SearchSiteAccountRequest } from "@serviceModels";
+import { SearchSiteAccountRequest, SaveSiteAccountRequest } from "@serviceModels";
 
 export default class SiteAccountService extends ServiceBase
 {
@@ -21,4 +21,10 @@ export default class SiteAccountService extends ServiceBase
         }
         return await this.Post(this.Search.name, request);
     }
+
+    public async Save(saveRequest: SaveSiteAccountRequest) : Promise<AxiosSuccess | AxiosError>
+    {
+        return await this.Post(this.Save.name, saveRequest);
+    }
+
 }

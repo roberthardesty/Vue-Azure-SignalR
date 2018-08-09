@@ -7,31 +7,57 @@
                         Welcome, here are your available places
                     </div>
                 </v-card-title>
+
+                <v-tabs
+                    centered
+                    color="secondary"
+                    v-model="selectedTab"
+                    dark
+                    grow
+                    icons-and-text
+                >
+                    <v-tabs-slider color="secondary darken-3"></v-tabs-slider>
+
+                    <v-tab href="#tab-1">
+                        <v-icon>favorite</v-icon>
+                    </v-tab>
+
+                    <v-tab href="#tab-2" @click="searchTab()">
+                        <v-icon>search</v-icon>
+                    </v-tab>
+
+                    <v-tab-item
+                    id="tab-1"
+                    >
+                    </v-tab-item>
+
+                    <v-tab-item
+                    id='tab-2'
+                    lazy
+                    >
+                        <v-flex xs12 sm6>
+                            <v-text-field
+                                color="primary lighten-3"
+                                label="Search..."
+                                single-line
+                                box
+                                clearable
+                            ></v-text-field>
+                        </v-flex>
+                    </v-tab-item>
+                </v-tabs>
                 <v-container grid-list-xs>
-                    <v-layout row wrap v-if="siteAccounts.length">
-                        <v-flex xs12 sm5 md3 lg2 pa-2 v-for="site in siteAccounts" :key="site.ID">
-                            <v-card :style="style_color(site.SiteAccountThemeColorPrimary)" >
-                                <v-card-title primary-title>
-                                    <div class="headline black--text">{{site.SiteAccountName}}</div>
-                                </v-card-title>
-                                <v-card-actions>
-                                        <v-btn @click="updateActiveSite(site)" 
-                                               tag="div"
-                                               :style="style_color(site.SiteAccountThemeColorSecondary)">
-                                               Enter now</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap v-else>
-                        <v-flex>
-                            <v-card flat tile>
-                                <v-card-title primary-title>
-                                    <div class="headline black--text">Loading...</div>
-                                </v-card-title>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
+                    <v-slide-x-transition>
+                        <v-layout row wrap v-show="siteAccounts.length">
+                            <v-flex xs12 sm5 md3 lg2 pa-2 v-for="site in siteAccounts" :key="site.ID">
+                                <site-card 
+                                    :site='site'
+                                    :userID ='currentUserID()'
+                                >
+                                </site-card>
+                            </v-flex>
+                        </v-layout>
+                    </v-slide-x-transition>
                 </v-container>
             </v-card>
         </v-flex>
@@ -45,17 +71,62 @@
 
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import SiteCard from './cards/site-card.vue'
 import SiteAccount from '../entity/SiteAccount';
-import {SiteAccountStore} from '@store';
+import { SiteAccountStore, LoginStore } from '@store';
 import { SiteAccountUserAccount } from '@entity';
-@Component({
 
+const MY_SITES_MODE = 1;
+const SEARCH_SITES_MODE = 2;
+
+@Component({
+    components: {
+        SiteCard
+    }
 })
 
 export default class DashboardPage extends Vue
 {
-    
-    public get siteAccounts (){ return SiteAccountStore.getters.siteAccountList};
+    public selectedTab: string = "";
+
+    public currentUserID() : string
+    {
+        return LoginStore.getters.user.ID
+    }
+
+    public get siteListMode()
+    {
+        return parseInt(this.selectedTab.replace("tab-", ""));
+    }
+
+    public get siteAccounts ()
+    { 
+        switch(this.siteListMode)
+        {
+            case MY_SITES_MODE:
+                return SiteAccountStore.getters.userSiteAccountList;
+            case SEARCH_SITES_MODE:
+                return SiteAccountStore.getters.searchSiteAccountList;
+            default:
+                return [];
+        }
+    };
+
+    public async search(keyword: string)
+    {
+        await SiteAccountStore.actions.search({
+            Keyword: keyword,
+            OtherUserSites: true,
+            CurrentUserSites: false,
+            UserEmail: '',
+            IncludeSiteAccountUserAccounts: true,
+            ExcludedSiteAccounts: [],
+            PageNumber: 0,
+            PageSize: 0,
+            RecordsToSkip: 0,
+            SortBy: []
+        })
+    }
     
     public async updateActiveSite(site: SiteAccount)
     {
@@ -64,13 +135,13 @@ export default class DashboardPage extends Vue
         this.$router.push('/sites/' + site.SiteAccountName);
     }
     
-    public style_color(colorHex) {
-      return "background-color:" + colorHex
-    };
-
-    public data(): any
+    public async searchTab()
     {
-        return { msg: '' };
+        console.log(SiteAccountStore.getters.searchSiteAccountList.length)
+        if(SiteAccountStore.getters.searchSiteAccountList.length)
+            return;
+
+        await this.search('');
     }
 
     public async created()

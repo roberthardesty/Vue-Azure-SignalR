@@ -4,9 +4,9 @@ import Role from "../Role";
 
 export default interface SiteAccountUserAccount {
     SiteAccountID: string;
-    SiteAccount: SiteAccount;
+    SiteAccount?: SiteAccount;
     UserAccountID: string;
-    UserAccount: UserAccount;
+    UserAccount?: UserAccount;
     RoleID: string;
     IsActive: boolean;
     IsMemberOfAllDepartments: boolean;

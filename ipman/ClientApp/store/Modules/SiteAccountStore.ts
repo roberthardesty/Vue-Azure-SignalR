@@ -1,10 +1,10 @@
 import Router from '../../router';
-import { SiteAccount, SiteAccountSearchCriteria } from '@entity';
+import { SiteAccount, SiteAccountSearchCriteria, SiteAccountUserAccount, Role } from '@entity';
 import { ISiteAccountState } from '../Types';
 import { storeBuilder } from './Store/Store';
 import { SiteAccountService } from '../Api/Services';
 import { SiteAccountType } from '../../entity/lookups/SiteAccountType';
-import { PostStore } from '@store'
+import { PostStore, LoginStore } from '@store'
 import { SearchSiteAccountResponse } from '@serviceModels';
 
 const siteAccountApiService = new SiteAccountService();
@@ -52,13 +52,18 @@ namespace Getters {
         return state.activeSiteAccount;
     })
 
-    const siteAccountList = b.read(function postList(state) {
+    const userSiteAccountList = b.read(function userPostList(state) {
         return state.userSiteAccountList;
+    })
+
+    const searchSiteAccountList = b.read(function searchPostList(state) {
+        return state.searchSiteAccountList;
     })
     
     export const getters = {
-        get siteAccountList() {return siteAccountList()},
-        get activeSiteAccount() {return activeSiteAccount()}
+        get userSiteAccountList() {return userSiteAccountList()},
+        get activeSiteAccount() {return activeSiteAccount()},
+        get searchSiteAccountList() {return searchSiteAccountList()}
     } 
 }
 
@@ -151,10 +156,32 @@ namespace Actions {
         Mutations.mutations.updateSearchSiteAccountList(searchResponse.SiteAccounts);
     }
 
+    async function requestInvite(context, siteAccount: SiteAccount)
+    {
+        console.log(LoginStore.getters.user)
+        let siteAccountUserAccount: SiteAccountUserAccount = {
+            SiteAccountID: siteAccount.ID,
+            UserAccountID: LoginStore.getters.user.ID,
+            RoleID: Role.GuestRole.RoleID,
+            IsActive: false,
+            IsMemberOfAllDepartments: false,
+            LastLoginUTC: new Date(Date.now()),
+            Role: Role.GuestRole
+        }
+
+        await siteAccountApiService.Save({ 
+            SiteAccount: siteAccount,
+            SiteAccountUserAccounts: [siteAccountUserAccount],
+            ShouldUpdateAllProps: false,
+            PropsToUpdate: [] 
+        });
+    }
+    
     export const actions = {
         fetchUserSiteAccounts: b.dispatch(fetchUserSiteAccounts),
         loadSiteAccount: b.dispatch(loadSiteAccount),
-        search: b.dispatch(search)
+        search: b.dispatch(search),
+        requestInvite: b.dispatch(requestInvite)
     }
 }
 

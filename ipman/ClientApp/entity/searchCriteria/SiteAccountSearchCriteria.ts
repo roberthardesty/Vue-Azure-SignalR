@@ -7,5 +7,6 @@ export default interface SiteAccountSearchCriteria extends SearchCriteria
     CurrentUserSites: boolean;
     UserEmail: string;
     IncludeSiteAccountUserAccounts: boolean;
-    ExcludedSiteAccounts: string[];
+    ExcludedSiteAccounts?: string[];
+    IncludedSiteAccounts?: string[];
 }
