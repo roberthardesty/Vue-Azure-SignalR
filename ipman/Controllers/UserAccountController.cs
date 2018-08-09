@@ -42,10 +42,13 @@ namespace IPMan.Controllers
                 await _userAccountUpsert.ExecuteAsync(request.UserAccount);
             else
             {
-                var existingUser = await _userAccountGetByEmail.ExecuteAsync(request.UserAccount.EmailAddress);
+                var existingUser = await _userAccountGetByEmail.ExecuteAsync(request.UserAccount.EmailAddress, true);
 
                 request.UserAccount.CopyProperties(existingUser,
                     (propInfo, source, target) => request.PropsToUpdate.Contains(propInfo.Name));
+
+                foreach (var saua in request.SiteAccountUserAccounts)
+                    existingUser.SiteAccountUserAccounts.Add(saua);
 
                 await _userAccountUpsert.ExecuteAsync(existingUser);
             }

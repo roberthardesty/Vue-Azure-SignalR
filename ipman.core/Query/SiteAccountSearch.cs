@@ -20,20 +20,20 @@ namespace ipman.core.Query
 
         public List<SiteAccount> Execute(SiteAccountSearchCriteria searchCriteria)
         {
-            var siteAccounts = from site in _dbContext.SiteAccounts
+            var siteAccounts = (from site in _dbContext.SiteAccounts
                                join saua in _dbContext.SiteAccountUserAccounts on site.ID equals saua.SiteAccountID
                                join user in _dbContext.UserAccounts on saua.UserAccountID equals user.ID
-                               where (searchCriteria.CurrentUserSites && searchCriteria.OtherUserSites)
-                                      || (user.EmailAddress == searchCriteria.UserEmail && searchCriteria.CurrentUserSites)
-                                      || (user.EmailAddress != searchCriteria.UserEmail && searchCriteria.OtherUserSites)
+                               where site.IsActive
+                                      &&  (!searchCriteria.CurrentUserSites && !searchCriteria.OtherUserSites)
+                                      || (searchCriteria.CurrentUserSites && user.EmailAddress == searchCriteria.UserEmail)
+                                      || (searchCriteria.OtherUserSites && user.EmailAddress != searchCriteria.UserEmail)
                                where string.IsNullOrWhiteSpace(searchCriteria.Keyword)
                                       || site.SiteAccountName.Contains(searchCriteria.Keyword)
                                where searchCriteria.ExcludedSiteAccounts.Count == 0
                                       || !searchCriteria.ExcludedSiteAccounts.Contains(site.ID)
-                               select site;
-
-            if (searchCriteria.IncludeSiteAccountUserAccounts)
-                siteAccounts.Include((sa) => sa.SiteAccountUserAccounts);
+                               where searchCriteria.IncludedSiteAccounts.Count == 0
+                                      || searchCriteria.IncludedSiteAccounts.Contains(site.ID)
+                                select site).Include(site => site.SiteAccountUserAccounts);
 
             return siteAccounts.ToList();
         }

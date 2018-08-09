@@ -67,6 +67,7 @@ namespace IPMan
             services.AddSingleton<IHostedService, Weather>();
 
             services.AddTransient<UserAccountUpsert>();
+            services.AddTransient<SiteAccountUpsert>();
             services.AddTransient<PostUpsert>();
             services.AddTransient<PostDelete>();
             services.AddTransient<PostGetBySiteAccountName>();

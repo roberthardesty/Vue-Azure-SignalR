@@ -11,6 +11,7 @@ namespace ipman.shared.Entity.SearchCriteria
         public bool CurrentUserSites { get; set; }
         public string UserEmail { get; set; }
         public bool IncludeSiteAccountUserAccounts { get; set; }
-        public List<Guid> ExcludedSiteAccounts { get; set; }
+        public List<Guid> ExcludedSiteAccounts { get; set; } = new List<Guid>();
+        public List<Guid> IncludedSiteAccounts { get; set; } = new List<Guid>();
     }
 }
