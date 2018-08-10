@@ -11,6 +11,7 @@ using ipman.core.Command;
 using System.Threading.Tasks;
 using IPMan.Utilities;
 using ipman.shared.Utilities;
+using IPMan.Authorization;
 
 namespace IPMan.Controllers 
 { 
@@ -20,14 +21,23 @@ namespace IPMan.Controllers
     { 
         private readonly UserAccountGetByUsername _userAccountGetByUsername;
         private readonly UserAccountGetByEmail _userAccountGetByEmail;
+        private readonly UserAccountGetByID _userAccountGetByID;
         private readonly UserAccountUpsert _userAccountUpsert;
+        private readonly UserAccountSearch _userAccountSearch;
+        private IAuthorizationService _authorizationService;
         public UserAccountController(UserAccountGetByUsername userAccountGetByUsername,
                                      UserAccountUpsert userAccountUpsert,
-                                     UserAccountGetByEmail userAccountGetByEmail)
+                                     UserAccountGetByEmail userAccountGetByEmail,
+                                     UserAccountGetByID userAccountGetByID,
+                                     UserAccountSearch userAccountSearch,
+                                     IAuthorizationService authorizationService)
         {
             _userAccountGetByUsername = userAccountGetByUsername;
             _userAccountUpsert = userAccountUpsert;
             _userAccountGetByEmail = userAccountGetByEmail;
+            _userAccountGetByID = userAccountGetByID;
+            _authorizationService = authorizationService;
+            _userAccountSearch = userAccountSearch;
         }
 
         [HttpPost("[action]")]
@@ -42,7 +52,7 @@ namespace IPMan.Controllers
                 await _userAccountUpsert.ExecuteAsync(request.UserAccount);
             else
             {
-                var existingUser = await _userAccountGetByEmail.ExecuteAsync(request.UserAccount.EmailAddress, true);
+                var existingUser = await _userAccountGetByID.ExecuteAsync(request.UserAccount.ID, true);
 
                 request.UserAccount.CopyProperties(existingUser,
                     (propInfo, source, target) => request.PropsToUpdate.Contains(propInfo.Name));
@@ -57,21 +67,27 @@ namespace IPMan.Controllers
         }
 
         [HttpPost("[action]")] 
-        public SearchUserAccountsResponse SearchUserAccounts([FromBody]SearchUserAccountsRequest request) 
+        public async Task<SearchUserAccountsResponse> SearchUserAccounts([FromBody]SearchUserAccountsRequest request) 
         {
             var response = new SearchUserAccountsResponse();
-            if (!string.IsNullOrWhiteSpace(request.Email))
+            if (response.InitializeFromModelStateIfInvalid(ModelState))
+                return response;
+
+            if(request.UserAccountSearchCriteria.SiteAccountID.HasValue)
             {
-                throw new NotImplementedException();
+                string email = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+                UserAccount user = await _userAccountGetByEmail.ExecuteAsync(email, true);
+
+                AuthorizationResult authResult = await _authorizationService.AuthorizeAsync(User,
+                                                                                            new SiteAccountUserAccountRoleModel { SiteAccountID = request.UserAccountSearchCriteria.SiteAccountID.Value, UserAccount = user },
+                                                                                            new SiteAccountRoleRequirement(new Role[] { Role.AdminRole, Role.OwnerRole, Role.BasicRole }));
+                if (!authResult.Succeeded)
+                    return new SearchUserAccountsResponse { ResponseError = new ResponseError { ErrorMessage = "Not Authed" } };
+
             }
-            else if (!string.IsNullOrWhiteSpace(request.Username))
-            {
-                response.UserAccounts = _userAccountGetByUsername.Execute(request.Username);
-            }
-            else if (request.SiteAccountID.HasValue)
-            {
-                throw new NotImplementedException();
-            }
+
+            response.UserAccounts = _userAccountSearch.Execute(request.UserAccountSearchCriteria)
+                                                      .Select(user => user.RemoveSensitiveData());
             return response;
         }
     } 

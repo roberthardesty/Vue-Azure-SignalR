@@ -72,8 +72,10 @@ namespace IPMan
             services.AddTransient<PostDelete>();
             services.AddTransient<PostGetBySiteAccountName>();
             services.AddTransient<PostGetBySiteAccountID>();
+            services.AddTransient<UserAccountGetByID>();
             services.AddTransient<UserAccountGetByEmail>();
             services.AddTransient<UserAccountGetByUsername>();
+            services.AddTransient<UserAccountSearch>();
             services.AddTransient<SiteAccountSearch>();
 
             services.AddDbContext<IPManDataContext>();
