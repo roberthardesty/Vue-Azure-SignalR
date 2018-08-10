@@ -1,6 +1,6 @@
+import { UserAccountSearchCriteria } from "@entity";
+
 export interface SearchUserAccountsRequest
 {
-    Username?: string;
-    Email?: string;
-    SiteAccountID?: string;
+    UserAccountSearchCriteria: UserAccountSearchCriteria;
 }

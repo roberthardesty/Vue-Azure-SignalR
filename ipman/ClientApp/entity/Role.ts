@@ -18,6 +18,7 @@ export default class Role
     public static BasicRole: Role = new Role(Role.BasicRoleID, "Basic");
     public static GuestRole: Role = new Role(Role.GuestRoleID, "Guest");
     public static OwnerRole: Role = new Role(Role.OwnerRoleID, "Owner");
+    public static AllRoles: Role[] = [Role.OwnerRole, Role.AdminRole, Role.BasicRole, Role.GuestRole]
 
     public static Find(roleID: string) : Role
     {

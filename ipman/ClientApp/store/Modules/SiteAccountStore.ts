@@ -176,12 +176,24 @@ namespace Actions {
             PropsToUpdate: [] 
         });
     }
+
+    async function updateSiteUser(context, siteUser: SiteAccountUserAccount)
+    {
+        let response = await siteAccountApiService.Save({
+            SiteAccount: Getters.getters.activeSiteAccount,
+            SiteAccountUserAccounts: [siteUser],
+            ShouldUpdateAllProps: false,
+            PropsToUpdate: []
+        })
+        console.log(response);
+    }
     
     export const actions = {
         fetchUserSiteAccounts: b.dispatch(fetchUserSiteAccounts),
         loadSiteAccount: b.dispatch(loadSiteAccount),
         search: b.dispatch(search),
-        requestInvite: b.dispatch(requestInvite)
+        requestInvite: b.dispatch(requestInvite),
+        updateSiteUser: b.dispatch(updateSiteUser)
     }
 }
 
