@@ -29,78 +29,7 @@ namespace ipman.pi
 
             //await counterService.StartLoggingIncrement();
 
-            var piCamService = new PiCamService();
-
-            var postService = new PostService();
-            var test = await postService.TestConnection();
-            await piCamService.JoinPiCams();
-
-            piCamService.RequestSingleImageCapture(async () =>
-            {
-
-                Guid piPostID = Guid.NewGuid();
-                DateTime nowTime = DateTime.UtcNow;
-                Post piPost = new Post
-                {
-                    ID = piPostID,
-                    PostTitle = $"Requested Image {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}",
-                    PostDescription = "Eventually this should be generated",
-                    IsActive = true,
-                    IsLocked = false,
-                    StartTimeUTC = nowTime,
-                    LockTimeUTC = nowTime,
-                    EndTimeUTC = nowTime,
-                    CreatedUTC = nowTime,
-                    LastUpdatedUTC = nowTime,
-                    SiteAccountID = SiteRobsRaspID,
-                    UserAccountCreatorID = UserBudNJoeID
-                };
-
-                Console.WriteLine($"Single Image Capture Requested. {piPostID}");
-
-                var testConnection = await postService.TestConnection();
-
-                if (!testConnection.Success)
-                {
-                    await piCamService.UpdateProgress("Error connecting :(", -1, STEP_COUNT);
-                    Console.WriteLine("Connection Error!");
-                    return;
-                }
-
-                await piCamService.UpdateProgress("Received", 1, STEP_COUNT);
-
-                PiCapture piCam = new PiCapture();
-
-                if(!piCam.TryOpenVideoCapture())
-                {
-                    await piCamService.UpdateProgress("Opening Camera", 2, STEP_COUNT);
-                    piCam.ForceOpenVideoCapture();
-                }
-                await piCamService.UpdateProgress("Capturing", 3, STEP_COUNT);
-
-                byte[] imageBytes = piCam.SingleImageCameraByteArray();
-
-                await piCamService.UpdateProgress("Uploading Image", 4, STEP_COUNT);
-
-                piPost.PostImageUri = await CloudUpload.UploadPostImage(piPostID, imageBytes);
-
-                await piCamService.UpdateProgress("Creating Post", 5, STEP_COUNT);
-
-                var savePostResponse = await postService.AddPost(piPost);
-
-                if (savePostResponse.Success)
-                {
-                    await piCamService.UpdateProgress("Success!", 6, STEP_COUNT);
-                    Console.WriteLine("Completed Successfully! A New Post Should Be Availible.");
-                }
-                else
-                {
-                    await piCamService.UpdateProgress("Error saving post :(", -1, 6);
-                    Console.WriteLine($"An Error happened while saving the post: {savePostResponse.Error.Message}");
-
-                }
-                piCam.DisposeCaptureInstance();
-            });
+            await RunService();
 
             CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -115,6 +44,88 @@ namespace ipman.pi
                 while (!cts.IsCancellationRequested);
             });
 
+        }
+
+        static async Task RunService()
+        {
+            var piCamService = new PiCamService();
+
+            var postService = new PostService();
+            var test = await postService.TestConnection();
+            await piCamService.JoinPiCams();
+
+            piCamService.RequestSingleImageCapture(async () =>
+            {
+                await SingleCaptureAndPost(postService, piCamService);
+
+            });
+
+        }
+
+        static async Task SingleCaptureAndPost(PostService postService, PiCamService piCamService)
+        {
+            Guid piPostID = Guid.NewGuid();
+            DateTime nowTime = DateTime.UtcNow;
+            Post piPost = new Post
+            {
+                ID = piPostID,
+                PostTitle = $"Requested Image {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}",
+                PostDescription = "Eventually this should be generated",
+                IsActive = true,
+                IsLocked = false,
+                StartTimeUTC = nowTime,
+                LockTimeUTC = nowTime,
+                EndTimeUTC = nowTime,
+                CreatedUTC = nowTime,
+                LastUpdatedUTC = nowTime,
+                SiteAccountID = SiteRobsRaspID,
+                UserAccountCreatorID = UserBudNJoeID
+            };
+
+            Console.WriteLine($"Single Image Capture Requested. {piPostID}");
+
+            var testConnection = await postService.TestConnection();
+
+            if (!testConnection.Success)
+            {
+                await piCamService.UpdateProgress("Error connecting :(", -1, STEP_COUNT);
+                Console.WriteLine("Connection Error!");
+                return;
+            }
+
+            await piCamService.UpdateProgress("Received", 1, STEP_COUNT);
+
+            PiCapture piCam = new PiCapture();
+
+            if (!piCam.TryOpenVideoCapture())
+            {
+                await piCamService.UpdateProgress("Opening Camera", 2, STEP_COUNT);
+                piCam.ForceOpenVideoCapture();
+            }
+            await piCamService.UpdateProgress("Capturing", 3, STEP_COUNT);
+
+            byte[] imageBytes = piCam.SingleImageCameraByteArray();
+
+            await piCamService.UpdateProgress("Uploading Image", 4, STEP_COUNT);
+
+            piPost.PostImageUri = await CloudUpload.UploadPostImage(piPostID, imageBytes);
+
+            await piCamService.UpdateProgress("Creating Post", 5, STEP_COUNT);
+
+            var savePostResponse = await postService.AddPost(piPost);
+
+            if (savePostResponse.Success)
+            {
+                await piCamService.UpdateProgress("Success!", 6, STEP_COUNT);
+                Console.WriteLine("Completed Successfully! A New Post Should Be Availible.");
+            }
+            else
+            {
+                await piCamService.UpdateProgress("Error saving post :(", -1, 6);
+                Console.WriteLine($"An Error happened while saving the post: {savePostResponse.Error.Message}");
+
+            }
+            piCam.DisposeCaptureInstance();
         }
     }
 }

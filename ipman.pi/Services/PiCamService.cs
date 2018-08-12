@@ -1,4 +1,5 @@
 ﻿using ipman.shared.Communications;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ipman.pi.Services
     {
         private HubConnection _connection;
         private CancellationTokenSource _cts;
+        private Action _piCaptureCallBack;
         public PiCamService() : base(HubNames.PiCamHub)
         {
             _connection = GetHubConnection();
@@ -31,11 +33,23 @@ namespace ipman.pi.Services
             };
         }
 
+        protected override async Task ConnectionClosedHandler(Exception e)
+        {
+            await base.ConnectionClosedHandler(e);
+            if (e is HubException)
+            {
+                await _connection.DisposeAsync();
+                _connection = GetHubConnection();
+                await JoinPiCams();
+                Console.WriteLine($"Registering handler for {HubNames.PiCamHub}/{nameof(RequestSingleImageCapture)}.....");
+                _connection.On(nameof(RequestSingleImageCapture), _piCaptureCallBack);
+                Console.WriteLine("Registered.");
+            }
+        }
 
         public async Task<SignalRServerResponse> JoinPiCams()
         {
             await _connection.StartAsync();
-
             return await MutableCallSameMethodOnTheHub<SignalRServerResponse>(connection: _connection).ConfigureAwait(false);
         }
 
@@ -48,8 +62,9 @@ namespace ipman.pi.Services
 
         public void RequestSingleImageCapture(Action handler)
         {
+            _piCaptureCallBack = handler;
             Console.WriteLine($"Registering handler for {HubNames.PiCamHub}/{nameof(RequestSingleImageCapture)}.....");
-            _connection.On(nameof(RequestSingleImageCapture), handler);
+            _connection.On(nameof(RequestSingleImageCapture), _piCaptureCallBack);
             Console.WriteLine("Registered.");
         }
     }

@@ -6,6 +6,7 @@
     <RootNamespace>IPMan</RootNamespace>
     <LangVersion>7.1</LangVersion>
     <UserSecretsId>IPManDevSignalR</UserSecretsId>
+    <Configurations>Debug;Release;DebugSignalR</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />

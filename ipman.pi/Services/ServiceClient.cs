@@ -1,5 +1,6 @@
 ﻿using ipman.pi.Utilities;
 using ipman.shared.Communications;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using System;
@@ -135,13 +136,25 @@ namespace ipman.pi.Services
         protected HubConnection GetHubConnection()
         {
             var hubConnection = new HubConnectionBuilder()
-                                                .WithUrl($"{PiConfiguration.AzureSignalRAddress}/{_hubName}",
+                                                .WithUrl($"{PiConfiguration.DevSignalRAddress}/{_hubName}",
                                                     (options) => 
                                                     {
                                                         options.AccessTokenProvider = () => Task.FromResult(PiConfiguration.AzureSignalRAccessKey);
                                                     })
                                                 .Build();
+            hubConnection.Closed -= ConnectionClosedHandler;
+            hubConnection.Closed += ConnectionClosedHandler;
+
             return hubConnection;
+        }
+
+        protected virtual Task ConnectionClosedHandler(Exception e)
+        {
+            Console.WriteLine($"{e.GetType().Name}");
+            if(e is HubException)
+            {
+            }
+            return Task.FromResult("");
         }
         #endregion
     }

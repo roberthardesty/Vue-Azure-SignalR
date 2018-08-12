@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace ipman.pi.Services
 {
     public class CounterService: ServiceClient
     {
-        private readonly HubConnection _connection;
+        private HubConnection _connection;
         private CancellationTokenSource _cts;
         public CounterService(): base(HubNames.CounterHub)
         {
@@ -39,6 +40,16 @@ namespace ipman.pi.Services
                 if(!_cts.IsCancellationRequested)
                     Console.WriteLine($"The count is now {count}.");
             });
+        }
+        protected override async Task ConnectionClosedHandler(Exception e)
+        {
+            await base.ConnectionClosedHandler(e);
+            if (e is HubException)
+            {
+                await _connection.DisposeAsync();
+                _connection = GetHubConnection();
+                await StartLoggingIncrement();
+            }
         }
     }
 }

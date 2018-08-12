@@ -9,28 +9,35 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ipman.shared", "ipman.share
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ipman.core", "ipman.core\ipman.core.csproj", "{C44DCB4A-77C8-4480-B5A1-14567201A2D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ipman.pi", "ipman.pi\ipman.pi.csproj", "{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ipman.pi", "ipman.pi\ipman.pi.csproj", "{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		DebugSignalR|Any CPU = DebugSignalR|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.DebugSignalR|Any CPU.ActiveCfg = DebugSignalR|Any CPU
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5FE715F-AB99-4FA6-AEC1-D3B644C76DF7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.DebugSignalR|Any CPU.ActiveCfg = DebugSignalR|Any CPU
+		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.DebugSignalR|Any CPU.Build.0 = DebugSignalR|Any CPU
 		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1AEB9CF-7257-4F8F-A75B-59DB23CE669F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.DebugSignalR|Any CPU.ActiveCfg = DebugSignalR|Any CPU
 		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C44DCB4A-77C8-4480-B5A1-14567201A2D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}.DebugSignalR|Any CPU.ActiveCfg = DebugSignalR|Any CPU
+		{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}.DebugSignalR|Any CPU.Build.0 = DebugSignalR|Any CPU
 		{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93FDA9CF-A63F-4FD7-B8E7-70C62BD19713}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
