@@ -24,7 +24,6 @@ namespace ipman.shared.Entity
         public DateTime CreatedUTC { get; set; }
         public DateTime LastUpdatedUTC { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
-        public virtual ICollection<Wager> Wagers { get; set; }
         public virtual ICollection<Post> CreatedPosts { get; set; }
         public virtual ICollection<SiteAccountUserAccount> SiteAccountUserAccounts { get; set; }
         [NotMapped]

@@ -23,7 +23,6 @@ namespace ipman.shared.Entity
         public UserAccount UserAccountCreator { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
         public virtual ICollection<PostTag> PostTags { get; set; }
-        public virtual ICollection<PostWager> PostWagers { get; set; }
         public virtual ICollection<PostChoice> PostChoices { get; set; }
     }
 }
