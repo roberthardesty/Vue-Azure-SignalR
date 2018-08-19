@@ -4,3 +4,4 @@ export * from './ISiteAccountState';
 export * from './IUserAccountState';
 export * from './RootState';
 export * from './IPiCamState';
+export * from './IPersonState';

@@ -7,6 +7,9 @@ export {default as Tag} from './Tag';
 export {default as UserAccount} from './UserAccount';
 export {default as Vote} from './Vote';
 export {default as Wager} from './Wager';
+export {default as Person} from './Person';
+export {default as FaceCollection} from './FaceCollection';
+export {default as FaceImage} from './FaceImage';
 
 export * from './lookups';
 export * from './join';
