@@ -1,10 +1,9 @@
 <template>
     <v-layout>
-        <v-flex xs12>
+        <v-flex xs12 v-if="false">
             <v-card class="secondary lighten-2">
                 <v-card-title primary-title class="secondary">
                     <div class="headline white--text">
-                        Welcome, here are your available places
                     </div>
                 </v-card-title>
 

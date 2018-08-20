@@ -1,7 +1,7 @@
 import PersonService from "../Api/Services/PersonService";
 import { IPersonState } from "../Types";
 import { FaceCollection, PersonSearchCriteria, Person } from "@entity";
-import { storeBuilder } from "@store";
+import { storeBuilder } from "./Store/Store";
 
 const personService = new PersonService();
 const personState: IPersonState = 
@@ -29,7 +29,7 @@ const personState: IPersonState =
     personList: [],
 }
 
-const b = storeBuilder.module<IPersonState>("SiteAccountModule", personState);
+const b = storeBuilder.module<IPersonState>("PersonModule", personState);
 const stateGetter = b.state()
 
 
@@ -90,10 +90,17 @@ namespace Mutations {
 
 namespace Actions {
     
-   
+   async function savePerson(context, person: Person)
+   {
+       if(!person.ID.length) person.ID = "00000000-0000-0000-0000-000000000000"
+       if(!person.CreatedUTC.toString().length) person.CreatedUTC = new Date(Date.now());
+       person.LastUpdatedUTC = new Date(Date.now());
+       console.log(person);
+       await personService.Save({ Person: person });
+   }
     
     export const actions = {
-        // fetchUserSiteAccounts: b.dispatch(fetchUserSiteAccounts),
+        savePerson: b.dispatch(savePerson),
         // loadSiteAccount: b.dispatch(loadSiteAccount),
         // search: b.dispatch(search),
         // requestInvite: b.dispatch(requestInvite),

@@ -68,6 +68,8 @@ namespace IPMan
 
             services.AddTransient<UserAccountUpsert>();
             services.AddTransient<SiteAccountUpsert>();
+            services.AddTransient<PersonUpsert>();
+            services.AddTransient<PersonSearch>();
             services.AddTransient<PostUpsert>();
             services.AddTransient<PostDelete>();
             services.AddTransient<PostGetBySiteAccountName>();

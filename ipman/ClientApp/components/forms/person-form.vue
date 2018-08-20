@@ -13,30 +13,23 @@
                             label="First Name"
                             placeholder="Start Typing..."
                             autofocus
-                            loading
                             required
                             :error-messages="firstNameErrors"
                             @input="firstNameDirty = true"
                             @blur="firstNameDirty = true"
                             >
+                            </v-text-field>
+
                             <v-text-field
                             v-model="person.LastName"
                             color="cyan darken"
                             label="Last Name"
                             placeholder="Start Typing..."
-                            autofocus
-                            loading
                             required
                             :error-messages="lastNameErrors"
                             @input="lastNameDirty = true"
                             @blur="lastNameDirty = true"
                             >
-                            <v-progress-linear
-                                slot="progress"
-                                :value="progress"
-                                :color="color"
-                                height="7"
-                            ></v-progress-linear>
                             </v-text-field>
                         </v-form>
                     </v-container>
@@ -44,6 +37,7 @@
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" :disabled="!isValid" flat @click="submit">Submit</v-btn>
+                <v-btn color="primary" flat @click="isOpen = false">Cancel</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -64,7 +58,8 @@ import debounce from 'lodash/debounce';
 
 @Component({
     props: {
-        person: Object
+        person: Object,
+        submitHandler: Function
     }
 })
 
@@ -75,30 +70,17 @@ export default class PersonForm extends Vue
     public firstNameDirty: boolean = false;
     public lastNameDirty: boolean = false;
 
-    public get progress () {
-        let p = 0
-        if(this.$props.person.FirstName.length > 0)
-            p++;
-        if(this.$props.person.LastName.length > 0)
-            p++;
-        return Math.min(100, p * 50)
-    };
-
-    public get color () {
-        return this.isUsernameTaken ? "error" : ['error', 'warning', 'success'][Math.floor(this.progress / 50)]
-    };
-
     public get firstNameErrors () {
         const errors = []
         if (!this.firstNameDirty) return errors
-        !this.username.length && errors.push('First name is required.')
+        !this.$props.person.FirstName.length && errors.push('First name is required.')
         return errors
     };
     
     public get lastNameErrors () {
         const errors = []
         if (!this.lastNameDirty) return errors
-        !(this.$props.person.LastName.length > 0) && errors.push('Last name is required.')
+        !this.$props.person.LastName.length && errors.push('Last name is required.')
         return errors
     };
 
@@ -108,7 +90,10 @@ export default class PersonForm extends Vue
         
     public created()
     {
-
+        let self = this;
+        EventBus.$on("person_form_popup_open", () => {
+            self.isOpen = true;
+        });
     }
 
     public submit(event)
@@ -118,7 +103,7 @@ export default class PersonForm extends Vue
         this.lastNameDirty = true;
         if(!this.isValid)
             return;
-
+        this.$props.submitHandler(this.$props.person);
         this.isOpen = false;
     }
 }

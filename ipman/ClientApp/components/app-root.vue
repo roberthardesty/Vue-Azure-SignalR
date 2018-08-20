@@ -18,6 +18,9 @@
             <v-btn icon to="/dashboard" v-if="Username">
                 <v-icon>cloud</v-icon>
             </v-btn>
+            <v-btn icon to="/people" v-if="Username">
+                <v-icon>person</v-icon>
+            </v-btn>
             <v-btn flat id="usernameTitle" tag="div" v-if="Username">
                     {{Username}}
             </v-btn>

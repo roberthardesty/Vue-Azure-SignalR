@@ -4,8 +4,10 @@
             <v-card class="secondary lighten-2">
                 <v-card-title primary-title class="secondary">
                     <div class="headline white--text">
-                        Welcome, here are your available places
+                        People
                     </div>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" @click="newPerson()">New Person</v-btn>
                 </v-card-title>
 
                 <v-container grid-list-xs>
@@ -21,6 +23,7 @@
                 </v-container>
                 <person-form
                     :person="currentPerson"
+                    :submitHandler="savePerson"
                 />
                 <webcam-capture
                 />
@@ -42,7 +45,8 @@ import PersonCard from '../cards/person-card.vue';
 import PersonForm from '../forms/person-form.vue';
 import FaceCollectionSelection from '../widgets/face-collection-selection.vue'
 import WebcamCapture from '../widgets/webcam-capture.vue'
-import { PersonStore } from '@store'
+import { PersonStore, EventBus } from '@store'
+import { Person } from '@entity';
 
 @Component({
     components: {
@@ -59,6 +63,30 @@ export default class PersonPage extends Vue
 
     public get personList() { return PersonStore.getters.personList; }
     public get currentPerson() { return PersonStore.getters.currentPerson; }
+
+    public newPerson()
+    {
+        this.openPersonForm({
+            ID: "",
+            FirstName: "",
+            LastName: "",
+            CreatedUTC: "",
+            LastUpdatedUTC: "",
+            IsActive: false,
+            FaceCollections: []
+        })
+    }
+
+    public openPersonForm(person: Person)
+    {
+        PersonStore.mutations.updateCurrentPerson(person);
+        EventBus.$emit("person_form_popup_open");
+    }
+
+    public async savePerson(person: Person)
+    {
+        await PersonStore.actions.savePerson(person);
+    }
 
     public async created()
     {
